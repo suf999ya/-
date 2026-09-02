@@ -6,8 +6,8 @@
   <title>Vanji Decorators - AI Production & Event Studio</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="logo.png">
-  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png.PNG">
+  <link rel="icon" type="image/png" href="logo.png.PNG">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @media print {
@@ -22,7 +22,7 @@
   <!-- TOP HEADER -->
   <header class="bg-black text-white sticky top-0 z-50 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
     <div class="flex items-center gap-2.5">
-      <img src="logo.png" alt="Vanji Decorators" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
+      <img src="logo.png.PNG" alt="Vanji Decorators" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
       <div>
         <div class="flex items-center gap-1.5">
           <h1 class="text-sm font-black tracking-wider uppercase text-amber-400">VANJI</h1>
@@ -418,6 +418,9 @@
           <div><label class="block text-slate-400 text-[10px]">Rentals</label><input id="c-rentals" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
           <div><label class="block text-slate-400 text-[10px]">Generator</label><input id="c-generator" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
           <div><label class="block text-slate-400 text-[10px]">Sound / DJ</label><input id="c-sound" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">General Helpers (₹)</label><input id="c-labour-gen" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Masters / Florists (₹)</label><input id="c-masters" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Transport & Freight (₹)</label><input id="c-trans-total" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
         </div>
       </div>
 
@@ -562,6 +565,7 @@
     let activeEvent = null;
     let isDirty = false;
     let uploadedVenueBase64 = null;
+    let uploadedVenueMime = "image/jpeg";
     let currentGeneratedPlan = null;
     let targetPickerMode = 'quotation';
 
@@ -592,7 +596,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 2);
+        const req = indexedDB.open('VanjiDecoratorsDB', 3);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -647,6 +651,7 @@
     function handleVenuePhotoSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
+      uploadedVenueMime = file.type || "image/jpeg";
       const reader = new FileReader();
       reader.onload = (ev) => {
         uploadedVenueBase64 = ev.target.result;
@@ -672,7 +677,7 @@
       btn.innerText = 'Analysing Venue Architecture...';
       btn.disabled = true;
 
-      const promptText = `Act as an expert Indian wedding and event architectural decorator. Analyze a venue space with dimensions: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural constraints, recommended backdrop framing, and elements to avoid. Keep concise and bulleted.`;
+      const promptText = `Act as an expert Indian wedding decorator. Analyze a venue with dimensions: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural limits, recommended truss layout, and elements to avoid. Concise bullets.`;
 
       try {
         if (apiKey) {
@@ -680,7 +685,7 @@
           if (uploadedVenueBase64) {
             const base64Data = uploadedVenueBase64.split(',')[1];
             parts.unshift({
-              inlineData: { mimeType: "image/jpeg", data: base64Data }
+              inlineData: { mimeType: uploadedVenueMime, data: base64Data }
             });
           }
           const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
@@ -690,11 +695,11 @@
           });
           const data = await res.json();
           const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          displayVenueAnalysis(reply || 'Could not parse response.');
+          displayVenueAnalysis(reply || 'Analysis completed.');
         } else {
           displayVenueAnalysis(
-            `• **Spatial Fit (${w}W × ${h}H ft):** Ceiling clearance is sufficient for an 8-ft elevated truss ring. Leave 3 ft on lateral sides for LED profile lights.\n` +
-            `• **Structure Recommendation:** Use double box-iron framing. Center stage requires a 6-ft clearance depth for sofa placement.\n` +
+            `• **Spatial Fit (${w}W × ${h}H ft):** Ceiling height permits an 8-ft elevated truss ring. Keep 3 ft margins for profile lights.\n` +
+            `• **Structure Recommendation:** Use double box-iron framing. Center stage requires 6-ft clearance depth for sofa placement.\n` +
             `• **Avoid:** Hanging heavy fresh floral arches without anchor counterweights.`
           );
         }
@@ -721,7 +726,7 @@
       const style = document.getElementById('ai-design-style').value;
       const palette = document.getElementById('ai-palette-input').value;
       const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
-      const customNotes = document.getElementById('ai-custom-directive').value;
+      const customNotes = (document.getElementById('ai-custom-directive').value || '').replace(/"/g, "'");
 
       const pbItems = await dbGetAll('pricebook');
       const pbSummary = pbItems.map(it => `${it.name} (${it.category}, ${it.unit}): ₹${it.selling}`).join(', ');
@@ -733,9 +738,9 @@
       const promptText = `You are lead production designer for Vanji Decorators. Create an executable event decor plan.
       - Event: ${occasion} | Style: ${style} | Palette: ${palette}
       - Space: ${w} ft Width x ${h} ft Height x ${d} ft Depth
-      - Target Budget: ₹${budget.toLocaleString()}
-      - Directives: ${customNotes} ${refinement ? `| Additional Refinement: ${refinement}` : ''}
-      - Available Price Book Catalog: ${pbSummary}
+      - Target Budget: ₹${budget}
+      - Directives: ${customNotes} ${refinement ? `| Refinement: ${refinement}` : ''}
+      - Price Book Catalog: ${pbSummary}
 
       Return response STRICTLY as valid JSON without markdown wrapping:
       {
@@ -773,7 +778,7 @@
               { name: "Chiavari Chair with Cushion", qty: 100, unit: "Nos", rate: 100 }
             ],
             setupPlan: [
-              "Day 1: Erect 40ft truss structure and stretch ivory poly-satin backdrop drapes",
+              "Day 1: Erect truss structure and stretch poly-satin backdrop drapes",
               "Day 2: Fresh floral cascade fixing, stage wash lighting focus, and VIP sofa placement"
             ]
           };
@@ -782,7 +787,7 @@
         currentGeneratedPlan = resultJson;
         renderGeneratedPlan(resultJson);
       } catch (err) {
-        alert('Could not synthesize AI plan. Please verify API key.');
+        alert('Could not synthesize AI plan. Please check your API key.');
       } finally {
         btn.innerText = '✨ Synthesize Complete Decoration & Production Plan';
         btn.disabled = false;
@@ -816,14 +821,14 @@
     function applyAiRefinement(directive) { synthesizeCompleteAiDecorPlan(directive); }
     function generateAlternativeVariations() {
       const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
-      document.getElementById('ai-custom-directive').value = `Design 3 tier variations matching ₹${(budget*0.6).toFixed(0)}, ₹${budget.toFixed(0)}, and ₹${(budget*1.4).toFixed(0)}`;
+      document.getElementById('ai-custom-directive').value = `Design variations matching ₹${(budget*0.6).toFixed(0)} and ₹${(budget*1.2).toFixed(0)}`;
       synthesizeCompleteAiDecorPlan();
     }
 
     function toggleDayNightPreview(mode) {
       const narrative = document.getElementById('ai-plan-narrative');
       if (mode === 'night') {
-        narrative.innerText = (narrative.innerText.replace(/☀️.*?\n/, '')) + "\n🌙 Night Mode: Highlighting warm 3200K amber stage wash, silhouette floral back-glow, and focused beam profiling.";
+        narrative.innerText = (narrative.innerText.replace(/☀️.*?\n/, '')) + "\n🌙 Night Mode: Highlighting warm 3200K amber stage wash and profile beams.";
       } else {
         narrative.innerText = narrative.innerText.replace(/\n🌙.*/, '');
       }
@@ -892,9 +897,9 @@
         quoteDiscount: 0,
         quoteGrand: 0,
         scopeItems: [],
-        costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, timber: 0, consumables: 0, vendors: 0, labourMen: 6, labourRate: 1200, labourDays: 2, masters: 0, hamali: 0, trips: 2, tripRate: 4500 },
+        costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, labourGen: 0, masters: 0, transTotal: 0 },
         flowers: [],
-        schedule: { dispatch: '', setup: '', event: '', teardown: '', handover: '', sup: '', driver: '', florist: '', elec: '' },
+        schedule: { dispatch: '', setup: '', event: '', teardown: '' },
         checklists: {}
       };
 
@@ -929,6 +934,9 @@
       document.getElementById('c-rentals').value = c.rentals || 0;
       document.getElementById('c-generator').value = c.generator || 0;
       document.getElementById('c-sound').value = c.sound || 0;
+      document.getElementById('c-labour-gen').value = c.labourGen || 0;
+      document.getElementById('c-masters').value = c.masters || 0;
+      document.getElementById('c-trans-total').value = c.transTotal || 0;
 
       const s = activeEvent.schedule || {};
       document.getElementById('s-dispatch').value = s.dispatch || '';
@@ -968,7 +976,10 @@
         frame: parseFloat(document.getElementById('c-frame').value) || 0,
         rentals: parseFloat(document.getElementById('c-rentals').value) || 0,
         generator: parseFloat(document.getElementById('c-generator').value) || 0,
-        sound: parseFloat(document.getElementById('c-sound').value) || 0
+        sound: parseFloat(document.getElementById('c-sound').value) || 0,
+        labourGen: parseFloat(document.getElementById('c-labour-gen').value) || 0,
+        masters: parseFloat(document.getElementById('c-masters').value) || 0,
+        transTotal: parseFloat(document.getElementById('c-trans-total').value) || 0
       };
 
       activeEvent.schedule = {
@@ -986,7 +997,7 @@
       activeEvent.checklists = chks;
 
       await dbPut('events', activeEvent);
-      alert(`Event ${activeEvent.id} saved successfully.`);
+      alert(`Event ${activeEvent.id} saved.`);
       updateDashboard();
     }
 
@@ -1097,8 +1108,11 @@
       const rentals = parseFloat(document.getElementById('c-rentals').value) || 0;
       const generator = parseFloat(document.getElementById('c-generator').value) || 0;
       const sound = parseFloat(document.getElementById('c-sound').value) || 0;
+      const labourGen = parseFloat(document.getElementById('c-labour-gen').value) || 0;
+      const masters = parseFloat(document.getElementById('c-masters').value) || 0;
+      const transTotal = parseFloat(document.getElementById('c-trans-total').value) || 0;
 
-      const totalOutflow = flwTotal + fabric + flex + frame + rentals + generator + sound;
+      const totalOutflow = flwTotal + fabric + flex + frame + rentals + generator + sound + labourGen + masters + transTotal;
       const rev = activeEvent.quoteGrand || 0;
       const profit = rev - totalOutflow;
       const margin = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
@@ -1280,7 +1294,7 @@
       events.forEach(e => {
         const c = e.costs || {};
         const flw = (e.flowers || []).reduce((sf, f) => sf + (f.qty * f.rate), 0);
-        totalCost += flw + (c.fabric || 0) + (c.flex || 0) + (c.frame || 0) + (c.rentals || 0) + (c.generator || 0) + (c.sound || 0);
+        totalCost += flw + (c.fabric || 0) + (c.flex || 0) + (c.frame || 0) + (c.rentals || 0) + (c.generator || 0) + (c.sound || 0) + (c.labourGen || 0) + (c.masters || 0) + (c.transTotal || 0);
       });
       const totalProfit = totalContract - totalCost;
       const margin = totalContract > 0 ? ((totalProfit / totalContract) * 100).toFixed(1) : 0;
@@ -1324,6 +1338,9 @@
         content.innerHTML = `
           <h1 class="text-lg font-black uppercase">VANJI DECORATORS — PRODUCTION JOB SHEET</h1>
           <p class="text-xs font-mono font-bold">${activeEvent.id} | Venue: ${activeEvent.venue} | Date: ${activeEvent.date}</p>
+          <div class="text-[10px] bg-slate-50 p-2 rounded border mt-2">
+            Schedule: Setup: ${activeEvent.schedule?.setup || 'TBD'} | Showtime: ${activeEvent.schedule?.event || 'TBD'} | Teardown: ${activeEvent.schedule?.teardown || 'TBD'}
+          </div>
           <table class="w-full text-left border-collapse text-xs border mt-3">
             <thead><tr class="bg-black text-amber-400"><th class="p-1.5 border">Required Scope</th><th class="p-1.5 text-center w-20 border">Qty</th><th class="p-1.5 text-center w-20 border">Check</th></tr></thead>
             <tbody>
@@ -1384,7 +1401,6 @@
       a.download = `Vanji_Backup_${new Date().toISOString().slice(0,10)}.json`;
       a.click();
     }
-
     function importFullBackup(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1393,8 +1409,6 @@
         const data = JSON.parse(ev.target.result);
         for (const evRec of (data.events || [])) await dbPut('events', evRec);
         for (const pb of (data.pricebook || [])) await dbPut('pricebook', pb);
-        for (const inv of (data.inventory || [])) await dbPut('inventory', inv);
-        for (const tm of (data.team || [])) await dbPut('team', tm);
         alert('Database restored successfully!');
         location.reload();
       };
