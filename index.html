@@ -699,6 +699,67 @@
       { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
     ];
 
+    const AI_TOOLS_DECLARATION = [{
+      function_declarations: [
+        {
+          name: "updateClientDetails",
+          description: "Fills or updates client information, date, venue, status, and event type.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              clientName: { type: "STRING", description: "Full name of the client" },
+              phone: { type: "STRING", description: "Phone or WhatsApp number" },
+              eventDate: { type: "STRING", description: "Date in YYYY-MM-DD format" },
+              venue: { type: "STRING", description: "Venue name and address" },
+              eventType: { type: "STRING", description: "Occasion: Nikah, Reception, Sangeet, Wedding, etc." },
+              status: { type: "STRING", enum: ["Inquiry", "Hold", "Quotation Sent", "Confirmed", "Production", "Completed"] }
+            }
+          }
+        },
+        {
+          name: "setScheduleTimetable",
+          description: "Sets the logistics and production schedule timestamps.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              dispatch: { type: "STRING", description: "Truck dispatch datetime" },
+              setup: { type: "STRING", description: "Setup start datetime" },
+              eventStart: { type: "STRING", description: "Event commences datetime" },
+              teardown: { type: "STRING", description: "Teardown datetime" }
+            }
+          }
+        },
+        {
+          name: "addScopeAndQuotationItem",
+          description: "Selects items from the Master Price Book and adds them to client quote and production scope.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              itemId: { type: "STRING", description: "Price book item ID (e.g., pb_1, pb_2, pb_3)" },
+              quantity: { type: "NUMBER", description: "Quantity required" }
+            },
+            required: ["itemId", "quantity"]
+          }
+        },
+        {
+          name: "queryProjectFinancials",
+          description: "Answers questions regarding contract value, internal costs, and net profit margins.",
+          parameters: { type: "OBJECT", properties: {} }
+        },
+        {
+          name: "navigateInterface",
+          description: "Switches pages or tabs inside the application.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              page: { type: "STRING", enum: ["dashboard", "events", "workspace", "design", "pricebook", "inventory", "labour", "settings"] }
+            },
+            required: ["page"]
+          }
+        }
+      ]
+    }];
+
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>'"]/g, tag => ({
@@ -988,7 +1049,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 16);
+        const req = indexedDB.open('VanjiDecoratorsDB', 17);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -1211,7 +1272,7 @@
       Return STRICTLY valid JSON:
       {
         "title": "Concept Name",
-        "narrative": "3-4 sentences detailing the floral arrangement on this stage.",
+        "narrative": "3-4 sentences detailing the floral arrangement on this stage within a ₹${budget.toLocaleString()} budget envelope.",
         "imagePrompt": "Photorealistic wedding stage decoration with ${style}, ${palette}, floral backdrop, sofa.",
         "materials": [{ "id": "pb_3", "qty": ${w} }, { "id": "pb_2", "qty": 2 }],
         "setupPlan": ["Day 1: Truss setup", "Day 2: Floral fixing"]
@@ -1236,7 +1297,7 @@
         } else {
           resultJson = {
             title: `${style} — ${occasion}`,
-            narrative: `Custom floral styling for your ${w}x${h} ft stage using ${palette} arrangements, cascading backdrops, and warm stage wash illumination.`,
+            narrative: `Custom floral styling for your ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope using ${palette} arrangements, cascading backdrops, and warm stage wash illumination.`,
             imagePrompt: `Indian wedding stage decorated with ${style}, ${palette}, floral arches and sofa.`,
             materials: [{ id: "pb_3", qty: 40 }, { id: "pb_2", qty: 2 }],
             setupPlan: ["Day 1: Structure erection", "Day 2: Floral Mandi fixing"]
@@ -1264,11 +1325,7 @@
     }
 
     async function synthesizeMultipleBotanicalDesigns() {
-      const w = document.getElementById('ai-dim-width')?.value || '40';
-      const h = document.getElementById('ai-dim-height')?.value || '18';
       const occasion = document.getElementById('ai-event-occasion')?.value || 'Wedding';
-      const palette = document.getElementById('ai-palette-input')?.value || 'Gold & White';
-
       const concepts = [
         { id: "c1", name: "Traditional Temple Marigold", floralProfile: "Orange Genda, Mogra strings, brass Urlis", narrative: "Auspicious South Indian layout with fragrant jasmine bells and marigold waterfall arches." },
         { id: "c2", name: "European Pastel Cloud", floralProfile: "Blush Hydrangeas, Peach Roses, Baby's Breath", narrative: "Modern minimalist luxury with curved floral arcs and poly-satin drapery." },
@@ -1328,7 +1385,7 @@
         renderedDataUrl = await overlayDecorOnUserPhoto(userPhoto.data, palette, style);
       }
       if (!renderedDataUrl) {
-        renderedDataUrl = createProceduralDecorRender(palette, style);
+        renderedDataUrl = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
       }
 
       currentRenderedImageData = renderedDataUrl;
@@ -1385,16 +1442,6 @@
         };
         img.src = base64Image;
       });
-    }
-
-    function createProceduralDecorRender(palette, style) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 1280; canvas.height = 720;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = "#0F172A"; ctx.fillRect(0, 0, 1280, 720);
-      ctx.fillStyle = "#FBBF24"; ctx.font = "bold 24px sans-serif";
-      ctx.fillText(`VANJI STUDIO CONCEPT: ${style} (${palette})`, 380, 100);
-      return canvas.toDataURL('image/jpeg', 0.9);
     }
 
     function refreshDecorDesign() {
