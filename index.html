@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Vanji Decorators - AI Production & Event Studio</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { background: white !important; font-size: 9pt; color: black !important; margin: 0; padding: 0; }
+      .no-print { display: none !important; }
+      .print-page { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans pb-28">
+
+  <!-- TOP HEADER -->
+  <header class="bg-black text-white sticky top-0 z-50 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
+    <div class="flex items-center gap-2.5">
+      <img src="logo.png" alt="Vanji Decorators" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
+      <div>
+        <div class="flex items-center gap-1.5">
+          <h1 class="text-sm font-black tracking-wider uppercase text-amber-400">VANJI</h1>
+          <span class="text-[9px] bg-amber-950 text-amber-200 border border-amber-800 px-1.5 py-0.5 rounded font-mono font-bold" id="active-event-badge">NO EVENT ACTIVE</span>
+        </div>
+        <p class="text-[9px] text-slate-400">AI Spatial Designer & Operations Control</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button onclick="openBackupModal()" class="bg-zinc-800 hover:bg-zinc-700 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-zinc-700 shadow font-semibold">💾 Data</button>
+      <button onclick="createNewEventFlow()" class="bg-amber-700 hover:bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold shadow">+ New Event</button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION -->
+  <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
+    <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950">🏠 Dashboard</button>
+    <button onclick="navTo('events')" id="pnav-events" class="py-2.5 px-3 border-b-2 border-transparent">📁 Events</button>
+    <button onclick="navTo('workspace')" id="pnav-workspace" class="py-2.5 px-3 border-b-2 border-transparent text-indigo-900">⚡ Active Workspace</button>
+    <button onclick="navTo('design')" id="pnav-design" class="py-2.5 px-3 border-b-2 border-transparent text-amber-900 font-extrabold flex items-center gap-1">
+      <span>🤖 AI Studio</span>
+    </button>
+    <button onclick="navTo('pricebook')" id="pnav-pricebook" class="py-2.5 px-3 border-b-2 border-transparent">💰 Price Book</button>
+    <button onclick="navTo('inventory')" id="pnav-inventory" class="py-2.5 px-3 border-b-2 border-transparent">📦 Inventory</button>
+    <button onclick="navTo('team')" id="pnav-team" class="py-2.5 px-3 border-b-2 border-transparent">👷 Team</button>
+    <button onclick="navTo('settings')" id="pnav-settings" class="py-2.5 px-3 border-b-2 border-transparent">⚙️ Settings</button>
+  </nav>
+
+  <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
+
+    <!-- 1. DASHBOARD -->
+    <section id="page-dashboard" class="space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400">Total Bookings</span>
+          <p class="text-xl font-black text-slate-900" id="dash-total-events">0</p>
+          <span class="text-[9px] text-amber-700 font-bold" id="dash-confirmed-events">0 Confirmed</span>
+        </div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400">Contract Pipeline</span>
+          <p class="text-xl font-black text-amber-700" id="dash-total-contract">₹0</p>
+          <span class="text-[9px] text-slate-400">Selling Value</span>
+        </div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400">Production Outflow</span>
+          <p class="text-xl font-black text-slate-700" id="dash-total-outflow">₹0</p>
+          <span class="text-[9px] text-slate-400">Internal Cost</span>
+        </div>
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400">Expected Profit</span>
+          <p class="text-xl font-black text-emerald-600" id="dash-total-profit">₹0</p>
+          <span class="text-[9px] text-emerald-700 font-bold" id="dash-profit-margin">0.0% Margin</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Upcoming Pipeline</h2>
+        <div id="dash-upcoming-container" class="space-y-2 text-xs"></div>
+      </div>
+    </section>
+
+    <!-- 2. EVENTS MASTER LIST -->
+    <section id="page-events" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Event Register</h2>
+          <button onclick="createNewEventFlow()" class="bg-black text-amber-400 border border-amber-800 text-xs px-3 py-1.5 rounded-lg font-bold">+ Create Event</button>
+        </div>
+        <input id="events-search-filter" oninput="renderEventsList()" type="text" placeholder="Search by client, venue, or event ID..." class="w-full text-xs p-2.5 border rounded-lg outline-none focus:ring-1 focus:ring-amber-500">
+        <div id="events-master-list" class="divide-y divide-slate-100 text-xs space-y-2"></div>
+      </div>
+    </section>
+
+    <!-- 3. AI STUDIO -->
+    <section id="page-design" class="hidden space-y-4">
+      <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji Virtual AI Decoration Designer</h2>
+            <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-mono" id="ai-active-event-tag">LINKED TO ACTIVE EVENT</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-0.5">Analyses venue photos, checks price book inventory, and creates feasible execution scopes.</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">1. Venue Upload & Architectural Dimensions</h3>
+          <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">Multimodal Spatial Lock</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="space-y-2">
+            <label class="block text-slate-500 font-semibold">Venue Photo (Stage / Hall / Entrance)</label>
+            <input id="ai-venue-upload" type="file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-slate-100 file:font-semibold" onchange="handleVenuePhotoSelected(event)">
+            <div id="ai-venue-preview-box" class="hidden relative rounded-lg border overflow-hidden">
+              <img id="ai-venue-preview-img" class="h-44 w-full object-cover">
+              <button onclick="clearVenuePhoto()" class="absolute top-2 right-2 bg-black/70 text-white rounded px-2 py-0.5 text-[10px] font-bold">Clear</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">Stage Width (ft)</label>
+              <input id="ai-dim-width" type="number" value="40" class="w-full border rounded p-1.5 font-bold">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">Stage Depth (ft)</label>
+              <input id="ai-dim-depth" type="number" value="12" class="w-full border rounded p-1.5 font-bold">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">Ceiling Height (ft)</label>
+              <input id="ai-dim-height" type="number" value="18" class="w-full border rounded p-1.5 font-bold">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">Walkway Length (ft)</label>
+              <input id="ai-dim-walkway" type="number" value="30" class="w-full border rounded p-1.5 font-bold">
+            </div>
+            <div class="col-span-2">
+              <button onclick="runVenueSpatialAnalysis()" id="btn-analyse-venue" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 rounded border flex items-center justify-center gap-1">
+                <span>🏛️ Analyse Venue & Detect Architectural Constraints</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="ai-venue-analysis-result" class="hidden p-3 bg-slate-50 border rounded-lg space-y-2 text-[11px]">
+          <div class="flex justify-between items-center font-bold text-slate-800">
+            <span>Architectural Venue Breakdown</span>
+            <button onclick="document.getElementById('ai-venue-analysis-result').classList.add('hidden')" class="text-slate-400">✕</button>
+          </div>
+          <div id="ai-analysis-text" class="text-slate-700 leading-relaxed"></div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">2. Event Theme, Palette & Budget Envelope</h3>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-0.5">Event Type</label>
+            <select id="ai-event-occasion" class="w-full border rounded p-1.5 font-semibold bg-slate-50">
+              <option value="Nikah / Muslim Wedding">Nikah</option>
+              <option value="Grand Reception">Reception</option>
+              <option value="Walima">Walima</option>
+              <option value="Sangeet / Musical Night">Sangeet</option>
+              <option value="Traditional Hindu Wedding">Traditional Wedding</option>
+              <option value="Mehendi / Haldi Ceremony">Mehendi / Haldi</option>
+              <option value="Corporate Gala / Stage">Corporate</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-0.5">Design Style</label>
+            <select id="ai-design-style" class="w-full border rounded p-1.5 font-semibold bg-slate-50">
+              <option value="Royal Luxury with Drapes & Gold">Royal Luxury</option>
+              <option value="Modern Minimalist Floral Pastel">Modern Minimalist</option>
+              <option value="Grand Traditional Floral & Brass">Traditional Floral</option>
+              <option value="Truss, Neon & Ambient Stage Lighting">Contemporary Lighting</option>
+              <option value="Outdoor Canopy with Fairy Lights">Garden Canopy</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-0.5">Colour Palette</label>
+            <input id="ai-palette-input" type="text" value="Royal Blue, Ivory White & Warm Gold" class="w-full border rounded p-1.5 font-semibold">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-0.5">Client Budget Target (₹)</label>
+            <input id="ai-budget-target" type="number" value="200000" class="w-full border rounded p-1.5 font-bold text-emerald-700">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 text-[10px] mb-0.5">Specific Client Preferences / Custom Directives</label>
+          <input id="ai-custom-directive" type="text" placeholder="e.g. 40ft central floral arch, double curved rings, Maharaja sofa, warm stage wash, no red roses..." class="w-full border rounded p-1.5">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+          <button onclick="synthesizeCompleteAiDecorPlan()" id="btn-run-full-ai" class="bg-black hover:bg-zinc-800 text-amber-400 border border-amber-800 font-bold py-2.5 rounded-lg text-xs shadow flex items-center justify-center gap-1.5">
+            <span>✨ Synthesize Complete Decoration & Production Plan</span>
+          </button>
+          <button onclick="generateAlternativeVariations()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold py-2.5 rounded-lg text-xs shadow">
+            🔄 Generate 3 Budget Alternatives (₹1L / ₹2L / ₹3L)
+          </button>
+        </div>
+      </div>
+
+      <div id="ai-plan-output-card" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4 text-xs">
+        <div class="flex justify-between items-center border-b pb-2">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Generated Architectural Proposal</span>
+            <h3 class="text-sm font-black text-slate-900" id="ai-plan-title">Proposal</h3>
+          </div>
+          <div class="flex gap-1">
+            <button onclick="toggleDayNightPreview('day')" id="btn-day-toggle" class="bg-slate-200 text-slate-800 px-2 py-1 rounded text-[10px] font-bold">☀️ Daylight</button>
+            <button onclick="toggleDayNightPreview('night')" id="btn-night-toggle" class="bg-indigo-950 text-amber-400 px-2 py-1 rounded text-[10px] font-bold">🌙 Evening Wash</button>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-lg space-y-1">
+          <span class="font-bold text-amber-950 block">Design Narrative & Spatial Fit:</span>
+          <p class="text-[11px] text-slate-700 leading-relaxed" id="ai-plan-narrative"></p>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold uppercase text-slate-400 block">Quick Concept Refinements:</span>
+          <div class="flex flex-wrap gap-1 text-[10px]">
+            <button onclick="applyAiRefinement('Increase floral density and use cascade arrangements')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border">+ More Flowers</button>
+            <button onclick="applyAiRefinement('Simplify floral volume to keep budget strictly minimal')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border">- Less Flowers</button>
+            <button onclick="applyAiRefinement('Change dominant color to Sage Green and Ivory White')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border">🎨 Sage Green & Ivory</button>
+            <button onclick="applyAiRefinement('Add grand crystal chandeliers and gold acrylic mirror walkway')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border">💎 Add Chandeliers</button>
+            <button onclick="applyAiRefinement('Maximize VIP Maharaja sofa luxury and add ambient candelabras')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border">👑 Royal VIP Accent</button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">Estimated Production Breakdown (From Price Book)</span>
+            <span class="font-black text-indigo-950" id="ai-plan-cost-summary">Est. Cost: ₹0</span>
+          </div>
+          <table class="w-full text-left border-collapse text-xs border">
+            <thead>
+              <tr class="bg-black text-amber-400 text-[10px]">
+                <th class="p-1.5 border">Item Name</th>
+                <th class="p-1.5 text-center w-16 border">Qty</th>
+                <th class="p-1.5 text-center w-16 border">Unit</th>
+                <th class="p-1.5 text-right w-24 border">Selling Rate</th>
+                <th class="p-1.5 text-right w-24 border">Total ₹</th>
+              </tr>
+            </thead>
+            <tbody id="ai-plan-items-tbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 border-t pt-3">
+          <button onclick="pushAiScopeToActiveEvent()" class="bg-amber-700 hover:bg-amber-600 text-white font-bold py-2 rounded text-xs shadow">
+            📦 Add Materials to Scope & Stock
+          </button>
+          <button onclick="pushAiQuoteToActiveEvent()" class="bg-indigo-950 hover:bg-indigo-900 text-amber-300 font-bold py-2 rounded text-xs shadow">
+            📝 Push Estimate to Client Quotation
+          </button>
+          <button onclick="pushAiScheduleToActiveEvent()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2 rounded text-xs shadow">
+            🏗️ Push Setup Sequence to Schedule
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ACTIVE WORKSPACE -->
+    <section id="page-workspace" class="hidden space-y-4">
+      <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-base font-black text-amber-400" id="ws-event-name">Select an Event</h2>
+            <span class="text-[10px] bg-amber-950 text-amber-300 border border-amber-700 px-1.5 py-0.5 rounded font-mono font-bold" id="ws-event-id">-</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-0.5" id="ws-event-subtitle">Venue: - | Date: -</p>
+        </div>
+        <div class="flex gap-1.5">
+          <button onclick="cloneCurrentEvent()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-zinc-700 text-[11px] px-2.5 py-1 rounded font-semibold">📋 Clone</button>
+          <button onclick="saveActiveEventToStore()" class="bg-amber-700 hover:bg-amber-600 text-white text-[11px] px-3 py-1 rounded font-bold">Save</button>
+        </div>
+      </div>
+
+      <nav class="bg-white border-b border-slate-200 sticky top-[95px] z-30 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 shadow-sm rounded-lg p-1">
+        <button onclick="switchWsTab('overview')" id="wstab-overview" class="py-1.5 px-2.5 rounded bg-amber-100 text-amber-950">Overview</button>
+        <button onclick="switchWsTab('quotation')" id="wstab-quotation" class="py-1.5 px-2.5 rounded">Quotation</button>
+        <button onclick="switchWsTab('scope')" id="wstab-scope" class="py-1.5 px-2.5 rounded">Scope & Stock</button>
+        <button onclick="switchWsTab('costing')" id="wstab-costing" class="py-1.5 px-2.5 rounded">Internal Cost</button>
+        <button onclick="switchWsTab('flowers')" id="wstab-flowers" class="py-1.5 px-2.5 rounded">Flowers</button>
+        <button onclick="switchWsTab('schedule')" id="wstab-schedule" class="py-1.5 px-2.5 rounded">Schedule</button>
+        <button onclick="switchWsTab('checklist')" id="wstab-checklist" class="py-1.5 px-2.5 rounded">Checklist</button>
+        <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
+      </nav>
+
+      <!-- OVERVIEW -->
+      <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label>
+            <input id="inp-client-name" type="text" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Mobile / WhatsApp Number *</label>
+            <input id="inp-client-phone" type="tel" class="w-full border rounded p-2" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Event Date *</label>
+            <input id="inp-event-date" type="date" class="w-full border rounded p-2" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Venue & Location *</label>
+            <input id="inp-venue" type="text" class="w-full border rounded p-2 font-semibold" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Lifecycle Status</label>
+            <select id="inp-event-status" class="w-full border rounded p-2 font-bold bg-slate-50" onchange="markUnsaved()">
+              <option value="Inquiry">1. Inquiry</option>
+              <option value="Hold">2. Hold</option>
+              <option value="Quotation Sent">3. Quotation Sent</option>
+              <option value="Confirmed">4. Confirmed</option>
+              <option value="Planning">5. Planning</option>
+              <option value="Material Procurement">6. Material Procurement</option>
+              <option value="Production">7. Production</option>
+              <option value="Loading">8. Loading</option>
+              <option value="Setup">9. Setup</option>
+              <option value="Event Live">10. Event Live</option>
+              <option value="Teardown">11. Teardown</option>
+              <option value="Completed">12. Completed</option>
+              <option value="Cancelled">13. Cancelled</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] mb-1">Event Type</label>
+            <input id="inp-event-type" type="text" class="w-full border rounded p-2" oninput="markUnsaved()">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 text-[10px] mb-1">Operational & Client Notes</label>
+          <textarea id="inp-event-notes" rows="3" class="w-full border rounded p-2" placeholder="Venue timings, structural rules, etc." oninput="markUnsaved()"></textarea>
+        </div>
+      </div>
+
+      <!-- QUOTATION -->
+      <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Client Quotation</h3>
+          <div class="flex gap-1.5">
+            <button onclick="openPriceBookPicker('quotation')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border border-amber-300 text-[11px]">+ From Price Book</button>
+            <button onclick="addCustomQuotationRow()" class="bg-slate-100 text-slate-700 font-bold px-2 py-1 rounded border text-[11px]">+ Add Line</button>
+          </div>
+        </div>
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b text-[11px]">
+              <th class="pb-1">Description</th>
+              <th class="pb-1 text-center w-16">Qty</th>
+              <th class="pb-1 text-center w-16">Unit</th>
+              <th class="pb-1 text-right w-24">Rate</th>
+              <th class="pb-1 text-right w-24">Amount</th>
+              <th class="pb-1 text-center w-8"></th>
+            </tr>
+          </thead>
+          <tbody id="ws-quote-items-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+        <div class="flex justify-end pt-2 border-t">
+          <div class="w-64 space-y-1 text-xs">
+            <div class="flex justify-between"><span class="text-slate-500">Transport:</span><input id="ws-quote-transport" type="number" value="0" class="w-24 text-right border rounded p-1" oninput="recalcQuotation()"></div>
+            <div class="flex justify-between"><span class="text-slate-500">Labour:</span><input id="ws-quote-labour" type="number" value="0" class="w-24 text-right border rounded p-1" oninput="recalcQuotation()"></div>
+            <div class="flex justify-between"><span class="text-slate-500">Discount:</span><input id="ws-quote-discount" type="number" value="0" class="w-24 text-right border rounded p-1 text-rose-600 font-semibold" oninput="recalcQuotation()"></div>
+            <div class="flex justify-between font-black text-sm border-t pt-1 text-indigo-950">
+              <span>Final Quotation:</span><span id="ws-quote-grand">₹0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCOPE -->
+      <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Production Scope & Stock Audit</h3>
+          <div class="flex gap-1.5">
+            <button onclick="openPriceBookPicker('scope')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border border-amber-300 text-[11px]">+ From Price Book</button>
+            <button onclick="addCustomScopeRow()" class="bg-slate-100 text-slate-700 font-bold px-2 py-1 rounded border text-[11px]">+ Add Item</button>
+          </div>
+        </div>
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b text-[10px]">
+              <th class="pb-1">Item Name</th>
+              <th class="pb-1 text-center w-14">Required</th>
+              <th class="pb-1 text-center w-14">Loaded</th>
+              <th class="pb-1 text-center w-14">Returned</th>
+              <th class="pb-1 text-center w-14 text-rose-600">Damaged</th>
+              <th class="pb-1 text-center w-12">Unit</th>
+              <th class="pb-1 text-center w-6"></th>
+            </tr>
+          </thead>
+          <tbody id="ws-scope-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+
+      <!-- INTERNAL COSTING -->
+      <div id="ws-tab-costing" class="hidden space-y-3 text-xs">
+        <div class="bg-black text-white p-4 rounded-xl shadow border border-amber-900/60 flex justify-between items-center">
+          <div><span class="text-[10px] text-slate-400 uppercase font-bold">Contract Value</span><p class="text-xl font-black text-amber-400" id="ws-cost-rev">₹0</p></div>
+          <div><span class="text-[10px] text-slate-400 uppercase font-bold">Total Cost</span><p class="text-xl font-black text-slate-200" id="ws-cost-total">₹0</p></div>
+          <div class="text-right"><span class="text-[10px] text-slate-400 uppercase font-bold">Expected Profit</span><p class="text-xl font-black text-emerald-400" id="ws-cost-profit">₹0</p><span class="text-[10px] text-emerald-300 font-bold" id="ws-cost-margin">0.0%</span></div>
+        </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div><label class="block text-slate-400 text-[10px]">Fabric</label><input id="c-fabric" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Flex</label><input id="c-flex" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Truss Frame</label><input id="c-frame" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Rentals</label><input id="c-rentals" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Generator</label><input id="c-generator" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+          <div><label class="block text-slate-400 text-[10px]">Sound / DJ</label><input id="c-sound" type="number" value="0" class="w-full border rounded p-1" oninput="recalcInternalCosting()"></div>
+        </div>
+      </div>
+
+      <!-- FLOWERS -->
+      <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Procurement</h3>
+          <button onclick="addFlowerRow()" class="bg-amber-100 text-amber-900 font-bold px-2 py-1 rounded border border-amber-300 text-[11px]">+ Add Flower</button>
+        </div>
+        <div id="ws-flowers-container" class="space-y-1.5"></div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px] border-b pb-1">Milestone Timetable</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><label class="block text-slate-500 font-semibold mb-1">Truck Dispatch</label><input id="s-dispatch" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
+          <div><label class="block text-slate-500 font-semibold mb-1">Setup Starts</label><input id="s-setup" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
+          <div><label class="block text-slate-500 font-semibold mb-1">Event Commences</label><input id="s-event" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
+          <div><label class="block text-slate-500 font-semibold mb-1">Teardown Starts</label><input id="s-teardown" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
+      </div>
+
+      <!-- PRINT DOCS -->
+      <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Print Client Quotation</button>
+          <button onclick="openPrintModal('jobsheet')" class="p-3 bg-black text-amber-400 font-bold rounded shadow">2. Print Production Job Sheet</button>
+          <button onclick="openPrintModal('warehouse')" class="p-3 bg-amber-700 text-white font-bold rounded shadow">3. Print Loading Sheet</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MASTER PRICE BOOK -->
+    <section id="page-pricebook" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Master Price Book</h2>
+          <button onclick="openPriceBookEditModal()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border border-amber-800 text-xs">+ New Item</button>
+        </div>
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b text-[11px]">
+              <th class="pb-1">Item Name</th>
+              <th class="pb-1">Category</th>
+              <th class="pb-1 text-center w-14">Unit</th>
+              <th class="pb-1 text-right w-20 text-indigo-900 font-bold">Selling ₹</th>
+              <th class="pb-1 text-right w-20 text-slate-600">Internal ₹</th>
+              <th class="pb-1 text-center w-12"></th>
+            </tr>
+          </thead>
+          <tbody id="pricebook-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. INVENTORY -->
+    <section id="page-inventory" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Warehouse Stock Register</h2>
+          <button onclick="openInventoryAddModal()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border border-amber-800 text-xs">+ Add Stock Item</button>
+        </div>
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b text-[11px]">
+              <th class="pb-1">Item Name</th>
+              <th class="pb-1 text-center w-24">Total Stock</th>
+              <th class="pb-1 text-center w-32">Location</th>
+              <th class="pb-1 text-center w-12"></th>
+            </tr>
+          </thead>
+          <tbody id="inventory-master-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. TEAM -->
+    <section id="page-team" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Crew Directory</h2>
+          <button onclick="openTeamAddModal()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border border-amber-800 text-xs">+ Add Crew Member</button>
+        </div>
+        <div id="team-cards-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+      </div>
+    </section>
+
+    <!-- 8. SETTINGS -->
+    <section id="page-settings" class="hidden space-y-4 text-xs">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Settings & Gemini API Credentials</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><label class="block text-slate-400 text-[10px] mb-1">Company Name</label><input id="set-name" type="text" class="w-full border rounded p-1.5 font-bold"></div>
+          <div><label class="block text-slate-400 text-[10px] mb-1">Google Gemini API Key</label><input id="set-aikey" type="password" class="w-full border rounded p-1.5"></div>
+        </div>
+        <button onclick="saveAppSettings()" class="bg-amber-700 text-white font-bold py-1.5 px-3 rounded">Save Settings</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PICKER MODAL -->
+  <div id="modal-pb-picker" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
+    <div class="bg-white w-full max-w-lg rounded-xl p-4 space-y-3 text-xs shadow-2xl max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-slate-900">Select Item from Master Price Book</h3>
+        <button onclick="closePriceBookPicker()" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+      <input id="picker-search-filter" oninput="renderPriceBookPickerList()" type="text" placeholder="Filter items..." class="w-full border rounded p-2 text-xs">
+      <div id="picker-items-list" class="overflow-y-auto divide-y divide-slate-100 flex-grow max-h-80"></div>
+    </div>
+  </div>
+
+  <!-- PRINT MODAL -->
+  <div id="modal-print-hub" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-3xl rounded-xl shadow-2xl p-6 sm:p-8 relative max-h-[95vh] overflow-y-auto">
+      <button onclick="document.getElementById('modal-print-hub').classList.add('hidden')" class="no-print absolute top-3 right-3 text-slate-400 text-lg font-bold">✕</button>
+      <div id="print-sheet-content" class="print-page space-y-4 text-slate-800"></div>
+      <div class="mt-4 no-print border-t pt-2">
+        <button onclick="window.print()" class="w-full bg-black text-amber-400 font-bold py-2 rounded text-xs">Print A4 Document</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKUP MODAL -->
+  <div id="modal-backup" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
+    <div class="bg-white w-full max-w-sm rounded-xl p-5 space-y-3 text-xs shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-2"><h2 class="text-sm font-bold">Backup & Restore</h2><button onclick="document.getElementById('modal-backup').classList.add('hidden')">✕</button></div>
+      <button onclick="exportFullBackup()" class="w-full bg-black text-amber-400 font-bold py-2 rounded">Export All Data (.json)</button>
+      <input type="file" accept=".json" onchange="importFullBackup(event)" class="w-full text-xs pt-2">
+    </div>
+  </div>
+
+  <script>
+    let db;
+    let activeEvent = null;
+    let isDirty = false;
+    let uploadedVenueBase64 = null;
+    let currentGeneratedPlan = null;
+    let targetPickerMode = 'quotation';
+
+    const checklistStages = [
+      { id: 'chk_des', label: 'Design Approved with Client' },
+      { id: 'chk_flw', label: 'Flowers Purchased & Dispatched' },
+      { id: 'chk_flx', label: 'Flex Printing Inspected' },
+      { id: 'chk_frm', label: 'Truss / Iron Frame Sized' },
+      { id: 'chk_fur', label: 'Furniture Count Verified' },
+      { id: 'chk_lgt', label: 'Stage Lights Tested' },
+      { id: 'chk_gen', label: 'Generator Arranged' },
+      { id: 'chk_lod', label: 'Truck Loading Audited' },
+      { id: 'chk_stp', label: 'Setup Completed' },
+      { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
+    ];
+
+    async function initApp() {
+      await openDatabase();
+      await seedDefaults();
+      renderChecklistGrid();
+      await renderEventsList();
+      await renderPriceBookTable();
+      await renderInventoryMaster();
+      await renderTeamCards();
+      await updateDashboard();
+      await loadAppSettings();
+    }
+
+    function openDatabase() {
+      return new Promise((res, rej) => {
+        const req = indexedDB.open('VanjiDecoratorsDB', 2);
+        req.onupgradeneeded = (e) => {
+          db = e.target.result;
+          ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
+            if (!db.objectStoreNames.contains(s)) db.createObjectStore(s, { keyPath: s === 'settings' ? 'key' : 'id' });
+          });
+        };
+        req.onsuccess = (e) => { db = e.target.result; res(db); };
+        req.onerror = rej;
+      });
+    }
+
+    function dbPut(s, v) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).put(v); tx.oncomplete = res; tx.onerror = rej; }); }
+    function dbGetAll(s) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).getAll(); r.onsuccess = () => res(r.result || []); }); }
+    function dbGet(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).get(k); r.onsuccess = () => res(r.result); }); }
+    function dbDelete(s, k) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).delete(k); tx.oncomplete = res; tx.onerror = rej; }); }
+
+    async function seedDefaults() {
+      const pbs = await dbGetAll('pricebook');
+      if (pbs.length === 0) {
+        const defs = [
+          { id: 'pb_1', name: 'Chiavari Chair with Cushion', category: 'Furniture', unit: 'Nos', selling: 100, internal: 60 },
+          { id: 'pb_2', name: 'Maharaja VIP Double Sofa', category: 'Furniture', unit: 'Nos', selling: 2500, internal: 1500 },
+          { id: 'pb_3', name: 'Stage Floral Decoration Backdrop', category: 'Decoration', unit: 'Rnft', selling: 800, internal: 450 },
+          { id: 'pb_4', name: 'Warm LED Par Stage Lights (Set of 8)', category: 'Lighting', unit: 'Set', selling: 3200, internal: 1800 },
+          { id: 'pb_5', name: 'Peach Roses (Mandi Bunches)', category: 'Flowers', unit: 'Bunch', selling: 250, internal: 180 }
+        ];
+        for (const it of defs) await dbPut('pricebook', it);
+      }
+    }
+
+    function navTo(p) {
+      ['dashboard', 'events', 'workspace', 'design', 'pricebook', 'inventory', 'team', 'settings'].forEach(id => {
+        document.getElementById(`page-${id}`).classList.add('hidden');
+        document.getElementById(`pnav-${id}`).className = 'py-2.5 px-3 border-b-2 border-transparent';
+      });
+      document.getElementById(`page-${p}`).classList.remove('hidden');
+      document.getElementById(`pnav-${p}`).className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
+      if (p === 'dashboard') updateDashboard();
+    }
+
+    function switchWsTab(t) {
+      ['overview', 'quotation', 'scope', 'costing', 'flowers', 'schedule', 'checklist', 'printdocs'].forEach(id => {
+        document.getElementById(`ws-tab-${id}`).classList.add('hidden');
+        document.getElementById(`wstab-${id}`).className = 'py-1.5 px-2.5 rounded text-slate-600';
+      });
+      document.getElementById(`ws-tab-${t}`).classList.remove('hidden');
+      document.getElementById(`wstab-${t}`).className = 'py-1.5 px-2.5 rounded bg-amber-100 text-amber-950 font-bold';
+    }
+
+    function markUnsaved() { isDirty = true; }
+
+    function handleVenuePhotoSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        uploadedVenueBase64 = ev.target.result;
+        document.getElementById('ai-venue-preview-img').src = uploadedVenueBase64;
+        document.getElementById('ai-venue-preview-box').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearVenuePhoto() {
+      uploadedVenueBase64 = null;
+      document.getElementById('ai-venue-preview-box').classList.add('hidden');
+      document.getElementById('ai-venue-upload').value = '';
+    }
+
+    async function runVenueSpatialAnalysis() {
+      const apiKey = getApiKey();
+      const w = document.getElementById('ai-dim-width').value;
+      const h = document.getElementById('ai-dim-height').value;
+      const d = document.getElementById('ai-dim-depth').value;
+
+      const btn = document.getElementById('btn-analyse-venue');
+      btn.innerText = 'Analysing Venue Architecture...';
+      btn.disabled = true;
+
+      const promptText = `Act as an expert Indian wedding and event architectural decorator. Analyze a venue space with dimensions: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural constraints, recommended backdrop framing, and elements to avoid. Keep concise and bulleted.`;
+
+      try {
+        if (apiKey) {
+          const parts = [{ text: promptText }];
+          if (uploadedVenueBase64) {
+            const base64Data = uploadedVenueBase64.split(',')[1];
+            parts.unshift({
+              inlineData: { mimeType: "image/jpeg", data: base64Data }
+            });
+          }
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts }] })
+          });
+          const data = await res.json();
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          displayVenueAnalysis(reply || 'Could not parse response.');
+        } else {
+          displayVenueAnalysis(
+            `• **Spatial Fit (${w}W × ${h}H ft):** Ceiling clearance is sufficient for an 8-ft elevated truss ring. Leave 3 ft on lateral sides for LED profile lights.\n` +
+            `• **Structure Recommendation:** Use double box-iron framing. Center stage requires a 6-ft clearance depth for sofa placement.\n` +
+            `• **Avoid:** Hanging heavy fresh floral arches without anchor counterweights.`
+          );
+        }
+      } catch (err) {
+        displayVenueAnalysis(`• **Standard Recommendation for ${w}x${h} ft:** Center 32ft floral arch, 8-ft lateral drape margins, 8 LED stage PARs.`);
+      } finally {
+        btn.innerText = '🏛️ Analyse Venue & Detect Architectural Constraints';
+        btn.disabled = false;
+      }
+    }
+
+    function displayVenueAnalysis(text) {
+      const box = document.getElementById('ai-venue-analysis-result');
+      document.getElementById('ai-analysis-text').innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      box.classList.remove('hidden');
+    }
+
+    async function synthesizeCompleteAiDecorPlan(refinement = '') {
+      const apiKey = getApiKey();
+      const w = document.getElementById('ai-dim-width').value;
+      const h = document.getElementById('ai-dim-height').value;
+      const d = document.getElementById('ai-dim-depth').value;
+      const occasion = document.getElementById('ai-event-occasion').value;
+      const style = document.getElementById('ai-design-style').value;
+      const palette = document.getElementById('ai-palette-input').value;
+      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
+      const customNotes = document.getElementById('ai-custom-directive').value;
+
+      const pbItems = await dbGetAll('pricebook');
+      const pbSummary = pbItems.map(it => `${it.name} (${it.category}, ${it.unit}): ₹${it.selling}`).join(', ');
+
+      const btn = document.getElementById('btn-run-full-ai');
+      btn.innerText = '✨ Synthesizing Feasible Proposal...';
+      btn.disabled = true;
+
+      const promptText = `You are lead production designer for Vanji Decorators. Create an executable event decor plan.
+      - Event: ${occasion} | Style: ${style} | Palette: ${palette}
+      - Space: ${w} ft Width x ${h} ft Height x ${d} ft Depth
+      - Target Budget: ₹${budget.toLocaleString()}
+      - Directives: ${customNotes} ${refinement ? `| Additional Refinement: ${refinement}` : ''}
+      - Available Price Book Catalog: ${pbSummary}
+
+      Return response STRICTLY as valid JSON without markdown wrapping:
+      {
+        "title": "Concept Name",
+        "narrative": "3-4 sentences describing visual concept and spatial fit.",
+        "materials": [
+          { "name": "Item Description", "qty": 10, "unit": "Nos", "rate": 100 }
+        ],
+        "setupPlan": [
+          "Day 1: Structural iron truss erection",
+          "Day 2: Flower fixing and lighting"
+        ]
+      }`;
+
+      try {
+        let resultJson = null;
+        if (apiKey) {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+          });
+          const data = await res.json();
+          let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+          raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+          resultJson = JSON.parse(raw);
+        } else {
+          resultJson = {
+            title: `${style} — ${occasion}`,
+            narrative: `Designed for a ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope. Uses ${palette} drapery anchored by balanced floral arches and warm stage wash illumination.`,
+            materials: [
+              { name: "Stage Floral Decoration Backdrop", qty: parseInt(w), unit: "Rnft", rate: 800 },
+              { name: "Maharaja VIP Double Sofa", qty: 2, unit: "Nos", rate: 2500 },
+              { name: "Warm LED Par Stage Lights (Set of 8)", qty: 2, unit: "Set", rate: 3200 },
+              { name: "Chiavari Chair with Cushion", qty: 100, unit: "Nos", rate: 100 }
+            ],
+            setupPlan: [
+              "Day 1: Erect 40ft truss structure and stretch ivory poly-satin backdrop drapes",
+              "Day 2: Fresh floral cascade fixing, stage wash lighting focus, and VIP sofa placement"
+            ]
+          };
+        }
+
+        currentGeneratedPlan = resultJson;
+        renderGeneratedPlan(resultJson);
+      } catch (err) {
+        alert('Could not synthesize AI plan. Please verify API key.');
+      } finally {
+        btn.innerText = '✨ Synthesize Complete Decoration & Production Plan';
+        btn.disabled = false;
+      }
+    }
+
+    function renderGeneratedPlan(plan) {
+      document.getElementById('ai-plan-title').innerText = plan.title || 'Custom Decor Proposal';
+      document.getElementById('ai-plan-narrative').innerText = plan.narrative || '';
+
+      const tbody = document.getElementById('ai-plan-items-tbody');
+      let total = 0;
+      tbody.innerHTML = (plan.materials || []).map(m => {
+        const lineTotal = (m.qty || 1) * (m.rate || 0);
+        total += lineTotal;
+        return `
+          <tr>
+            <td class="p-1.5 border font-semibold">${m.name}</td>
+            <td class="p-1.5 border text-center">${m.qty}</td>
+            <td class="p-1.5 border text-center text-slate-500">${m.unit}</td>
+            <td class="p-1.5 border text-right">₹${m.rate.toLocaleString()}</td>
+            <td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
+      document.getElementById('ai-plan-output-card').classList.remove('hidden');
+    }
+
+    function applyAiRefinement(directive) { synthesizeCompleteAiDecorPlan(directive); }
+    function generateAlternativeVariations() {
+      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
+      document.getElementById('ai-custom-directive').value = `Design 3 tier variations matching ₹${(budget*0.6).toFixed(0)}, ₹${budget.toFixed(0)}, and ₹${(budget*1.4).toFixed(0)}`;
+      synthesizeCompleteAiDecorPlan();
+    }
+
+    function toggleDayNightPreview(mode) {
+      const narrative = document.getElementById('ai-plan-narrative');
+      if (mode === 'night') {
+        narrative.innerText = (narrative.innerText.replace(/☀️.*?\n/, '')) + "\n🌙 Night Mode: Highlighting warm 3200K amber stage wash, silhouette floral back-glow, and focused beam profiling.";
+      } else {
+        narrative.innerText = narrative.innerText.replace(/\n🌙.*/, '');
+      }
+    }
+
+    function pushAiScopeToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
+      currentGeneratedPlan.materials.forEach(m => {
+        activeEvent.scopeItems.push({ name: m.name, req: m.qty, loaded: 0, ret: 0, dam: 0, unit: m.unit });
+      });
+      alert('Materials pushed to Production Scope!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('scope');
+    }
+
+    function pushAiQuoteToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
+      currentGeneratedPlan.materials.forEach(m => {
+        activeEvent.quoteItems.push({ name: m.name, qty: m.qty, unit: m.unit, rate: m.rate });
+      });
+      alert('Estimate pushed to Client Quotation Sheet!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('quotation');
+    }
+
+    function pushAiScheduleToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.setupPlan) return;
+      activeEvent.notes = (activeEvent.notes || '') + "\n--- AI Setup Sequence ---\n" + currentGeneratedPlan.setupPlan.join("\n");
+      alert('Setup sequence appended to Event Notes!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    async function createNewEventFlow() {
+      const year = new Date().getFullYear();
+      const allEvents = await dbGetAll('events');
+      let maxSeq = 0;
+      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
+      allEvents.forEach(e => {
+        const m = (e.id || '').match(regex);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxSeq) maxSeq = num;
+        }
+      });
+      const newId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+
+      activeEvent = {
+        id: newId,
+        client: '',
+        phone: '',
+        date: '',
+        venue: '',
+        status: 'Confirmed',
+        type: 'Wedding',
+        notes: '',
+        quoteItems: [],
+        quoteTransport: 0,
+        quoteLabour: 0,
+        quoteDiscount: 0,
+        quoteGrand: 0,
+        scopeItems: [],
+        costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, timber: 0, consumables: 0, vendors: 0, labourMen: 6, labourRate: 1200, labourDays: 2, masters: 0, hamali: 0, trips: 2, tripRate: 4500 },
+        flowers: [],
+        schedule: { dispatch: '', setup: '', event: '', teardown: '', handover: '', sup: '', driver: '', florist: '', elec: '' },
+        checklists: {}
+      };
+
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    function loadActiveEventIntoUI() {
+      if (!activeEvent) return;
+      document.getElementById('active-event-badge').innerText = activeEvent.id;
+      document.getElementById('ws-event-id').innerText = activeEvent.id;
+      document.getElementById('ws-event-name').innerText = activeEvent.client || 'Untitled Event';
+      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
+
+      document.getElementById('inp-client-name').value = activeEvent.client || '';
+      document.getElementById('inp-client-phone').value = activeEvent.phone || '';
+      document.getElementById('inp-event-date').value = activeEvent.date || '';
+      document.getElementById('inp-venue').value = activeEvent.venue || '';
+      document.getElementById('inp-event-status').value = activeEvent.status || 'Confirmed';
+      document.getElementById('inp-event-type').value = activeEvent.type || '';
+      document.getElementById('inp-event-notes').value = activeEvent.notes || '';
+
+      document.getElementById('ws-quote-transport').value = activeEvent.quoteTransport || 0;
+      document.getElementById('ws-quote-labour').value = activeEvent.quoteLabour || 0;
+      document.getElementById('ws-quote-discount').value = activeEvent.quoteDiscount || 0;
+
+      const c = activeEvent.costs || {};
+      document.getElementById('c-fabric').value = c.fabric || 0;
+      document.getElementById('c-flex').value = c.flex || 0;
+      document.getElementById('c-frame').value = c.frame || 0;
+      document.getElementById('c-rentals').value = c.rentals || 0;
+      document.getElementById('c-generator').value = c.generator || 0;
+      document.getElementById('c-sound').value = c.sound || 0;
+
+      const s = activeEvent.schedule || {};
+      document.getElementById('s-dispatch').value = s.dispatch || '';
+      document.getElementById('s-setup').value = s.setup || '';
+      document.getElementById('s-event').value = s.event || '';
+      document.getElementById('s-teardown').value = s.teardown || '';
+
+      const chks = activeEvent.checklists || {};
+      checklistStages.forEach(stg => {
+        const el = document.getElementById(stg.id);
+        if (el) el.checked = !!chks[stg.id];
+      });
+
+      renderQuotationRows();
+      renderScopeRows();
+      renderFlowerRows();
+      recalcQuotation();
+    }
+
+    async function saveActiveEventToStore() {
+      if (!activeEvent) return;
+      activeEvent.client = document.getElementById('inp-client-name').value.trim();
+      activeEvent.phone = document.getElementById('inp-client-phone').value.trim();
+      activeEvent.date = document.getElementById('inp-event-date').value;
+      activeEvent.venue = document.getElementById('inp-venue').value.trim();
+      activeEvent.status = document.getElementById('inp-event-status').value;
+      activeEvent.type = document.getElementById('inp-event-type').value;
+      activeEvent.notes = document.getElementById('inp-event-notes').value;
+
+      activeEvent.quoteTransport = parseFloat(document.getElementById('ws-quote-transport').value) || 0;
+      activeEvent.quoteLabour = parseFloat(document.getElementById('ws-quote-labour').value) || 0;
+      activeEvent.quoteDiscount = parseFloat(document.getElementById('ws-quote-discount').value) || 0;
+
+      activeEvent.costs = {
+        fabric: parseFloat(document.getElementById('c-fabric').value) || 0,
+        flex: parseFloat(document.getElementById('c-flex').value) || 0,
+        frame: parseFloat(document.getElementById('c-frame').value) || 0,
+        rentals: parseFloat(document.getElementById('c-rentals').value) || 0,
+        generator: parseFloat(document.getElementById('c-generator').value) || 0,
+        sound: parseFloat(document.getElementById('c-sound').value) || 0
+      };
+
+      activeEvent.schedule = {
+        dispatch: document.getElementById('s-dispatch').value,
+        setup: document.getElementById('s-setup').value,
+        event: document.getElementById('s-event').value,
+        teardown: document.getElementById('s-teardown').value
+      };
+
+      const chks = {};
+      checklistStages.forEach(stg => {
+        const el = document.getElementById(stg.id);
+        if (el) chks[stg.id] = el.checked;
+      });
+      activeEvent.checklists = chks;
+
+      await dbPut('events', activeEvent);
+      alert(`Event ${activeEvent.id} saved successfully.`);
+      updateDashboard();
+    }
+
+    async function cloneCurrentEvent() {
+      if (!activeEvent) return;
+      if (!confirm('Duplicate this event into a fresh booking?')) return;
+      const year = new Date().getFullYear();
+      const allEvents = await dbGetAll('events');
+      let maxSeq = 0;
+      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
+      allEvents.forEach(e => {
+        const m = (e.id || '').match(regex);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxSeq) maxSeq = num;
+        }
+      });
+      const clonedId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+      const newEvent = JSON.parse(JSON.stringify(activeEvent));
+      newEvent.id = clonedId;
+      newEvent.client += ' (Duplicate)';
+      newEvent.date = '';
+      newEvent.status = 'Inquiry';
+      newEvent.scopeItems.forEach(it => { it.loaded = 0; it.ret = 0; it.dam = 0; });
+      activeEvent = newEvent;
+      await dbPut('events', activeEvent);
+      loadActiveEventIntoUI();
+      alert(`Cloned to ${clonedId}`);
+    }
+
+    function renderQuotationRows() {
+      const tbody = document.getElementById('ws-quote-items-tbody');
+      tbody.innerHTML = (activeEvent.quoteItems || []).map((it, idx) => `
+        <tr>
+          <td class="py-1 pr-1"><input type="text" value="${it.name}" oninput="activeEvent.quoteItems[${idx}].name=this.value" class="w-full border rounded p-1 text-xs"></td>
+          <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-16"><input type="text" value="${it.unit}" oninput="activeEvent.quoteItems[${idx}].unit=this.value" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
+          <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
+          <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function addCustomQuotationRow() {
+      activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 });
+      renderQuotationRows();
+    }
+
+    function recalcQuotation() {
+      const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
+      const transport = parseFloat(document.getElementById('ws-quote-transport').value) || 0;
+      const labour = parseFloat(document.getElementById('ws-quote-labour').value) || 0;
+      const discount = parseFloat(document.getElementById('ws-quote-discount').value) || 0;
+      const grand = Math.max(0, (subtotal + transport + labour) - discount);
+
+      activeEvent.quoteGrand = grand;
+      document.getElementById('ws-quote-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+      document.getElementById('ws-quote-grand').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      document.getElementById('ws-cost-rev').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      recalcInternalCosting();
+    }
+
+    function renderScopeRows() {
+      const tbody = document.getElementById('ws-scope-tbody');
+      tbody.innerHTML = (activeEvent.scopeItems || []).map((it, idx) => `
+        <tr>
+          <td class="py-1 pr-1"><input type="text" value="${it.name}" oninput="activeEvent.scopeItems[${idx}].name=this.value" class="w-full border rounded p-1 text-xs font-medium"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+          <td class="py-1 px-1 w-12"><input type="text" value="${it.unit}" oninput="activeEvent.scopeItems[${idx}].unit=this.value" class="w-full border rounded p-1 text-center text-[10px]"></td>
+          <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); renderScopeRows();" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function addCustomScopeRow() {
+      activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' });
+      renderScopeRows();
+    }
+
+    function renderFlowerRows() {
+      const container = document.getElementById('ws-flowers-container');
+      container.innerHTML = (activeEvent.flowers || []).map((f, i) => `
+        <div class="flex gap-2 items-center">
+          <input type="text" value="${f.name}" oninput="activeEvent.flowers[${i}].name=this.value" class="flex-grow border rounded p-1 text-xs">
+          <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; recalcInternalCosting();" class="w-16 border rounded p-1 text-center text-xs">
+          <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; recalcInternalCosting();" class="w-20 border rounded p-1 text-right text-xs">
+          <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
+          <button onclick="activeEvent.flowers.splice(${i},1); renderFlowerRows(); recalcInternalCosting();" class="text-rose-500 font-bold px-1.5">✕</button>
+        </div>
+      `).join('');
+      recalcInternalCosting();
+    }
+
+    function addFlowerRow() {
+      activeEvent.flowers.push({ name: '', qty: 1, rate: 0 });
+      renderFlowerRows();
+    }
+
+    function recalcInternalCosting() {
+      const flwTotal = (activeEvent.flowers || []).reduce((sum, f) => sum + (f.qty * f.rate), 0);
+      const fabric = parseFloat(document.getElementById('c-fabric').value) || 0;
+      const flex = parseFloat(document.getElementById('c-flex').value) || 0;
+      const frame = parseFloat(document.getElementById('c-frame').value) || 0;
+      const rentals = parseFloat(document.getElementById('c-rentals').value) || 0;
+      const generator = parseFloat(document.getElementById('c-generator').value) || 0;
+      const sound = parseFloat(document.getElementById('c-sound').value) || 0;
+
+      const totalOutflow = flwTotal + fabric + flex + frame + rentals + generator + sound;
+      const rev = activeEvent.quoteGrand || 0;
+      const profit = rev - totalOutflow;
+      const margin = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
+
+      document.getElementById('ws-cost-total').innerText = `₹${Math.round(totalOutflow).toLocaleString()}`;
+      document.getElementById('ws-cost-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('ws-cost-margin').innerText = `${margin}% Margin`;
+    }
+
+    function renderChecklistGrid() {
+      const container = document.getElementById('ws-checklist-grid');
+      container.innerHTML = checklistStages.map(stg => `
+        <label class="flex items-center gap-2 p-1.5 border rounded bg-slate-50">
+          <input type="checkbox" id="${stg.id}" class="rounded">
+          <span>${stg.label}</span>
+        </label>
+      `).join('');
+    }
+
+    async function openPriceBookPicker(mode) {
+      targetPickerMode = mode;
+      document.getElementById('picker-search-filter').value = '';
+      await renderPriceBookPickerList();
+      document.getElementById('modal-pb-picker').classList.remove('hidden');
+    }
+
+    function closePriceBookPicker() { document.getElementById('modal-pb-picker').classList.add('hidden'); }
+
+    async function renderPriceBookPickerList() {
+      const query = (document.getElementById('picker-search-filter').value || '').toLowerCase();
+      const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query) || it.category.toLowerCase().includes(query));
+      const container = document.getElementById('picker-items-list');
+      container.innerHTML = items.map(it => `
+        <div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')">
+          <div>
+            <span class="font-bold text-slate-800 text-xs">${it.name}</span>
+            <span class="text-[10px] text-slate-400 block">${it.category} • ${it.unit}</span>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-indigo-900 block text-xs">₹${it.selling.toLocaleString()}</span>
+            <span class="text-[10px] text-slate-400">Cost: ₹${it.internal.toLocaleString()}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function selectItemFromPicker(id) {
+      const it = await dbGet('pricebook', id);
+      if (!it || !activeEvent) return;
+      if (targetPickerMode === 'quotation') {
+        activeEvent.quoteItems.push({ name: it.name, qty: 1, unit: it.unit, rate: it.selling });
+        renderQuotationRows();
+        recalcQuotation();
+      } else {
+        activeEvent.scopeItems.push({ name: it.name, req: 1, loaded: 0, ret: 0, dam: 0, unit: it.unit });
+        renderScopeRows();
+      }
+      closePriceBookPicker();
+    }
+
+    async function renderPriceBookTable() {
+      const items = await dbGetAll('pricebook');
+      const tbody = document.getElementById('pricebook-tbody');
+      tbody.innerHTML = items.map(it => `
+        <tr>
+          <td class="py-1.5 font-bold">${it.name}</td>
+          <td class="py-1.5">${it.category}</td>
+          <td class="py-1.5 text-center">${it.unit}</td>
+          <td class="py-1.5 text-right font-bold text-indigo-900">₹${it.selling.toLocaleString()}</td>
+          <td class="py-1.5 text-right text-slate-600">₹${it.internal.toLocaleString()}</td>
+          <td class="py-1.5 text-center"><button onclick="deletePriceBookItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function openPriceBookEditModal() {
+      const name = prompt('Item Name:');
+      if (!name) return;
+      const category = prompt('Category (Furniture, Decoration, Flowers, Lighting, Tent):') || 'Decoration';
+      const unit = prompt('Unit (Nos, Rnft, Sqft, Bunch):') || 'Nos';
+      const selling = parseFloat(prompt('Selling Rate (₹):')) || 0;
+      const internal = parseFloat(prompt('Internal Cost (₹):')) || 0;
+      await dbPut('pricebook', { id: 'pb_' + Date.now(), name, category, unit, selling, internal });
+      renderPriceBookTable();
+    }
+
+    async function deletePriceBookItem(id) {
+      if (confirm('Delete from Master Price Book?')) { await dbDelete('pricebook', id); renderPriceBookTable(); }
+    }
+
+    async function renderInventoryMaster() {
+      const items = await dbGetAll('inventory');
+      const tbody = document.getElementById('inventory-master-tbody');
+      tbody.innerHTML = items.map(it => `
+        <tr>
+          <td class="py-1.5 font-bold">${it.name}</td>
+          <td class="py-1.5 text-center font-bold">${it.stock}</td>
+          <td class="py-1.5 text-center text-slate-500">${it.location || 'Main Warehouse'}</td>
+          <td class="py-1.5 text-center"><button onclick="deleteInventoryItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function openInventoryAddModal() {
+      const name = prompt('Asset Name:');
+      if (!name) return;
+      const stock = parseInt(prompt('Total Stock Count:')) || 0;
+      const location = prompt('Storage Location (e.g. Rack A1):') || 'Main Warehouse';
+      await dbPut('inventory', { id: 'inv_' + Date.now(), name, stock, location });
+      renderInventoryMaster();
+    }
+
+    async function deleteInventoryItem(id) {
+      if (confirm('Delete asset?')) { await dbDelete('inventory', id); renderInventoryMaster(); }
+    }
+
+    async function renderTeamCards() {
+      const team = await dbGetAll('team');
+      const container = document.getElementById('team-cards-container');
+      container.innerHTML = team.map(t => `
+        <div class="border rounded-xl p-3 bg-white shadow-sm flex justify-between items-center">
+          <div>
+            <span class="font-bold text-slate-900 text-xs block">${t.name}</span>
+            <span class="text-[10px] text-amber-900 font-semibold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">${t.role}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <a href="tel:${t.phone}" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1 rounded text-xs font-bold">📞 Call</a>
+            <button onclick="deleteTeamMember('${t.id}')" class="text-slate-300 hover:text-rose-600 font-bold px-1 text-sm">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function openTeamAddModal() {
+      const name = prompt('Crew Name:');
+      if (!name) return;
+      const role = prompt('Role (Supervisor, Florist, Electrician, Driver):') || 'Helper';
+      const phone = prompt('Phone:') || '';
+      await dbPut('team', { id: 'tm_' + Date.now(), name, role, phone });
+      renderTeamCards();
+    }
+
+    async function deleteTeamMember(id) {
+      if (confirm('Remove crew member?')) { await dbDelete('team', id); renderTeamCards(); }
+    }
+
+    async function renderEventsList() {
+      const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
+      const events = (await dbGetAll('events')).filter(e => 
+        (e.client || '').toLowerCase().includes(query) || 
+        (e.venue || '').toLowerCase().includes(query) || 
+        (e.id || '').toLowerCase().includes(query)
+      );
+      const container = document.getElementById('events-master-list');
+      container.innerHTML = events.map(e => `
+        <div class="py-2.5 flex justify-between items-center hover:bg-slate-50">
+          <div>
+            <span class="font-bold text-slate-900 text-xs">${e.client || 'Untitled'}</span>
+            <span class="text-[10px] text-slate-400 block">${e.id} • ${e.venue || 'No Venue'} • ${e.date || 'No Date'}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2 py-1 rounded text-xs font-bold">Open</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function openEventById(id) {
+      activeEvent = await dbGet('events', id);
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    async function updateDashboard() {
+      const events = await dbGetAll('events');
+      const totalContract = events.reduce((sum, e) => sum + (e.quoteGrand || 0), 0);
+      let totalCost = 0;
+      events.forEach(e => {
+        const c = e.costs || {};
+        const flw = (e.flowers || []).reduce((sf, f) => sf + (f.qty * f.rate), 0);
+        totalCost += flw + (c.fabric || 0) + (c.flex || 0) + (c.frame || 0) + (c.rentals || 0) + (c.generator || 0) + (c.sound || 0);
+      });
+      const totalProfit = totalContract - totalCost;
+      const margin = totalContract > 0 ? ((totalProfit / totalContract) * 100).toFixed(1) : 0;
+
+      document.getElementById('dash-total-events').innerText = events.length;
+      document.getElementById('dash-confirmed-events').innerText = `${events.filter(e => e.status === 'Confirmed').length} Confirmed`;
+      document.getElementById('dash-total-contract').innerText = `₹${(totalContract/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-outflow').innerText = `₹${(totalCost/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-profit').innerText = `₹${Math.round(totalProfit).toLocaleString()}`;
+      document.getElementById('dash-profit-margin').innerText = `${margin}% Margin`;
+
+      const upBox = document.getElementById('dash-upcoming-container');
+      const sorted = [...events].sort((a,b) => (a.date || '').localeCompare(b.date || '')).slice(0, 5);
+      upBox.innerHTML = sorted.map(e => `
+        <div class="p-2.5 border rounded-lg flex justify-between items-center bg-slate-50">
+          <div>
+            <span class="font-bold text-slate-900 block">${e.date || 'TBD'} — ${e.venue || 'Venue TBD'}</span>
+            <span class="text-[10px] text-slate-500">${e.client} • ₹${Math.round(e.quoteGrand || 0).toLocaleString()}</span>
+          </div>
+          <span class="text-[9px] px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-900 border border-amber-200">${e.status}</span>
+        </div>
+      `).join('');
+    }
+
+    function openPrintModal(type) {
+      if (!activeEvent) return alert('Open an event first.');
+      const content = document.getElementById('print-sheet-content');
+      if (type === 'quotation') {
+        content.innerHTML = `
+          <h1 class="text-xl font-black uppercase text-black">VANJI DECORATORS — QUOTATION</h1>
+          <p class="text-xs font-mono font-bold">${activeEvent.id} | Client: ${activeEvent.client} | Date: ${activeEvent.date}</p>
+          <table class="w-full text-left border-collapse text-xs border mt-3">
+            <thead><tr class="bg-black text-amber-400"><th class="p-1.5 border">Item</th><th class="p-1.5 text-center w-16 border">Qty</th><th class="p-1.5 text-right w-24 border">Total</th></tr></thead>
+            <tbody>
+              ${(activeEvent.quoteItems || []).map(it => `<tr><td class="p-1.5 border font-semibold">${it.name}</td><td class="p-1.5 border text-center">${it.qty}</td><td class="p-1.5 border text-right font-bold">₹${(it.qty*it.rate).toLocaleString()}</td></tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="text-right font-black text-sm pt-2">Grand Total: ₹${Math.round(activeEvent.quoteGrand || 0).toLocaleString()}</div>
+        `;
+      } else if (type === 'jobsheet') {
+        content.innerHTML = `
+          <h1 class="text-lg font-black uppercase">VANJI DECORATORS — PRODUCTION JOB SHEET</h1>
+          <p class="text-xs font-mono font-bold">${activeEvent.id} | Venue: ${activeEvent.venue} | Date: ${activeEvent.date}</p>
+          <table class="w-full text-left border-collapse text-xs border mt-3">
+            <thead><tr class="bg-black text-amber-400"><th class="p-1.5 border">Required Scope</th><th class="p-1.5 text-center w-20 border">Qty</th><th class="p-1.5 text-center w-20 border">Check</th></tr></thead>
+            <tbody>
+              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border font-semibold">${it.name}</td><td class="p-1.5 border text-center font-bold">${it.req} ${it.unit}</td><td class="p-1.5 border text-center font-mono">[ &nbsp; ]</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (type === 'warehouse') {
+        content.innerHTML = `
+          <h1 class="text-lg font-black uppercase">VANJI DECORATORS — WAREHOUSE LOADING & RETURN AUDIT</h1>
+          <p class="text-xs font-mono font-bold">${activeEvent.id} | Venue: ${activeEvent.venue} | Date: ${activeEvent.date}</p>
+          <table class="w-full text-left border-collapse text-xs border mt-3">
+            <thead>
+              <tr class="bg-black text-amber-400">
+                <th class="p-1.5 border">Item</th>
+                <th class="p-1.5 text-center border">Required</th>
+                <th class="p-1.5 text-center border">Loaded</th>
+                <th class="p-1.5 text-center border">Returned</th>
+                <th class="p-1.5 text-center border text-rose-300">Damage</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border">${it.name}</td><td class="p-1.5 border text-center">${it.req}</td><td class="p-1.5 border text-center">${it.loaded || 0}</td><td class="p-1.5 border text-center">${it.ret || 0}</td><td class="p-1.5 border text-center text-rose-600 font-bold">${it.dam || 0}</td></tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="grid grid-cols-2 gap-4 border-t pt-4 text-center text-[10px] text-slate-500">
+            <div>Warehouse Dispatch Sign: _____________</div>
+            <div>Return Auditor Sign: _____________</div>
+          </div>
+        `;
+      }
+      document.getElementById('modal-print-hub').classList.remove('hidden');
+    }
+
+    function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey').value; }
+    function loadAppSettings() {
+      document.getElementById('set-name').value = localStorage.getItem('vanji_cname') || 'VANJI DECORATORS';
+      document.getElementById('set-aikey').value = localStorage.getItem('vanji_aikey') || '';
+    }
+    function saveAppSettings() {
+      localStorage.setItem('vanji_cname', document.getElementById('set-name').value.trim());
+      localStorage.setItem('vanji_aikey', document.getElementById('set-aikey').value.trim());
+      alert('Settings saved.');
+    }
+
+    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
+    async function exportFullBackup() {
+      const payload = {
+        app: 'Vanji Decorators Studio',
+        events: await dbGetAll('events'),
+        pricebook: await dbGetAll('pricebook'),
+        inventory: await dbGetAll('inventory'),
+        team: await dbGetAll('team'),
+        settings: { cname: localStorage.getItem('vanji_cname') }
+      };
+      const a = document.createElement('a');
+      a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      a.download = `Vanji_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importFullBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const data = JSON.parse(ev.target.result);
+        for (const evRec of (data.events || [])) await dbPut('events', evRec);
+        for (const pb of (data.pricebook || [])) await dbPut('pricebook', pb);
+        for (const inv of (data.inventory || [])) await dbPut('inventory', inv);
+        for (const tm of (data.team || [])) await dbPut('team', tm);
+        alert('Database restored successfully!');
+        location.reload();
+      };
+      reader.readAsText(file);
+    }
+
+    window.onload = initApp;
+  </script>
+</body>
+</html>
