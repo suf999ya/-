@@ -89,7 +89,7 @@
 
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
 
-      <!-- 1. DASHBOARD -->
+      <!-- DASHBOARD -->
       <section id="page-dashboard" class="space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
@@ -125,7 +125,7 @@
         </div>
       </section>
 
-      <!-- 2. EVENTS MASTER LIST -->
+      <!-- EVENTS MASTER LIST -->
       <section id="page-events" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -137,7 +137,7 @@
         </div>
       </section>
 
-      <!-- 3. AI STUDIO -->
+      <!-- AI STUDIO -->
       <section id="page-design" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -145,14 +145,14 @@
               <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji Virtual AI & Botanical Designer</h2>
               <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-mono" id="ai-active-event-tag">LINKED TO ACTIVE EVENT</span>
             </div>
-            <p class="text-[10px] text-slate-400 mt-0.5">Upload your venue photo. The AI botanical studio decorates your exact stage with traditional or luxury flowers.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Upload venue photo. AI decorates your exact stage layout with traditional or luxury botanicals.</p>
           </div>
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">1. Venue Upload & Dimensions</h3>
-            <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">Multimodal Spatial Scanner</span>
+            <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">Auto-Compressed Scanner</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -306,7 +306,7 @@
         </div>
       </section>
 
-      <!-- 4. ACTIVE WORKSPACE -->
+      <!-- ACTIVE WORKSPACE -->
       <section id="page-workspace" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -699,67 +699,6 @@
       { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
     ];
 
-    const AI_TOOLS_DECLARATION = [{
-      function_declarations: [
-        {
-          name: "updateClientDetails",
-          description: "Fills or updates client information, date, venue, status, and event type.",
-          parameters: {
-            type: "OBJECT",
-            properties: {
-              clientName: { type: "STRING", description: "Full name of the client" },
-              phone: { type: "STRING", description: "Phone or WhatsApp number" },
-              eventDate: { type: "STRING", description: "Date in YYYY-MM-DD format" },
-              venue: { type: "STRING", description: "Venue name and address" },
-              eventType: { type: "STRING", description: "Occasion: Nikah, Reception, Sangeet, Wedding, etc." },
-              status: { type: "STRING", enum: ["Inquiry", "Hold", "Quotation Sent", "Confirmed", "Production", "Completed"] }
-            }
-          }
-        },
-        {
-          name: "setScheduleTimetable",
-          description: "Sets the logistics and production schedule timestamps.",
-          parameters: {
-            type: "OBJECT",
-            properties: {
-              dispatch: { type: "STRING", description: "Truck dispatch datetime" },
-              setup: { type: "STRING", description: "Setup start datetime" },
-              eventStart: { type: "STRING", description: "Event commences datetime" },
-              teardown: { type: "STRING", description: "Teardown datetime" }
-            }
-          }
-        },
-        {
-          name: "addScopeAndQuotationItem",
-          description: "Selects items from the Master Price Book and adds them to client quote and production scope.",
-          parameters: {
-            type: "OBJECT",
-            properties: {
-              itemId: { type: "STRING", description: "Price book item ID (e.g., pb_1, pb_2, pb_3)" },
-              quantity: { type: "NUMBER", description: "Quantity required" }
-            },
-            required: ["itemId", "quantity"]
-          }
-        },
-        {
-          name: "queryProjectFinancials",
-          description: "Answers questions regarding contract value, internal costs, and net profit margins.",
-          parameters: { type: "OBJECT", properties: {} }
-        },
-        {
-          name: "navigateInterface",
-          description: "Switches pages or tabs inside the application.",
-          parameters: {
-            type: "OBJECT",
-            properties: {
-              page: { type: "STRING", enum: ["dashboard", "events", "workspace", "design", "pricebook", "inventory", "labour", "settings"] }
-            },
-            required: ["page"]
-          }
-        }
-      ]
-    }];
-
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>'"]/g, tag => ({
@@ -1049,7 +988,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 15);
+        const req = indexedDB.open('VanjiDecoratorsDB', 16);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -1413,22 +1352,34 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          const w = canvas.width; const h = canvas.height;
-          // Backdrop drape
-          ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-          ctx.fillRect(w * 0.2, h * 0.2, w * 0.6, h * 0.5);
+          const w = canvas.width;
+          const h = canvas.height;
 
-          // Florals
-          for (let i = 0; i < 40; i++) {
+          // Stage backdrop drapes overlay
+          ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+          ctx.fillRect(w * 0.22, h * 0.18, w * 0.56, h * 0.52);
+
+          // Gold border trim
+          ctx.strokeStyle = "#FBBF24";
+          ctx.lineWidth = 6;
+          ctx.strokeRect(w * 0.22, h * 0.18, w * 0.56, h * 0.52);
+
+          // Floral Arch garland across top of backdrop
+          for (let i = 0; i < 50; i++) {
             ctx.beginPath();
-            ctx.arc(w * 0.2 + (w * 0.6) * (i / 40), h * 0.22 + Math.sin(i) * 15, 14, 0, Math.PI * 2);
-            ctx.fillStyle = i % 2 === 0 ? "#FDE047" : "#F43F5E";
+            let fx = w * 0.22 + (w * 0.56) * (i / 50);
+            let fy = h * 0.18 + Math.sin((i / 50) * Math.PI) * -30;
+            ctx.arc(fx, fy, 16, 0, Math.PI * 2);
+            ctx.fillStyle = (i % 2 === 0) ? "#FDE047" : "#F43F5E";
             ctx.fill();
           }
 
-          // Sofa
+          // Luxury Sofa Center Stage
           ctx.fillStyle = "#D97706";
-          ctx.fillRect(w * 0.35, h * 0.55, w * 0.3, h * 0.12);
+          ctx.fillRect(w * 0.38, h * 0.52, w * 0.24, h * 0.12);
+          ctx.strokeStyle = "#FEF3C7";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(w * 0.38, h * 0.52, w * 0.24, h * 0.12);
 
           resolve(canvas.toDataURL('image/jpeg', 0.92));
         };
@@ -1474,7 +1425,10 @@
         tbody.innerHTML = (plan.materials || []).map(m => {
           const lineTotal = (m.qty || 1) * m.selling;
           total += lineTotal;
-          return `<tr><td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td><td class="p-1.5 border text-center">${m.qty}</td><td class="p-1.5 border text-center">${escapeHTML(m.unit)}</td><td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td><td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td></tr>`;
+          const name = m.name || 'Custom Asset';
+          const unit = m.unit || 'Nos';
+          const selling = m.selling || 0;
+          return `<tr><td class="p-1.5 border font-semibold">${escapeHTML(name)}</td><td class="p-1.5 border text-center">${m.qty}</td><td class="p-1.5 border text-center">${escapeHTML(unit)}</td><td class="p-1.5 border text-right">₹${selling.toLocaleString()}</td><td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td></tr>`;
         }).join('');
       }
       document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
@@ -1485,7 +1439,7 @@
     function pushAiScopeToActiveEvent() {
       if (!activeEvent) return alert('Open an event first.');
       (currentGeneratedPlan?.materials || []).forEach(m => {
-        activeEvent.scopeItems.push({ id: m.id, name: m.name, req: m.qty, loaded: 0, ret: 0, dam: 0, unit: m.unit });
+        activeEvent.scopeItems.push({ id: m.id, name: m.name || 'Asset', req: m.qty, loaded: 0, ret: 0, dam: 0, unit: m.unit || 'Nos' });
       });
       alert('Added to Scope!');
       loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('scope');
@@ -1494,7 +1448,7 @@
     function pushAiQuoteToActiveEvent() {
       if (!activeEvent) return alert('Open an event first.');
       (currentGeneratedPlan?.materials || []).forEach(m => {
-        activeEvent.quoteItems.push({ name: m.name, qty: m.qty, unit: m.unit, rate: m.selling });
+        activeEvent.quoteItems.push({ name: m.name || 'Asset', qty: m.qty, unit: m.unit || 'Nos', rate: m.selling || 0 });
       });
       alert('Added to Quotation!');
       loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('quotation');
@@ -1544,7 +1498,10 @@
     function loadActiveEventIntoUI() {
       if (!activeEvent) return;
       activeEvent.dimensions = activeEvent.dimensions || { width: 40, depth: 12, height: 18, walkway: 30 };
-      activeEvent.labourGroups = activeEvent.labourGroups || [];
+      activeEvent.labourGroups = activeEvent.labourGroups || [
+        { role: 'Florist Master', men: 2, days: 2, rate: 1500 },
+        { role: 'Setup Labour', men: 6, days: 2, rate: 1200 }
+      ];
       activeEvent.scopeItems = activeEvent.scopeItems || [];
       activeEvent.quoteItems = activeEvent.quoteItems || [];
       activeEvent.flowers = activeEvent.flowers || [];
@@ -1693,8 +1650,8 @@
       const pbItems = await dbGetAll('pricebook');
       let autoCost = 0;
       (activeEvent.scopeItems || []).forEach(sc => {
-        const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === (sc.name || '').toLowerCase());
-        if (match) autoCost += (sc.req || 0) * (match.internal || 0);
+        const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === sc.name.toLowerCase());
+        if(match) autoCost += sc.req * match.internal;
       });
       document.getElementById('ws-cost-auto-scope').innerText = `₹${Math.round(autoCost).toLocaleString()}`;
       let labourCost = (activeEvent.labourGroups || []).reduce((sum, lg) => sum + ((lg.men || 0) * (lg.days || 0) * (lg.rate || 0)), 0);
