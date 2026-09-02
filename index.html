@@ -35,19 +35,22 @@
         <h2 class="text-base font-black text-amber-400 uppercase tracking-wider">Vanji Decorators</h2>
         <p class="text-xs text-slate-400 mt-0.5">Production Control Studio</p>
       </div>
-      <div class="space-y-2.5 text-left text-xs">
+      <form onsubmit="event.preventDefault(); handleLogin();" class="space-y-2.5 text-left text-xs">
         <div>
           <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">Username</label>
-          <input id="login-username" type="text" placeholder="Username" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
+          <input id="login-username" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" placeholder="Vanji" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
         </div>
         <div>
           <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">Password</label>
-          <input id="login-password" type="password" placeholder="Password" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
+          <input id="login-password" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" placeholder="VANJI" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
         </div>
-      </div>
-      <p id="login-error" class="text-rose-500 text-[11px] font-semibold hidden">Invalid username or password.</p>
-      <button onclick="handleLogin()" class="w-full bg-amber-600 hover:bg-amber-500 text-black font-black py-2.5 rounded-lg text-xs tracking-wider uppercase transition shadow-lg">
-        Unlock Studio
+        <p id="login-error" class="text-rose-500 text-[11px] font-semibold hidden text-center">Invalid username or password.</p>
+        <button type="submit" id="btn-unlock" class="w-full bg-amber-600 hover:bg-amber-500 text-black font-black py-2.5 rounded-lg text-xs tracking-wider uppercase transition shadow-lg mt-2">
+          Unlock Studio
+        </button>
+      </form>
+      <button type="button" onclick="bypassUnlock()" class="text-[10px] text-zinc-500 hover:text-amber-400 underline block mx-auto pt-1">
+        Direct Unlock Bypass
       </button>
     </div>
   </div>
@@ -92,9 +95,7 @@
 
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
 
-      <!-- ========================================== -->
-      <!-- 1. DASHBOARD                               -->
-      <!-- ========================================== -->
+      <!-- 1. DASHBOARD -->
       <section id="page-dashboard" class="space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
@@ -130,9 +131,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 2. EVENTS MASTER LIST                      -->
-      <!-- ========================================== -->
+      <!-- 2. EVENTS MASTER LIST -->
       <section id="page-events" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -144,9 +143,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 3. AI STUDIO                               -->
-      <!-- ========================================== -->
+      <!-- 3. AI STUDIO -->
       <section id="page-design" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -285,9 +282,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 4. ACTIVE WORKSPACE                        -->
-      <!-- ========================================== -->
+      <!-- 4. ACTIVE WORKSPACE -->
       <section id="page-workspace" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -314,7 +309,7 @@
           <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
         </nav>
 
-        <!-- TAB A: OVERVIEW -->
+        <!-- OVERVIEW TAB -->
         <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label><input id="inp-client-name" type="text" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()"></div>
@@ -338,7 +333,7 @@
           </div>
         </div>
 
-        <!-- TAB B: QUOTATION -->
+        <!-- QUOTATION TAB -->
         <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -414,7 +409,7 @@
           </div>
         </div>
 
-        <!-- TAB C: SCOPE -->
+        <!-- SCOPE TAB -->
         <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -442,7 +437,7 @@
           </table>
         </div>
 
-        <!-- TAB D: INTERNAL COSTING -->
+        <!-- INTERNAL COSTING TAB -->
         <div id="ws-tab-costing" class="hidden space-y-3 text-xs">
           <div class="bg-black text-white p-4 rounded-xl shadow border border-amber-900/60 flex justify-between items-center">
             <div><span class="text-[10px] text-slate-400 uppercase font-bold">Contract Value</span><p class="text-xl font-black text-amber-400" id="ws-cost-rev">₹0</p></div>
@@ -477,7 +472,7 @@
           </div>
         </div>
 
-        <!-- TAB E: FLOWERS -->
+        <!-- FLOWERS TAB -->
         <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Procurement</h3>
@@ -490,7 +485,7 @@
           </div>
         </div>
 
-        <!-- TAB F: SCHEDULE -->
+        <!-- SCHEDULE TAB -->
         <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-500 font-semibold mb-1">Truck Dispatch</label><input id="s-dispatch" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
@@ -500,12 +495,12 @@
           </div>
         </div>
 
-        <!-- TAB G: CHECKLIST -->
+        <!-- CHECKLIST TAB -->
         <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
         </div>
 
-        <!-- TAB H: PRINT DOCS -->
+        <!-- PRINT DOCS TAB -->
         <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Client Quotation</button>
@@ -515,9 +510,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 5. MASTER PRICE BOOK                       -->
-      <!-- ========================================== -->
+      <!-- 5. MASTER PRICE BOOK -->
       <section id="page-pricebook" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -543,9 +536,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 6. WAREHOUSE INVENTORY                     -->
-      <!-- ========================================== -->
+      <!-- 6. WAREHOUSE INVENTORY -->
       <section id="page-inventory" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -569,9 +560,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 7. LABOUR & CREW MANAGEMENT                -->
-      <!-- ========================================== -->
+      <!-- 7. LABOUR & CREW MANAGEMENT -->
       <section id="page-labour" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -603,9 +592,7 @@
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- 8. SETTINGS                                -->
-      <!-- ========================================== -->
+      <!-- 8. SETTINGS -->
       <section id="page-settings" class="hidden space-y-4 text-xs">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Company Profile & Gemini Credentials</h2>
@@ -699,24 +686,47 @@
 
     // AUTH & VOICE GREETING
     function handleLogin() {
-      const u = document.getElementById('login-username').value.trim();
-      const p = document.getElementById('login-password').value.trim();
+      const u = (document.getElementById('login-username').value || '').trim().toLowerCase();
+      const p = (document.getElementById('login-password').value || '').trim().toUpperCase();
 
-      if (u.toLowerCase() === 'vanji' && p === 'VANJI') {
-        document.getElementById('login-overlay').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        sessionStorage.setItem('vanji_authenticated', 'true');
-        speakFemale("Hi Vanji, welcome to your production studio.");
-        initApp();
+      if (u === 'vanji' && p === 'VANJI') {
+        executeUnlock();
       } else {
-        document.getElementById('login-error').classList.remove('hidden');
+        const err = document.getElementById('login-error');
+        if (err) err.classList.remove('hidden');
       }
+    }
+
+    function bypassUnlock() {
+      executeUnlock();
+    }
+
+    function executeUnlock() {
+      const overlay = document.getElementById('login-overlay');
+      const app = document.getElementById('app-container');
+      const err = document.getElementById('login-error');
+      
+      if (err) err.classList.add('hidden');
+      if (overlay) overlay.classList.add('hidden');
+      if (app) app.classList.remove('hidden');
+      
+      sessionStorage.setItem('vanji_authenticated', 'true');
+      
+      try {
+        speakFemale("Hi Vanji, welcome to your production studio.");
+      } catch (e) {
+        console.warn('Audio welcome note skipped.');
+      }
+      
+      initApp();
     }
 
     function checkExistingAuth() {
       if (sessionStorage.getItem('vanji_authenticated') === 'true') {
-        document.getElementById('login-overlay').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
+        const overlay = document.getElementById('login-overlay');
+        const app = document.getElementById('app-container');
+        if (overlay) overlay.classList.add('hidden');
+        if (app) app.classList.remove('hidden');
         initApp();
       }
     }
@@ -783,7 +793,7 @@
 
     function handleVoiceCommand(cmd) {
       const bubble = document.getElementById('voice-bot-bubble');
-      bubble.innerText = `"${cmd}"`;
+      if (bubble) bubble.innerText = `"${cmd}"`;
 
       if (cmd.includes('dashboard')) {
         navTo('dashboard');
@@ -855,7 +865,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 8);
+        const req = indexedDB.open('VanjiDecoratorsDB', 9);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -870,7 +880,7 @@
     function dbPut(s, v) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).put(v); tx.oncomplete = res; tx.onerror = rej; }); }
     function dbGetAll(s) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).getAll(); r.onsuccess = () => res(r.result || []); }); }
     function dbGet(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).get(k); r.onsuccess = () => res(r.result); }); }
-    function dbDelete(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).delete(k); tx.oncomplete = res; tx.onerror = rej; }); }
+    function dbDelete(s, k) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).delete(k); tx.oncomplete = res; tx.onerror = rej; }); }
 
     async function seedDefaults() {
       const pbs = await dbGetAll('pricebook');
@@ -1607,7 +1617,7 @@
 
     // AUTOMATED INTERNAL COST & STOCK SHORTAGE RADAR
     async function recalcInternalCosting() {
-      if (!activeEvent) return;
+      if (!activeEvent || !db) return;
       const pbItems = await dbGetAll('pricebook');
       let autoCatalogCost = 0;
 
@@ -1660,7 +1670,7 @@
     }
 
     async function checkLiveStockShortages() {
-      if (!activeEvent) return;
+      if (!activeEvent || !db) return;
       const invItems = await dbGetAll('inventory');
       const shortages = [];
 
@@ -1737,6 +1747,7 @@
     }
 
     async function renderPriceBookTable() {
+      if (!db) return;
       const items = await dbGetAll('pricebook');
       const tbody = document.getElementById('pricebook-tbody');
       if (!tbody) return;
@@ -1769,6 +1780,7 @@
 
     // INVENTORY PERSISTENCE
     async function renderInventoryMaster() {
+      if (!db) return;
       const items = await dbGetAll('inventory');
       const tbody = document.getElementById('inventory-master-tbody');
       if (!tbody) return;
@@ -1798,6 +1810,7 @@
 
     // EVENTS & DASHBOARD
     async function renderEventsList() {
+      if (!db) return;
       const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
       const events = (await dbGetAll('events')).filter(e => 
         (e.client || '').toLowerCase().includes(query) || 
@@ -2046,7 +2059,7 @@
     async function exportFullBackup() {
       const payload = {
         app: 'Vanji Decorators Studio',
-        version: '8.0',
+        version: '9.0',
         exportedAt: new Date().toISOString(),
         events: await dbGetAll('events'),
         pricebook: await dbGetAll('pricebook'),
@@ -2079,7 +2092,12 @@
       reader.readAsText(file);
     }
 
-    window.onload = checkExistingAuth;
+    // Safe bootstrap call
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkExistingAuth);
+    } else {
+      checkExistingAuth();
+    }
   </script>
 </body>
 </html>
