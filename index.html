@@ -686,8 +686,8 @@
 
     // AUTH & VOICE GREETING
     function handleLogin() {
-      const u = (document.getElementById('login-username').value || '').trim().toLowerCase();
-      const p = (document.getElementById('login-password').value || '').trim().toUpperCase();
+      const u = (document.getElementById('login-username')?.value || '').trim().toLowerCase();
+      const p = (document.getElementById('login-password')?.value || '').trim().toUpperCase();
 
       if (u === 'vanji' && p === 'VANJI') {
         executeUnlock();
@@ -738,13 +738,26 @@
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.pitch = 1.15;
         utterance.rate = 0.95;
+        utterance.lang = 'en-US';
 
-        const voices = window.speechSynthesis.getVoices();
-        const femaleVoice = voices.find(v => (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Victoria')) && v.lang.startsWith('en')) ||
-                           voices.find(v => v.lang.startsWith('en'));
+        const setVoice = () => {
+          const voices = window.speechSynthesis.getVoices();
+          if (voices && voices.length > 0) {
+            const femaleVoice = voices.find(v => (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Victoria')) && v.lang.startsWith('en')) ||
+                               voices.find(v => v.lang.startsWith('en'));
+            if (femaleVoice) utterance.voice = femaleVoice;
+          }
+        };
 
-        if (femaleVoice) utterance.voice = femaleVoice;
-        window.speechSynthesis.speak(utterance);
+        if (window.speechSynthesis.getVoices().length === 0) {
+          window.speechSynthesis.onvoiceschanged = () => {
+            setVoice();
+            window.speechSynthesis.speak(utterance);
+          };
+        } else {
+          setVoice();
+          window.speechSynthesis.speak(utterance);
+        }
       } catch (e) {
         console.warn('Speech synthesis restricted by browser.');
       }
@@ -754,21 +767,36 @@
     function initSpeechRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) return;
-      speechRecognition = new SpeechRecognition();
-      speechRecognition.continuous = false;
-      speechRecognition.interimResults = false;
-      speechRecognition.lang = 'en-IN';
+      try {
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+        speechRecognition.lang = 'en-IN';
 
-      speechRecognition.onresult = (event) => {
-        const cmd = event.results[0][0].transcript.toLowerCase();
-        handleVoiceCommand(cmd);
-      };
+        speechRecognition.onresult = (event) => {
+          const cmd = event.results[0][0].transcript.toLowerCase();
+          handleVoiceCommand(cmd);
+        };
 
-      speechRecognition.onend = () => {
-        isVoiceListening = false;
-        document.getElementById('voice-bot-btn').classList.remove('mic-pulse');
-        document.getElementById('voice-bot-bubble').classList.add('hidden');
-      };
+        speechRecognition.onerror = (event) => {
+          console.warn("Speech recognition error:", event.error);
+          isVoiceListening = false;
+          const btn = document.getElementById('voice-bot-btn');
+          const bubble = document.getElementById('voice-bot-bubble');
+          if (btn) btn.classList.remove('mic-pulse');
+          if (bubble) bubble.classList.add('hidden');
+        };
+
+        speechRecognition.onend = () => {
+          isVoiceListening = false;
+          const btn = document.getElementById('voice-bot-btn');
+          const bubble = document.getElementById('voice-bot-bubble');
+          if (btn) btn.classList.remove('mic-pulse');
+          if (bubble) bubble.classList.add('hidden');
+        };
+      } catch(err) {
+        console.warn("Speech recognition unsupported or blocked:", err);
+      }
     }
 
     function toggleVoiceBot() {
@@ -782,10 +810,14 @@
         try {
           speechRecognition.start();
           isVoiceListening = true;
-          bubble.innerText = 'Listening for command...';
-          bubble.classList.remove('hidden');
-          btn.classList.add('mic-pulse');
-        } catch(e){}
+          if (bubble) {
+            bubble.innerText = 'Listening for command...';
+            bubble.classList.remove('hidden');
+          }
+          if (btn) btn.classList.add('mic-pulse');
+        } catch(e){
+          console.warn("Could not start speech recognition:", e);
+        }
       } else {
         speechRecognition.stop();
       }
@@ -865,7 +897,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 9);
+        const req = indexedDB.open('VanjiDecoratorsDB', 11);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -950,10 +982,14 @@
     function syncEventDimensions() {
       if (!activeEvent) return;
       if (!activeEvent.dimensions) activeEvent.dimensions = {};
-      activeEvent.dimensions.width = document.getElementById('ai-dim-width').value;
-      activeEvent.dimensions.depth = document.getElementById('ai-dim-depth').value;
-      activeEvent.dimensions.height = document.getElementById('ai-dim-height').value;
-      activeEvent.dimensions.walkway = document.getElementById('ai-dim-walkway').value;
+      const wEl = document.getElementById('ai-dim-width');
+      const dEl = document.getElementById('ai-dim-depth');
+      const hEl = document.getElementById('ai-dim-height');
+      const walkEl = document.getElementById('ai-dim-walkway');
+      if (wEl) activeEvent.dimensions.width = wEl.value;
+      if (dEl) activeEvent.dimensions.depth = dEl.value;
+      if (hEl) activeEvent.dimensions.height = hEl.value;
+      if (walkEl) activeEvent.dimensions.walkway = walkEl.value;
       markUnsaved();
     }
 
@@ -1004,13 +1040,15 @@
     // VENUE ANALYSIS
     async function runVenueSpatialAnalysis() {
       const apiKey = getApiKey();
-      const w = document.getElementById('ai-dim-width').value;
-      const h = document.getElementById('ai-dim-height').value;
-      const d = document.getElementById('ai-dim-depth').value;
+      const w = document.getElementById('ai-dim-width')?.value || '40';
+      const h = document.getElementById('ai-dim-height')?.value || '18';
+      const d = document.getElementById('ai-dim-depth')?.value || '12';
 
       const btn = document.getElementById('btn-analyse-venue');
-      btn.innerText = 'Analysing Venue Architecture...';
-      btn.disabled = true;
+      if (btn) {
+        btn.innerText = 'Analysing Venue Architecture...';
+        btn.disabled = true;
+      }
 
       const promptText = `Act as an expert Indian wedding decorator. Analyze venue with: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural limits, recommended truss layout, and elements to avoid. Concise bullets.`;
 
@@ -1042,35 +1080,40 @@
       } catch (err) {
         displayVenueAnalysis(`• **Standard Recommendation for ${w}x${h} ft:** Center 32ft floral arch, 8-ft lateral drape margins, 8 LED stage PARs.`);
       } finally {
-        btn.innerText = '🏛️ Analyse Venue & Structural Constraints';
-        btn.disabled = false;
+        if (btn) {
+          btn.innerText = '🏛️ Analyse Venue & Structural Constraints';
+          btn.disabled = false;
+        }
       }
     }
 
     function displayVenueAnalysis(text) {
       const box = document.getElementById('ai-venue-analysis-result');
-      document.getElementById('ai-analysis-text').innerHTML = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-      box.classList.remove('hidden');
+      const textEl = document.getElementById('ai-analysis-text');
+      if (textEl) textEl.innerHTML = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      if (box) box.classList.remove('hidden');
     }
 
     // STRICT PRICE BOOK ID GROUNDED AI DESIGN SYNTHESIZER
     async function synthesizeCompleteAiDecorPlan(refinement = '') {
       const apiKey = getApiKey();
-      const w = document.getElementById('ai-dim-width').value;
-      const h = document.getElementById('ai-dim-height').value;
-      const d = document.getElementById('ai-dim-depth').value;
-      const occasion = document.getElementById('ai-event-occasion').value;
-      const style = document.getElementById('ai-design-style').value;
-      const palette = document.getElementById('ai-palette-input').value;
-      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
-      const customNotes = (document.getElementById('ai-custom-directive').value || '').replace(/"/g, "'");
+      const w = document.getElementById('ai-dim-width')?.value || '40';
+      const h = document.getElementById('ai-dim-height')?.value || '18';
+      const d = document.getElementById('ai-dim-depth')?.value || '12';
+      const occasion = document.getElementById('ai-event-occasion')?.value || 'Nikah / Muslim Wedding';
+      const style = document.getElementById('ai-design-style')?.value || 'Royal Luxury with Drapes & Gold';
+      const palette = document.getElementById('ai-palette-input')?.value || 'Royal Blue & Gold';
+      const budget = parseFloat(document.getElementById('ai-budget-target')?.value) || 200000;
+      const customNotes = (document.getElementById('ai-custom-directive')?.value || '').replace(/"/g, "'");
 
       const pbItems = await dbGetAll('pricebook');
       const pbCatalog = pbItems.map(it => ({ id: it.id, name: it.name, unit: it.unit, selling: it.selling, internal: it.internal }));
 
       const btn = document.getElementById('btn-run-full-ai');
-      btn.innerText = '✨ Querying Catalog & Synthesizing...';
-      btn.disabled = true;
+      if (btn) {
+        btn.innerText = '✨ Querying Catalog & Synthesizing...';
+        btn.disabled = true;
+      }
 
       const promptText = `You are production designer for Vanji Decorators. Create an executable decor plan.
       - Event: ${occasion} | Style: ${style} | Palette: ${palette}
@@ -1139,43 +1182,52 @@
         resultJson.materials = hydratedMaterials;
 
         currentGeneratedPlan = resultJson;
-        document.getElementById('ai-variations-container').classList.add('hidden');
+        const varContainer = document.getElementById('ai-variations-container');
+        if (varContainer) varContainer.classList.add('hidden');
         renderGeneratedPlan(resultJson);
       } catch (err) {
         alert('Could not synthesize AI plan. Check your API key.');
       } finally {
-        btn.innerText = '✨ Synthesize Decoration Plan (Single)';
-        btn.disabled = false;
+        if (btn) {
+          btn.innerText = '✨ Synthesize Decoration Plan (Single)';
+          btn.disabled = false;
+        }
       }
     }
 
     function renderGeneratedPlan(plan) {
-      document.getElementById('ai-plan-title').innerText = plan.title || 'Custom Decor Proposal';
-      document.getElementById('ai-plan-narrative').innerText = plan.narrative || '';
+      const titleEl = document.getElementById('ai-plan-title');
+      const narrativeEl = document.getElementById('ai-plan-narrative');
+      if (titleEl) titleEl.innerText = plan.title || 'Custom Decor Proposal';
+      if (narrativeEl) narrativeEl.innerText = plan.narrative || '';
 
       const tbody = document.getElementById('ai-plan-items-tbody');
       let total = 0;
-      tbody.innerHTML = (plan.materials || []).map(m => {
-        const lineTotal = (m.qty || 1) * m.selling;
-        total += lineTotal;
-        return `
-          <tr>
-            <td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td>
-            <td class="p-1.5 border text-center">${m.qty}</td>
-            <td class="p-1.5 border text-center text-slate-500">${escapeHTML(m.unit)}</td>
-            <td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td>
-            <td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td>
-          </tr>
-        `;
-      }).join('');
+      if (tbody) {
+        tbody.innerHTML = (plan.materials || []).map(m => {
+          const lineTotal = (m.qty || 1) * m.selling;
+          total += lineTotal;
+          return `
+            <tr>
+              <td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td>
+              <td class="p-1.5 border text-center">${m.qty}</td>
+              <td class="p-1.5 border text-center text-slate-500">${escapeHTML(m.unit)}</td>
+              <td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td>
+              <td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td>
+            </tr>
+          `;
+        }).join('');
+      }
 
-      document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
-      document.getElementById('ai-plan-output-card').classList.remove('hidden');
+      const summaryEl = document.getElementById('ai-plan-cost-summary');
+      const cardEl = document.getElementById('ai-plan-output-card');
+      if (summaryEl) summaryEl.innerText = `Est. Price: ₹${total.toLocaleString()}`;
+      if (cardEl) cardEl.classList.remove('hidden');
     }
 
     // 3 BUDGET VARIATIONS GENERATOR
     async function generateAlternativeVariations() {
-      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
+      const budget = parseFloat(document.getElementById('ai-budget-target')?.value) || 200000;
       const bTiers = [
         { label: 'Essential Tier', amount: Math.round(budget * 0.5) },
         { label: 'Balanced Tier', amount: Math.round(budget) },
@@ -1184,6 +1236,7 @@
 
       const pbItems = await dbGetAll('pricebook');
       const container = document.getElementById('ai-variations-grid');
+      if (!container) return;
       container.innerHTML = '';
 
       bTiers.forEach((tier, idx) => {
@@ -1210,12 +1263,15 @@
         container.appendChild(card);
       });
 
-      document.getElementById('ai-plan-output-card').classList.add('hidden');
-      document.getElementById('ai-variations-container').classList.remove('hidden');
+      const cardEl = document.getElementById('ai-plan-output-card');
+      const varContainer = document.getElementById('ai-variations-container');
+      if (cardEl) cardEl.classList.add('hidden');
+      if (varContainer) varContainer.classList.remove('hidden');
     }
 
     function adoptTierPlan(amount, label) {
-      document.getElementById('ai-budget-target').value = amount;
+      const budgetInput = document.getElementById('ai-budget-target');
+      if (budgetInput) budgetInput.value = amount;
       synthesizeCompleteAiDecorPlan(`Strictly target ${label} specifications.`);
     }
 
@@ -1319,46 +1375,65 @@
 
     function loadActiveEventIntoUI() {
       if (!activeEvent) return;
-      document.getElementById('active-event-badge').innerText = activeEvent.id;
-      document.getElementById('ws-event-id').innerText = activeEvent.id;
-      document.getElementById('ws-event-name').innerText = activeEvent.client || 'Untitled Event';
-      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
 
-      document.getElementById('inp-client-name').value = activeEvent.client || '';
-      document.getElementById('inp-client-phone').value = activeEvent.phone || '';
-      document.getElementById('inp-event-date').value = activeEvent.date || '';
-      document.getElementById('inp-venue').value = activeEvent.venue || '';
-      document.getElementById('inp-event-status').value = activeEvent.status || 'Confirmed';
-      document.getElementById('inp-event-type').value = activeEvent.type || '';
-      document.getElementById('inp-event-notes').value = activeEvent.notes || '';
+      activeEvent.dimensions = activeEvent.dimensions || { width: 40, depth: 12, height: 18, walkway: 30 };
+      activeEvent.labourGroups = activeEvent.labourGroups || [
+        { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
+        { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
+        { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
+      ];
+      activeEvent.scopeItems = activeEvent.scopeItems || [];
+      activeEvent.quoteItems = activeEvent.quoteItems || [];
+      activeEvent.flowers = activeEvent.flowers || [];
 
-      if (activeEvent.dimensions) {
-        document.getElementById('ai-dim-width').value = activeEvent.dimensions.width || 40;
-        document.getElementById('ai-dim-depth').value = activeEvent.dimensions.depth || 12;
-        document.getElementById('ai-dim-height').value = activeEvent.dimensions.height || 18;
-        document.getElementById('ai-dim-walkway').value = activeEvent.dimensions.walkway || 30;
-      }
+      const badgeEl = document.getElementById('active-event-badge');
+      const wsIdEl = document.getElementById('ws-event-id');
+      const wsNameEl = document.getElementById('ws-event-name');
+      const wsSubEl = document.getElementById('ws-event-subtitle');
 
-      document.getElementById('ws-quote-transport').value = activeEvent.quoteTransport || 0;
-      document.getElementById('ws-quote-labour').value = activeEvent.quoteLabour || 0;
-      document.getElementById('ws-quote-discount').value = activeEvent.quoteDiscount || 0;
-      document.getElementById('ws-quote-taxmode').value = activeEvent.quoteTaxMode || 'none';
-      document.getElementById('ws-quote-advance').value = activeEvent.quoteAdvance || 0;
+      if (badgeEl) badgeEl.innerText = activeEvent.id;
+      if (wsIdEl) wsIdEl.innerText = activeEvent.id;
+      if (wsNameEl) wsNameEl.innerText = activeEvent.client || 'Untitled Event';
+      if (wsSubEl) wsSubEl.innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
+
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val !== undefined && val !== null ? val : '';
+      };
+
+      setVal('inp-client-name', activeEvent.client);
+      setVal('inp-client-phone', activeEvent.phone);
+      setVal('inp-event-date', activeEvent.date);
+      setVal('inp-venue', activeEvent.venue);
+      setVal('inp-event-status', activeEvent.status || 'Confirmed');
+      setVal('inp-event-type', activeEvent.type || '');
+      setVal('inp-event-notes', activeEvent.notes || '');
+
+      setVal('ai-dim-width', activeEvent.dimensions.width);
+      setVal('ai-dim-depth', activeEvent.dimensions.depth);
+      setVal('ai-dim-height', activeEvent.dimensions.height);
+      setVal('ai-dim-walkway', activeEvent.dimensions.walkway);
+
+      setVal('ws-quote-transport', activeEvent.quoteTransport || 0);
+      setVal('ws-quote-labour', activeEvent.quoteLabour || 0);
+      setVal('ws-quote-discount', activeEvent.quoteDiscount || 0);
+      setVal('ws-quote-taxmode', activeEvent.quoteTaxMode || 'none');
+      setVal('ws-quote-advance', activeEvent.quoteAdvance || 0);
 
       const c = activeEvent.costs || {};
-      document.getElementById('c-fabric').value = c.fabric || 0;
-      document.getElementById('c-flex').value = c.flex || 0;
-      document.getElementById('c-frame').value = c.frame || 0;
-      document.getElementById('c-rentals').value = c.rentals || 0;
-      document.getElementById('c-generator').value = c.generator || 0;
-      document.getElementById('c-sound').value = c.sound || 0;
-      document.getElementById('c-trans-total').value = c.transTotal || 0;
+      setVal('c-fabric', c.fabric || 0);
+      setVal('c-flex', c.flex || 0);
+      setVal('c-frame', c.frame || 0);
+      setVal('c-rentals', c.rentals || 0);
+      setVal('c-generator', c.generator || 0);
+      setVal('c-sound', c.sound || 0);
+      setVal('c-trans-total', c.transTotal || 0);
 
       const s = activeEvent.schedule || {};
-      document.getElementById('s-dispatch').value = s.dispatch || '';
-      document.getElementById('s-setup').value = s.setup || '';
-      document.getElementById('s-event').value = s.event || '';
-      document.getElementById('s-teardown').value = s.teardown || '';
+      setVal('s-dispatch', s.dispatch || '');
+      setVal('s-setup', s.setup || '');
+      setVal('s-event', s.event || '');
+      setVal('s-teardown', s.teardown || '');
 
       const chks = activeEvent.checklists || {};
       checklistStages.forEach(stg => {
@@ -1376,40 +1451,61 @@
 
     async function saveActiveEventToStore(isSilent = false) {
       if (!activeEvent) return;
-      activeEvent.client = document.getElementById('inp-client-name').value.trim();
-      activeEvent.phone = document.getElementById('inp-client-phone').value.trim();
-      activeEvent.date = document.getElementById('inp-event-date').value;
-      activeEvent.venue = document.getElementById('inp-venue').value.trim();
-      activeEvent.status = document.getElementById('inp-event-status').value;
-      activeEvent.type = document.getElementById('inp-event-type').value;
-      activeEvent.notes = document.getElementById('inp-event-notes').value;
+
+      const getVal = (id, fallback) => {
+        const el = document.getElementById(id);
+        return el ? el.value : fallback;
+      };
+
+      activeEvent.client = (getVal('inp-client-name', activeEvent.client) || '').trim();
+      activeEvent.phone = (getVal('inp-client-phone', activeEvent.phone) || '').trim();
+      activeEvent.date = getVal('inp-event-date', activeEvent.date);
+      activeEvent.venue = (getVal('inp-venue', activeEvent.venue) || '').trim();
+      activeEvent.status = getVal('inp-event-status', activeEvent.status);
+      activeEvent.type = getVal('inp-event-type', activeEvent.type);
+      activeEvent.notes = getVal('inp-event-notes', activeEvent.notes);
 
       syncEventDimensions();
 
-      activeEvent.quoteTransport = parseFloat(document.getElementById('ws-quote-transport').value) || 0;
-      activeEvent.quoteLabour = parseFloat(document.getElementById('ws-quote-labour').value) || 0;
-      activeEvent.quoteDiscount = parseFloat(document.getElementById('ws-quote-discount').value) || 0;
-      activeEvent.quoteTaxMode = document.getElementById('ws-quote-taxmode').value;
-      activeEvent.quoteAdvance = parseFloat(document.getElementById('ws-quote-advance').value) || 0;
+      const qTrans = document.getElementById('ws-quote-transport');
+      const qLab = document.getElementById('ws-quote-labour');
+      const qDisc = document.getElementById('ws-quote-discount');
+      const qTax = document.getElementById('ws-quote-taxmode');
+      const qAdv = document.getElementById('ws-quote-advance');
 
-      activeEvent.costs = {
-        fabric: parseFloat(document.getElementById('c-fabric').value) || 0,
-        flex: parseFloat(document.getElementById('c-flex').value) || 0,
-        frame: parseFloat(document.getElementById('c-frame').value) || 0,
-        rentals: parseFloat(document.getElementById('c-rentals').value) || 0,
-        generator: parseFloat(document.getElementById('c-generator').value) || 0,
-        sound: parseFloat(document.getElementById('c-sound').value) || 0,
-        transTotal: parseFloat(document.getElementById('c-trans-total').value) || 0
-      };
+      if (qTrans) activeEvent.quoteTransport = parseFloat(qTrans.value) || 0;
+      if (qLab) activeEvent.quoteLabour = parseFloat(qLab.value) || 0;
+      if (qDisc) activeEvent.quoteDiscount = parseFloat(qDisc.value) || 0;
+      if (qTax) activeEvent.quoteTaxMode = qTax.value || 'none';
+      if (qAdv) activeEvent.quoteAdvance = parseFloat(qAdv.value) || 0;
 
-      activeEvent.schedule = {
-        dispatch: document.getElementById('s-dispatch').value,
-        setup: document.getElementById('s-setup').value,
-        event: document.getElementById('s-event').value,
-        teardown: document.getElementById('s-teardown').value
-      };
+      const cFab = document.getElementById('c-fabric');
+      const cFlx = document.getElementById('c-flex');
+      const cFrm = document.getElementById('c-frame');
+      const cRen = document.getElementById('c-rentals');
+      const cGen = document.getElementById('c-generator');
+      const cSnd = document.getElementById('c-sound');
+      const cTrn = document.getElementById('c-trans-total');
 
-      const chks = {};
+      if (cFab) activeEvent.costs.fabric = parseFloat(cFab.value) || 0;
+      if (cFlx) activeEvent.costs.flex = parseFloat(cFlx.value) || 0;
+      if (cFrm) activeEvent.costs.frame = parseFloat(cFrm.value) || 0;
+      if (cRen) activeEvent.costs.rentals = parseFloat(cRen.value) || 0;
+      if (cGen) activeEvent.costs.generator = parseFloat(cGen.value) || 0;
+      if (cSnd) activeEvent.costs.sound = parseFloat(cSnd.value) || 0;
+      if (cTrn) activeEvent.costs.transTotal = parseFloat(cTrn.value) || 0;
+
+      const sDisp = document.getElementById('s-dispatch');
+      const sSet = document.getElementById('s-setup');
+      const sEv = document.getElementById('s-event');
+      const sTrd = document.getElementById('s-teardown');
+
+      if (sDisp) activeEvent.schedule.dispatch = sDisp.value;
+      if (sSet) activeEvent.schedule.setup = sSet.value;
+      if (sEv) activeEvent.schedule.event = sEv.value;
+      if (sTrd) activeEvent.schedule.teardown = sTrd.value;
+
+      const chks = activeEvent.checklists || {};
       checklistStages.forEach(stg => {
         const el = document.getElementById(stg.id);
         if (el) chks[stg.id] = el.checked;
@@ -1705,17 +1801,23 @@
     // PRICE BOOK PICKER MODAL
     async function openPriceBookPicker(mode) {
       targetPickerMode = mode;
-      document.getElementById('picker-search-filter').value = '';
+      const filterEl = document.getElementById('picker-search-filter');
+      if (filterEl) filterEl.value = '';
       await renderPriceBookPickerList();
-      document.getElementById('modal-pb-picker').classList.remove('hidden');
+      const modal = document.getElementById('modal-pb-picker');
+      if (modal) modal.classList.remove('hidden');
     }
 
-    function closePriceBookPicker() { document.getElementById('modal-pb-picker').classList.add('hidden'); }
+    function closePriceBookPicker() { 
+      const modal = document.getElementById('modal-pb-picker');
+      if (modal) modal.classList.add('hidden'); 
+    }
 
     async function renderPriceBookPickerList() {
-      const query = (document.getElementById('picker-search-filter').value || '').toLowerCase();
+      const query = (document.getElementById('picker-search-filter')?.value || '').toLowerCase();
       const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query) || it.category.toLowerCase().includes(query));
       const container = document.getElementById('picker-items-list');
+      if (!container) return;
       container.innerHTML = items.map(it => `
         <div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')">
           <div>
@@ -1949,7 +2051,7 @@
                 <tr>
                   <td class="p-1.5 border font-semibold">${escapeHTML(it.name)}</td>
                   <td class="p-1.5 border text-center">${it.qty}</td>
-                  <td class="p-1.5 border text-center text-slate-500">${escapeHTML(it.unit)}</td>
+                  <td class="p-1.5 border text-center">${escapeHTML(it.unit)}</td>
                   <td class="p-1.5 border text-right">₹${it.rate.toLocaleString()}</td>
                   <td class="p-1.5 border text-right font-bold">₹${(it.qty * it.rate).toLocaleString()}</td>
                 </tr>
@@ -2030,36 +2132,49 @@
           </div>
         `;
       }
-      document.getElementById('modal-print-hub').classList.remove('hidden');
+      const printHub = document.getElementById('modal-print-hub');
+      if (printHub) printHub.classList.remove('hidden');
     }
 
     // SETTINGS & BACKUP ENGINE
-    function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey').value; }
+    function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey')?.value || ''; }
     async function loadAppSettings() {
       const s = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '', aikey: '' };
-      document.getElementById('set-name').value = s.name || '';
-      document.getElementById('set-phone').value = s.phone || '';
-      document.getElementById('set-gst').value = s.gst || '';
-      document.getElementById('set-aikey').value = s.aikey || '';
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val || '';
+      };
+      setVal('set-name', s.name);
+      setVal('set-phone', s.phone);
+      setVal('set-gst', s.gst);
+      setVal('set-aikey', s.aikey);
     }
 
     async function saveAppSettings() {
+      const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      };
       const s = {
-        name: document.getElementById('set-name').value.trim(),
-        phone: document.getElementById('set-phone').value.trim(),
-        gst: document.getElementById('set-gst').value.trim(),
-        aikey: document.getElementById('set-aikey').value.trim()
+        name: getVal('set-name'),
+        phone: getVal('set-phone'),
+        gst: getVal('set-gst'),
+        aikey: getVal('set-aikey')
       };
       await dbPut('settings', { key: 'main', val: s });
       localStorage.setItem('vanji_aikey', s.aikey);
       alert('Settings saved.');
     }
 
-    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
+    function openBackupModal() { 
+      const modal = document.getElementById('modal-backup');
+      if (modal) modal.classList.remove('hidden'); 
+    }
+
     async function exportFullBackup() {
       const payload = {
         app: 'Vanji Decorators Studio',
-        version: '9.0',
+        version: '11.0',
         exportedAt: new Date().toISOString(),
         events: await dbGetAll('events'),
         pricebook: await dbGetAll('pricebook'),
