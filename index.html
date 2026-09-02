@@ -25,7 +25,9 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-28">
 
-  <!-- LOGIN LOCK OVERLAY -->
+  <!-- ========================================== -->
+  <!-- 0. LOGIN LOCK OVERLAY                      -->
+  <!-- ========================================== -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
       <img src="logo.png.PNG" alt="Vanji Logo" class="h-16 w-16 mx-auto object-contain rounded-full border border-amber-400/40 p-1" onerror="this.style.display='none'">
@@ -50,8 +52,11 @@
     </div>
   </div>
 
-  <!-- MAIN SYSTEM INTERFACE -->
+  <!-- ========================================== -->
+  <!-- MAIN SYSTEM INTERFACE                      -->
+  <!-- ========================================== -->
   <div id="app-container" class="hidden">
+    <!-- APP HEADER -->
     <header class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
       <div class="flex items-center gap-2.5">
         <img src="logo.png.PNG" alt="Vanji" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
@@ -71,6 +76,7 @@
       </div>
     </header>
 
+    <!-- NAVIGATION BAR -->
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
       <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950">🏠 Dashboard</button>
       <button onclick="navTo('events')" id="pnav-events" class="py-2.5 px-3 border-b-2 border-transparent">📁 Events</button>
@@ -86,7 +92,9 @@
 
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
 
-      <!-- DASHBOARD -->
+      <!-- ========================================== -->
+      <!-- 1. DASHBOARD                               -->
+      <!-- ========================================== -->
       <section id="page-dashboard" class="space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
@@ -122,7 +130,9 @@
         </div>
       </section>
 
-      <!-- EVENTS MASTER LIST -->
+      <!-- ========================================== -->
+      <!-- 2. EVENTS MASTER LIST                      -->
+      <!-- ========================================== -->
       <section id="page-events" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -134,7 +144,9 @@
         </div>
       </section>
 
-      <!-- AI STUDIO -->
+      <!-- ========================================== -->
+      <!-- 3. AI STUDIO                               -->
+      <!-- ========================================== -->
       <section id="page-design" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -273,7 +285,9 @@
         </div>
       </section>
 
-      <!-- ACTIVE WORKSPACE -->
+      <!-- ========================================== -->
+      <!-- 4. ACTIVE WORKSPACE                        -->
+      <!-- ========================================== -->
       <section id="page-workspace" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
@@ -300,7 +314,7 @@
           <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
         </nav>
 
-        <!-- OVERVIEW TAB -->
+        <!-- TAB A: OVERVIEW -->
         <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label><input id="inp-client-name" type="text" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()"></div>
@@ -324,7 +338,7 @@
           </div>
         </div>
 
-        <!-- QUOTATION TAB -->
+        <!-- TAB B: QUOTATION -->
         <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -400,7 +414,7 @@
           </div>
         </div>
 
-        <!-- SCOPE TAB -->
+        <!-- TAB C: SCOPE -->
         <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -428,7 +442,7 @@
           </table>
         </div>
 
-        <!-- INTERNAL COSTING TAB -->
+        <!-- TAB D: INTERNAL COSTING -->
         <div id="ws-tab-costing" class="hidden space-y-3 text-xs">
           <div class="bg-black text-white p-4 rounded-xl shadow border border-amber-900/60 flex justify-between items-center">
             <div><span class="text-[10px] text-slate-400 uppercase font-bold">Contract Value</span><p class="text-xl font-black text-amber-400" id="ws-cost-rev">₹0</p></div>
@@ -463,7 +477,7 @@
           </div>
         </div>
 
-        <!-- FLOWERS TAB -->
+        <!-- TAB E: FLOWERS -->
         <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Procurement</h3>
@@ -476,7 +490,7 @@
           </div>
         </div>
 
-        <!-- SCHEDULE TAB -->
+        <!-- TAB F: SCHEDULE -->
         <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-500 font-semibold mb-1">Truck Dispatch</label><input id="s-dispatch" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
@@ -486,12 +500,12 @@
           </div>
         </div>
 
-        <!-- CHECKLIST TAB -->
+        <!-- TAB G: CHECKLIST -->
         <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
         </div>
 
-        <!-- PRINT DOCS TAB -->
+        <!-- TAB H: PRINT DOCS -->
         <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Client Quotation</button>
@@ -501,7 +515,9 @@
         </div>
       </section>
 
-      <!-- PRICE BOOK -->
+      <!-- ========================================== -->
+      <!-- 5. MASTER PRICE BOOK                       -->
+      <!-- ========================================== -->
       <section id="page-pricebook" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -527,7 +543,9 @@
         </div>
       </section>
 
-      <!-- INVENTORY -->
+      <!-- ========================================== -->
+      <!-- 6. WAREHOUSE INVENTORY                     -->
+      <!-- ========================================== -->
       <section id="page-inventory" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -551,7 +569,9 @@
         </div>
       </section>
 
-      <!-- LABOUR & CREW -->
+      <!-- ========================================== -->
+      <!-- 7. LABOUR & CREW MANAGEMENT                -->
+      <!-- ========================================== -->
       <section id="page-labour" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <div class="flex justify-between items-center">
@@ -583,7 +603,9 @@
         </div>
       </section>
 
-      <!-- SETTINGS -->
+      <!-- ========================================== -->
+      <!-- 8. SETTINGS                                -->
+      <!-- ========================================== -->
       <section id="page-settings" class="hidden space-y-4 text-xs">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Company Profile & Gemini Credentials</h2>
@@ -642,18 +664,189 @@
   </div>
 
   <script>
-    // FIX: Updated voice command parser to route team/crew directly to 'labour'
-    const originalHandleVoiceCommand = handleVoiceCommand;
-    handleVoiceCommand = function(cmd) {
-      if (cmd.includes('team') || cmd.includes('crew') || cmd.includes('labour') || cmd.includes('worker')) {
+    let db;
+    let activeEvent = null;
+    let isDirty = false;
+    let autoSaveTimer = null;
+    let currentGeneratedPlan = null;
+    let targetPickerMode = 'quotation';
+    let isVoiceListening = false;
+    let speechRecognition = null;
+
+    const checklistStages = [
+      { id: 'chk_des', label: 'Design Approved with Client' },
+      { id: 'chk_flw', label: 'Flowers Purchased & Dispatched' },
+      { id: 'chk_flx', label: 'Flex Printing Inspected' },
+      { id: 'chk_frm', label: 'Truss / Iron Frame Sized' },
+      { id: 'chk_fur', label: 'Furniture Count Verified' },
+      { id: 'chk_lgt', label: 'Stage Lights Tested' },
+      { id: 'chk_gen', label: 'Generator Arranged' },
+      { id: 'chk_lod', label: 'Truck Loading Audited' },
+      { id: 'chk_stp', label: 'Setup Completed' },
+      { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
+    ];
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+
+    // AUTH & VOICE GREETING
+    function handleLogin() {
+      const u = document.getElementById('login-username').value.trim();
+      const p = document.getElementById('login-password').value.trim();
+
+      if (u.toLowerCase() === 'vanji' && p === 'VANJI') {
+        document.getElementById('login-overlay').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        sessionStorage.setItem('vanji_authenticated', 'true');
+        speakFemale("Hi Vanji, welcome to your production studio.");
+        initApp();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    }
+
+    function checkExistingAuth() {
+      if (sessionStorage.getItem('vanji_authenticated') === 'true') {
+        document.getElementById('login-overlay').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        initApp();
+      }
+    }
+
+    function speakFemale(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 1.15;
+      utterance.rate = 0.95;
+
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(v => (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Victoria')) && v.lang.startsWith('en')) ||
+                         voices.find(v => v.lang.startsWith('en'));
+
+      if (femaleVoice) utterance.voice = femaleVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // AI VOICE COMMAND BOT
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return;
+      speechRecognition = new SpeechRecognition();
+      speechRecognition.continuous = false;
+      speechRecognition.interimResults = false;
+      speechRecognition.lang = 'en-IN';
+
+      speechRecognition.onresult = (event) => {
+        const cmd = event.results[0][0].transcript.toLowerCase();
+        handleVoiceCommand(cmd);
+      };
+
+      speechRecognition.onend = () => {
+        isVoiceListening = false;
+        document.getElementById('voice-bot-btn').classList.remove('mic-pulse');
+        document.getElementById('voice-bot-bubble').classList.add('hidden');
+      };
+    }
+
+    function toggleVoiceBot() {
+      if (!speechRecognition) initSpeechRecognition();
+      if (!speechRecognition) return alert('Speech recognition not supported on this device/browser.');
+
+      const bubble = document.getElementById('voice-bot-bubble');
+      const btn = document.getElementById('voice-bot-btn');
+
+      if (!isVoiceListening) {
+        try {
+          speechRecognition.start();
+          isVoiceListening = true;
+          bubble.innerText = 'Listening for command...';
+          bubble.classList.remove('hidden');
+          btn.classList.add('mic-pulse');
+        } catch(e){}
+      } else {
+        speechRecognition.stop();
+      }
+    }
+
+    function handleVoiceCommand(cmd) {
+      const bubble = document.getElementById('voice-bot-bubble');
+      bubble.innerText = `"${cmd}"`;
+
+      if (cmd.includes('dashboard')) {
+        navTo('dashboard');
+        speakFemale('Opening Dashboard.');
+      } else if (cmd.includes('new event') || cmd.includes('create event')) {
+        createNewEventFlow();
+        speakFemale('Created a new event for you.');
+      } else if (cmd.includes('event') || cmd.includes('all events')) {
+        navTo('events');
+        speakFemale('Opening event register.');
+      } else if (cmd.includes('design') || cmd.includes('studio') || cmd.includes('ai')) {
+        navTo('design');
+        speakFemale('Opening AI Design Studio.');
+      } else if (cmd.includes('price book') || cmd.includes('price')) {
+        navTo('pricebook');
+        speakFemale('Opening Master Price Book.');
+      } else if (cmd.includes('inventory') || cmd.includes('stock')) {
+        navTo('inventory');
+        speakFemale('Opening Warehouse Stock.');
+      } else if (cmd.includes('labour') || cmd.includes('worker') || cmd.includes('crew') || cmd.includes('team')) {
         navTo('labour');
         speakFemale('Opening Labour and Crew.');
+      } else if (cmd.includes('save')) {
+        saveActiveEventToStore();
+        speakFemale('Event details saved.');
+      } else if (cmd.includes('print quotation') || cmd.includes('quotation')) {
+        openPrintModal('quotation');
+        speakFemale('Opening Client Quotation.');
+      } else if (cmd.includes('job sheet')) {
+        openPrintModal('jobsheet');
+        speakFemale('Opening Job Sheet.');
+      } else if (cmd.includes('loading sheet')) {
+        openPrintModal('warehouse');
+        speakFemale('Opening Warehouse Loading Sheet.');
+      } else if (cmd.includes('profit') || cmd.includes('margin')) {
+        if (!activeEvent) {
+          speakFemale('No active event selected.');
+        } else {
+          const rev = activeEvent.quoteGrand || 0;
+          const costText = document.getElementById('ws-cost-total').innerText;
+          const profitText = document.getElementById('ws-cost-profit').innerText;
+          speakFemale(`Contract value is ${rev} rupees. Outflow is ${costText}. Expected profit is ${profitText}.`);
+        }
       } else {
-        originalHandleVoiceCommand(cmd);
+        speakFemale(`Heard: ${cmd}`);
       }
-    };
+    }
 
-    // FIX: Corrected IndexedDB initialization schema ensuring all legacy stores are preserved safely
+    // DATABASE CORE & PERSISTENCE
+    async function initApp() {
+      await openDatabase();
+      await seedDefaults();
+      renderChecklistGrid();
+      await renderEventsList();
+      await renderPriceBookTable();
+      await renderInventoryMaster();
+      await updateDashboard();
+      await loadAppSettings();
+
+      window.addEventListener('beforeunload', (e) => {
+        if (isDirty) {
+          e.preventDefault();
+          e.returnValue = 'You have unsaved changes.';
+        }
+      });
+    }
+
     function openDatabase() {
       return new Promise((res, rej) => {
         const req = indexedDB.open('VanjiDecoratorsDB', 8);
@@ -667,6 +860,1159 @@
         req.onerror = rej;
       });
     }
+
+    function dbPut(s, v) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).put(v); tx.oncomplete = res; tx.onerror = rej; }); }
+    function dbGetAll(s) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).getAll(); r.onsuccess = () => res(r.result || []); }); }
+    function dbGet(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).get(k); r.onsuccess = () => res(r.result); }); }
+    function dbDelete(s, k) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).delete(k); tx.oncomplete = res; tx.onerror = rej; }); }
+
+    async function seedDefaults() {
+      const pbs = await dbGetAll('pricebook');
+      if (pbs.length === 0) {
+        const defs = [
+          { id: 'pb_1', name: 'Chiavari Chair with Cushion', category: 'Furniture', unit: 'Nos', selling: 100, internal: 60 },
+          { id: 'pb_2', name: 'Maharaja VIP Double Sofa', category: 'Furniture', unit: 'Nos', selling: 2500, internal: 1500 },
+          { id: 'pb_3', name: 'Stage Floral Decoration Backdrop', category: 'Decoration', unit: 'Rnft', selling: 800, internal: 450 },
+          { id: 'pb_4', name: 'Warm LED Par Stage Lights (Set of 8)', category: 'Lighting', unit: 'Set', selling: 3200, internal: 1800 },
+          { id: 'pb_5', name: 'Peach Roses (Mandi Bunches)', category: 'Flowers', unit: 'Bunch', selling: 250, internal: 180 }
+        ];
+        for (const it of defs) await dbPut('pricebook', it);
+      }
+
+      const inv = await dbGetAll('inventory');
+      if (inv.length === 0) {
+        const defInv = [
+          { id: 'inv_1', name: 'Chiavari Chair with Cushion', stock: 150, location: 'Rack A1' },
+          { id: 'inv_2', name: 'Maharaja VIP Double Sofa', stock: 4, location: 'Main Floor' },
+          { id: 'inv_3', name: 'Warm LED Par Stage Lights (Set of 8)', stock: 6, location: 'Electronics Bay' }
+        ];
+        for (const it of defInv) await dbPut('inventory', it);
+      }
+    }
+
+    function navTo(p) {
+      ['dashboard', 'events', 'workspace', 'design', 'pricebook', 'inventory', 'labour', 'settings'].forEach(id => {
+        document.getElementById(`page-${id}`).classList.add('hidden');
+        document.getElementById(`pnav-${id}`).className = 'py-2.5 px-3 border-b-2 border-transparent';
+      });
+      document.getElementById(`page-${p}`).classList.remove('hidden');
+      document.getElementById(`pnav-${p}`).className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
+      if (p === 'dashboard') updateDashboard();
+    }
+
+    function switchWsTab(t) {
+      ['overview', 'quotation', 'scope', 'costing', 'flowers', 'schedule', 'checklist', 'printdocs'].forEach(id => {
+        document.getElementById(`ws-tab-${id}`).classList.add('hidden');
+        document.getElementById(`wstab-${id}`).className = 'py-1.5 px-2.5 rounded text-slate-600';
+      });
+      document.getElementById(`ws-tab-${t}`).classList.remove('hidden');
+      document.getElementById(`wstab-${t}`).className = 'py-1.5 px-2.5 rounded bg-amber-100 text-amber-950 font-bold';
+    }
+
+    function markUnsaved() {
+      isDirty = true;
+      const ind = document.getElementById('save-status-indicator');
+      ind.innerText = '● Unsaved';
+      ind.className = 'text-[9px] text-amber-400 font-semibold';
+
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        if (isDirty && activeEvent) saveActiveEventToStore(true);
+      }, 3500);
+    }
+
+    function syncEventDimensions() {
+      if (!activeEvent) return;
+      if (!activeEvent.dimensions) activeEvent.dimensions = {};
+      activeEvent.dimensions.width = document.getElementById('ai-dim-width').value;
+      activeEvent.dimensions.depth = document.getElementById('ai-dim-depth').value;
+      activeEvent.dimensions.height = document.getElementById('ai-dim-height').value;
+      activeEvent.dimensions.walkway = document.getElementById('ai-dim-walkway').value;
+      markUnsaved();
+    }
+
+    // MULTI-AREA VENUE PHOTO PERSISTENCE
+    function handleVenuePhotoSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!activeEvent) return alert('Select or create an active event first.');
+      const category = document.getElementById('ai-photo-category').value;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (!activeEvent.venuePhotos) activeEvent.venuePhotos = [];
+        activeEvent.venuePhotos.push({
+          id: 'ph_' + Date.now(),
+          category: category,
+          mime: file.type || 'image/jpeg',
+          data: ev.target.result
+        });
+        renderVenuePhotosGrid();
+        markUnsaved();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderVenuePhotosGrid() {
+      const container = document.getElementById('ai-venue-photos-grid');
+      if (!activeEvent || !activeEvent.venuePhotos || activeEvent.venuePhotos.length === 0) {
+        container.innerHTML = '<p class="text-[10px] text-slate-400 col-span-2">No venue photos attached.</p>';
+        return;
+      }
+      container.innerHTML = activeEvent.venuePhotos.map((p, idx) => `
+        <div class="relative border rounded-lg overflow-hidden bg-black/5">
+          <img src="${p.data}" class="h-20 w-full object-cover">
+          <span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5 capitalize truncate">${escapeHTML(p.category)}</span>
+          <button onclick="removeVenuePhoto(${idx})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function removeVenuePhoto(idx) {
+      if (!activeEvent || !activeEvent.venuePhotos) return;
+      activeEvent.venuePhotos.splice(idx, 1);
+      renderVenuePhotosGrid();
+      markUnsaved();
+    }
+
+    // VENUE ANALYSIS
+    async function runVenueSpatialAnalysis() {
+      const apiKey = getApiKey();
+      const w = document.getElementById('ai-dim-width').value;
+      const h = document.getElementById('ai-dim-height').value;
+      const d = document.getElementById('ai-dim-depth').value;
+
+      const btn = document.getElementById('btn-analyse-venue');
+      btn.innerText = 'Analysing Venue Architecture...';
+      btn.disabled = true;
+
+      const promptText = `Act as an expert Indian wedding decorator. Analyze venue with: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural limits, recommended truss layout, and elements to avoid. Concise bullets.`;
+
+      try {
+        if (apiKey) {
+          const parts = [{ text: promptText }];
+          if (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) {
+            activeEvent.venuePhotos.slice(0, 3).forEach(p => {
+              parts.unshift({
+                inlineData: { mimeType: p.mime, data: p.data.split(',')[1] }
+              });
+            });
+          }
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts }] })
+          });
+          const data = await res.json();
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          displayVenueAnalysis(reply || 'Analysis completed.');
+        } else {
+          displayVenueAnalysis(
+            `• **Spatial Fit (${w}W × ${h}H ft):** Ceiling permits 8-ft elevated truss ring. Keep 3-ft margins for profile lights.\n` +
+            `• **Structure Recommendation:** Use double box-iron framing. Center stage requires 6-ft clearance depth for sofa placement.\n` +
+            `• **Avoid:** Hanging heavy fresh floral arches without anchor counterweights.`
+          );
+        }
+      } catch (err) {
+        displayVenueAnalysis(`• **Standard Recommendation for ${w}x${h} ft:** Center 32ft floral arch, 8-ft lateral drape margins, 8 LED stage PARs.`);
+      } finally {
+        btn.innerText = '🏛️ Analyse Venue & Structural Constraints';
+        btn.disabled = false;
+      }
+    }
+
+    function displayVenueAnalysis(text) {
+      const box = document.getElementById('ai-venue-analysis-result');
+      document.getElementById('ai-analysis-text').innerHTML = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      box.classList.remove('hidden');
+    }
+
+    // STRICT PRICE BOOK ID GROUNDED AI DESIGN SYNTHESIZER
+    async function synthesizeCompleteAiDecorPlan(refinement = '') {
+      const apiKey = getApiKey();
+      const w = document.getElementById('ai-dim-width').value;
+      const h = document.getElementById('ai-dim-height').value;
+      const d = document.getElementById('ai-dim-depth').value;
+      const occasion = document.getElementById('ai-event-occasion').value;
+      const style = document.getElementById('ai-design-style').value;
+      const palette = document.getElementById('ai-palette-input').value;
+      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
+      const customNotes = (document.getElementById('ai-custom-directive').value || '').replace(/"/g, "'");
+
+      const pbItems = await dbGetAll('pricebook');
+      const pbCatalog = pbItems.map(it => ({ id: it.id, name: it.name, unit: it.unit, selling: it.selling, internal: it.internal }));
+
+      const btn = document.getElementById('btn-run-full-ai');
+      btn.innerText = '✨ Querying Catalog & Synthesizing...';
+      btn.disabled = true;
+
+      const promptText = `You are production designer for Vanji Decorators. Create an executable decor plan.
+      - Event: ${occasion} | Style: ${style} | Palette: ${palette}
+      - Space: ${w} ft Width x ${h} ft Height x ${d} ft Depth
+      - Target Budget: ₹${budget}
+      - Directives: ${customNotes} ${refinement ? `| Refinement: ${refinement}` : ''}
+      - Master Catalog: ${JSON.stringify(pbCatalog)}
+
+      CRITICAL SECURITY RULE: You must select items from the Master Catalog using their EXACT "id". DO NOT invent items or rates.
+      Return response STRICTLY as valid JSON without markdown wrapping:
+      {
+        "title": "Concept Name",
+        "narrative": "3-4 sentences describing visual concept and fit.",
+        "materials": [
+          { "id": "Exact id from catalog", "qty": 10 }
+        ],
+        "setupPlan": [
+          "Day 1: Structural iron truss erection",
+          "Day 2: Flower fixing and lighting"
+        ]
+      }`;
+
+      try {
+        let resultJson = null;
+        if (apiKey) {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+          });
+          const data = await res.json();
+          let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+          raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+          resultJson = JSON.parse(raw);
+        } else {
+          resultJson = {
+            title: `${style} — ${occasion}`,
+            narrative: `Designed for a ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope. Uses ${palette} drapery anchored by balanced floral arches and warm stage wash illumination.`,
+            materials: [
+              { id: "pb_3", qty: parseInt(w) || 40 },
+              { id: "pb_2", qty: 2 },
+              { id: "pb_4", qty: 2 },
+              { id: "pb_1", qty: 100 }
+            ],
+            setupPlan: [
+              "Day 1: Erect truss structure and stretch poly-satin backdrop drapes",
+              "Day 2: Fresh floral cascade fixing, stage wash lighting focus, and VIP sofa placement"
+            ]
+          };
+        }
+
+        const hydratedMaterials = [];
+        (resultJson.materials || []).forEach(m => {
+          const matched = pbItems.find(p => p.id === m.id);
+          if (matched) {
+            hydratedMaterials.push({
+              id: matched.id,
+              name: matched.name,
+              qty: m.qty || 1,
+              unit: matched.unit,
+              selling: matched.selling,
+              internal: matched.internal
+            });
+          }
+        });
+        resultJson.materials = hydratedMaterials;
+
+        currentGeneratedPlan = resultJson;
+        document.getElementById('ai-variations-container').classList.add('hidden');
+        renderGeneratedPlan(resultJson);
+      } catch (err) {
+        alert('Could not synthesize AI plan. Check your API key.');
+      } finally {
+        btn.innerText = '✨ Synthesize Decoration Plan (Single)';
+        btn.disabled = false;
+      }
+    }
+
+    function renderGeneratedPlan(plan) {
+      document.getElementById('ai-plan-title').innerText = plan.title || 'Custom Decor Proposal';
+      document.getElementById('ai-plan-narrative').innerText = plan.narrative || '';
+
+      const tbody = document.getElementById('ai-plan-items-tbody');
+      let total = 0;
+      tbody.innerHTML = (plan.materials || []).map(m => {
+        const lineTotal = (m.qty || 1) * m.selling;
+        total += lineTotal;
+        return `
+          <tr>
+            <td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td>
+            <td class="p-1.5 border text-center">${m.qty}</td>
+            <td class="p-1.5 border text-center text-slate-500">${escapeHTML(m.unit)}</td>
+            <td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td>
+            <td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
+      document.getElementById('ai-plan-output-card').classList.remove('hidden');
+    }
+
+    // 3 BUDGET VARIATIONS GENERATOR
+    async function generateAlternativeVariations() {
+      const budget = parseFloat(document.getElementById('ai-budget-target').value) || 200000;
+      const bTiers = [
+        { label: 'Essential Tier', amount: Math.round(budget * 0.5) },
+        { label: 'Balanced Tier', amount: Math.round(budget) },
+        { label: 'Grand Luxury Tier', amount: Math.round(budget * 1.5) }
+      ];
+
+      const pbItems = await dbGetAll('pricebook');
+      const container = document.getElementById('ai-variations-grid');
+      container.innerHTML = '';
+
+      bTiers.forEach((tier, idx) => {
+        const card = document.createElement('div');
+        card.className = 'p-3 bg-white border border-amber-200 rounded-xl shadow-sm space-y-2 text-xs flex flex-col justify-between';
+        
+        let sampleItems = [];
+        if (idx === 0) sampleItems = pbItems.slice(0, 2);
+        else if (idx === 1) sampleItems = pbItems.slice(0, 4);
+        else sampleItems = pbItems.slice(0, 5);
+
+        card.innerHTML = `
+          <div>
+            <span class="text-[9px] uppercase font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">${tier.label}</span>
+            <h4 class="font-bold text-sm text-slate-900 mt-1">₹${tier.amount.toLocaleString()} Budget</h4>
+            <ul class="mt-2 space-y-1 text-[11px] text-slate-600">
+              ${sampleItems.map(it => `<li>• ${escapeHTML(it.name)} (${it.unit})</li>`).join('')}
+            </ul>
+          </div>
+          <button onclick="adoptTierPlan(${tier.amount}, '${tier.label}')" class="w-full mt-3 bg-black hover:bg-zinc-800 text-amber-400 font-bold py-1.5 rounded text-[11px]">
+            Adopt ${tier.label}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('ai-plan-output-card').classList.add('hidden');
+      document.getElementById('ai-variations-container').classList.remove('hidden');
+    }
+
+    function adoptTierPlan(amount, label) {
+      document.getElementById('ai-budget-target').value = amount;
+      synthesizeCompleteAiDecorPlan(`Strictly target ${label} specifications.`);
+    }
+
+    // PIPELINE PUSH ACTIONS
+    function pushAiScopeToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
+      currentGeneratedPlan.materials.forEach(m => {
+        activeEvent.scopeItems.push({
+          id: m.id,
+          name: m.name,
+          req: m.qty,
+          loaded: 0,
+          ret: 0,
+          dam: 0,
+          unit: m.unit
+        });
+      });
+      alert('Materials pushed to Scope & Stock Audit!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('scope');
+    }
+
+    function pushAiQuoteToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
+      currentGeneratedPlan.materials.forEach(m => {
+        activeEvent.quoteItems.push({
+          name: m.name,
+          qty: m.qty,
+          unit: m.unit,
+          rate: m.selling
+        });
+      });
+      alert('Estimate pushed to Client Quotation Sheet!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('quotation');
+    }
+
+    function pushAiScheduleToActiveEvent() {
+      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
+      if (!currentGeneratedPlan || !currentGeneratedPlan.setupPlan) return;
+      activeEvent.notes = (activeEvent.notes || '') + "\n--- AI Setup Sequence ---\n" + currentGeneratedPlan.setupPlan.join("\n");
+      alert('Setup sequence appended to Event Notes!');
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    // EVENT LIFECYCLE MANAGEMENT
+    async function createNewEventFlow() {
+      const year = new Date().getFullYear();
+      const allEvents = await dbGetAll('events');
+      let maxSeq = 0;
+      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
+      allEvents.forEach(e => {
+        const m = (e.id || '').match(regex);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxSeq) maxSeq = num;
+        }
+      });
+      const newId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+
+      activeEvent = {
+        id: newId,
+        client: '',
+        phone: '',
+        date: '',
+        venue: '',
+        status: 'Confirmed',
+        type: 'Wedding',
+        notes: '',
+        dimensions: { width: 40, depth: 12, height: 18, walkway: 30 },
+        venuePhotos: [],
+        quoteItems: [],
+        quoteTransport: 0,
+        quoteLabour: 0,
+        quoteDiscount: 0,
+        quoteTaxMode: 'none',
+        quoteAdvance: 0,
+        quoteGrand: 0,
+        scopeItems: [],
+        costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, transTotal: 0 },
+        flowers: [],
+        labourGroups: [
+          { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
+          { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
+          { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
+        ],
+        schedule: { dispatch: '', setup: '', event: '', teardown: '' },
+        checklists: {}
+      };
+
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    function loadActiveEventIntoUI() {
+      if (!activeEvent) return;
+      document.getElementById('active-event-badge').innerText = activeEvent.id;
+      document.getElementById('ws-event-id').innerText = activeEvent.id;
+      document.getElementById('ws-event-name').innerText = activeEvent.client || 'Untitled Event';
+      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
+
+      document.getElementById('inp-client-name').value = activeEvent.client || '';
+      document.getElementById('inp-client-phone').value = activeEvent.phone || '';
+      document.getElementById('inp-event-date').value = activeEvent.date || '';
+      document.getElementById('inp-venue').value = activeEvent.venue || '';
+      document.getElementById('inp-event-status').value = activeEvent.status || 'Confirmed';
+      document.getElementById('inp-event-type').value = activeEvent.type || '';
+      document.getElementById('inp-event-notes').value = activeEvent.notes || '';
+
+      if (activeEvent.dimensions) {
+        document.getElementById('ai-dim-width').value = activeEvent.dimensions.width || 40;
+        document.getElementById('ai-dim-depth').value = activeEvent.dimensions.depth || 12;
+        document.getElementById('ai-dim-height').value = activeEvent.dimensions.height || 18;
+        document.getElementById('ai-dim-walkway').value = activeEvent.dimensions.walkway || 30;
+      }
+
+      document.getElementById('ws-quote-transport').value = activeEvent.quoteTransport || 0;
+      document.getElementById('ws-quote-labour').value = activeEvent.quoteLabour || 0;
+      document.getElementById('ws-quote-discount').value = activeEvent.quoteDiscount || 0;
+      document.getElementById('ws-quote-taxmode').value = activeEvent.quoteTaxMode || 'none';
+      document.getElementById('ws-quote-advance').value = activeEvent.quoteAdvance || 0;
+
+      const c = activeEvent.costs || {};
+      document.getElementById('c-fabric').value = c.fabric || 0;
+      document.getElementById('c-flex').value = c.flex || 0;
+      document.getElementById('c-frame').value = c.frame || 0;
+      document.getElementById('c-rentals').value = c.rentals || 0;
+      document.getElementById('c-generator').value = c.generator || 0;
+      document.getElementById('c-sound').value = c.sound || 0;
+      document.getElementById('c-trans-total').value = c.transTotal || 0;
+
+      const s = activeEvent.schedule || {};
+      document.getElementById('s-dispatch').value = s.dispatch || '';
+      document.getElementById('s-setup').value = s.setup || '';
+      document.getElementById('s-event').value = s.event || '';
+      document.getElementById('s-teardown').value = s.teardown || '';
+
+      const chks = activeEvent.checklists || {};
+      checklistStages.forEach(stg => {
+        const el = document.getElementById(stg.id);
+        if (el) el.checked = !!chks[stg.id];
+      });
+
+      renderVenuePhotosGrid();
+      renderQuotationRows();
+      renderScopeRows();
+      renderFlowerRows();
+      renderLabourRows();
+      recalcQuotation();
+    }
+
+    async function saveActiveEventToStore(isSilent = false) {
+      if (!activeEvent) return;
+      activeEvent.client = document.getElementById('inp-client-name').value.trim();
+      activeEvent.phone = document.getElementById('inp-client-phone').value.trim();
+      activeEvent.date = document.getElementById('inp-event-date').value;
+      activeEvent.venue = document.getElementById('inp-venue').value.trim();
+      activeEvent.status = document.getElementById('inp-event-status').value;
+      activeEvent.type = document.getElementById('inp-event-type').value;
+      activeEvent.notes = document.getElementById('inp-event-notes').value;
+
+      syncEventDimensions();
+
+      activeEvent.quoteTransport = parseFloat(document.getElementById('ws-quote-transport').value) || 0;
+      activeEvent.quoteLabour = parseFloat(document.getElementById('ws-quote-labour').value) || 0;
+      activeEvent.quoteDiscount = parseFloat(document.getElementById('ws-quote-discount').value) || 0;
+      activeEvent.quoteTaxMode = document.getElementById('ws-quote-taxmode').value;
+      activeEvent.quoteAdvance = parseFloat(document.getElementById('ws-quote-advance').value) || 0;
+
+      activeEvent.costs = {
+        fabric: parseFloat(document.getElementById('c-fabric').value) || 0,
+        flex: parseFloat(document.getElementById('c-flex').value) || 0,
+        frame: parseFloat(document.getElementById('c-frame').value) || 0,
+        rentals: parseFloat(document.getElementById('c-rentals').value) || 0,
+        generator: parseFloat(document.getElementById('c-generator').value) || 0,
+        sound: parseFloat(document.getElementById('c-sound').value) || 0,
+        transTotal: parseFloat(document.getElementById('c-trans-total').value) || 0
+      };
+
+      activeEvent.schedule = {
+        dispatch: document.getElementById('s-dispatch').value,
+        setup: document.getElementById('s-setup').value,
+        event: document.getElementById('s-event').value,
+        teardown: document.getElementById('s-teardown').value
+      };
+
+      const chks = {};
+      checklistStages.forEach(stg => {
+        const el = document.getElementById(stg.id);
+        if (el) chks[stg.id] = el.checked;
+      });
+      activeEvent.checklists = chks;
+
+      await dbPut('events', activeEvent);
+      isDirty = false;
+      const ind = document.getElementById('save-status-indicator');
+      ind.innerText = '● Saved';
+      ind.className = 'text-[9px] text-emerald-400 font-semibold';
+
+      if (!isSilent) alert(`Event ${activeEvent.id} saved.`);
+      updateDashboard();
+    }
+
+    async function cloneCurrentEvent() {
+      if (!activeEvent) return;
+      if (!confirm('Duplicate this event into a fresh booking?')) return;
+      const year = new Date().getFullYear();
+      const allEvents = await dbGetAll('events');
+      let maxSeq = 0;
+      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
+      allEvents.forEach(e => {
+        const m = (e.id || '').match(regex);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxSeq) maxSeq = num;
+        }
+      });
+      const clonedId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+      const newEvent = JSON.parse(JSON.stringify(activeEvent));
+      newEvent.id = clonedId;
+      newEvent.client += ' (Duplicate)';
+      newEvent.date = '';
+      newEvent.status = 'Inquiry';
+      newEvent.quoteAdvance = 0;
+      newEvent.scopeItems.forEach(it => { it.loaded = 0; it.ret = 0; it.dam = 0; });
+      activeEvent = newEvent;
+      await dbPut('events', activeEvent);
+      loadActiveEventIntoUI();
+      alert(`Cloned to ${clonedId}`);
+    }
+
+    // SCOPE & QUOTATION RENDERING
+    function renderQuotationRows() {
+      const tbody = document.getElementById('ws-quote-items-tbody');
+      tbody.innerHTML = (activeEvent.quoteItems || []).map((it, idx) => `
+        <tr>
+          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.quoteItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+          <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-16"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.quoteItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
+          <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
+          <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); markUnsaved(); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function addCustomQuotationRow() {
+      activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 });
+      markUnsaved();
+      renderQuotationRows();
+    }
+
+    function recalcQuotation() {
+      const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
+      const transport = parseFloat(document.getElementById('ws-quote-transport').value) || 0;
+      const labour = parseFloat(document.getElementById('ws-quote-labour').value) || 0;
+      const discount = parseFloat(document.getElementById('ws-quote-discount').value) || 0;
+      const netCharge = Math.max(0, (subtotal + transport + labour) - discount);
+
+      const taxMode = document.getElementById('ws-quote-taxmode').value;
+      let taxable = netCharge;
+      let gstVal = 0;
+      let grand = netCharge;
+
+      if (taxMode === 'extra18') {
+        taxable = netCharge;
+        gstVal = Math.round(taxable * 0.18);
+        grand = taxable + gstVal;
+      } else if (taxMode === 'incl18') {
+        taxable = Math.round(netCharge / 1.18);
+        gstVal = netCharge - taxable;
+        grand = netCharge;
+      }
+
+      const advance = parseFloat(document.getElementById('ws-quote-advance').value) || 0;
+      const balance = Math.max(0, grand - advance);
+
+      activeEvent.quoteGrand = grand;
+      document.getElementById('ws-quote-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+      document.getElementById('ws-quote-taxable').innerText = `₹${taxable.toLocaleString()}`;
+      document.getElementById('ws-quote-gstval').innerText = `₹${gstVal.toLocaleString()}`;
+      document.getElementById('ws-quote-grand').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      document.getElementById('ws-quote-balance').innerText = `₹${Math.round(balance).toLocaleString()}`;
+      document.getElementById('ws-cost-rev').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      recalcInternalCosting();
+    }
+
+    function renderScopeRows() {
+      const tbody = document.getElementById('ws-scope-tbody');
+      tbody.innerHTML = (activeEvent.scopeItems || []).map((it, idx) => `
+        <tr>
+          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.scopeItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs font-medium"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting(); checkLiveStockShortages();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+          <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+          <td class="py-1 px-1 w-12"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.scopeItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-[10px]"></td>
+          <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); markUnsaved(); renderScopeRows(); recalcInternalCosting(); checkLiveStockShortages();" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+      checkLiveStockShortages();
+    }
+
+    function addCustomScopeRow() {
+      activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' });
+      markUnsaved();
+      renderScopeRows();
+    }
+
+    function renderFlowerRows() {
+      const container = document.getElementById('ws-flowers-container');
+      container.innerHTML = (activeEvent.flowers || []).map((f, i) => `
+        <div class="flex gap-2 items-center">
+          <input type="text" value="${escapeHTML(f.name)}" oninput="activeEvent.flowers[${i}].name=this.value; markUnsaved();" class="flex-grow border rounded p-1 text-xs">
+          <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-16 border rounded p-1 text-center text-xs">
+          <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-20 border rounded p-1 text-right text-xs">
+          <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
+          <button onclick="activeEvent.flowers.splice(${i},1); markUnsaved(); renderFlowerRows(); recalcInternalCosting();" class="text-rose-500 font-bold px-1.5">✕</button>
+        </div>
+      `).join('');
+      recalcInternalCosting();
+    }
+
+    function addFlowerRow() {
+      activeEvent.flowers.push({ name: '', qty: 1, rate: 0 });
+      markUnsaved();
+      renderFlowerRows();
+    }
+
+    // ANONYMOUS LABOUR / CREW ROLE PLANNER
+    function renderLabourRows() {
+      if (!activeEvent) return;
+      if (!activeEvent.labourGroups) {
+        activeEvent.labourGroups = [
+          { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
+          { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
+          { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
+        ];
+      }
+
+      const tbody = document.getElementById('labour-table-tbody');
+      let totalLabourCost = 0;
+
+      tbody.innerHTML = activeEvent.labourGroups.map((lg, i) => {
+        const lineTotal = (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
+        totalLabourCost += lineTotal;
+        return `
+          <tr>
+            <td class="py-1 pr-1"><input type="text" value="${escapeHTML(lg.role)}" oninput="activeEvent.labourGroups[${i}].role=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+            <td class="py-1 px-1 w-16"><input type="number" value="${lg.men}" oninput="activeEvent.labourGroups[${i}].men=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+            <td class="py-1 px-1 w-16"><input type="number" value="${lg.days}" oninput="activeEvent.labourGroups[${i}].days=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+            <td class="py-1 px-1 w-24"><input type="number" value="${lg.rate}" oninput="activeEvent.labourGroups[${i}].rate=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-right text-xs"></td>
+            <td class="py-1 pl-1 text-right font-bold w-24">₹${lineTotal.toLocaleString()}</td>
+            <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.labourGroups.splice(${i},1); markUnsaved(); renderLabourRows();" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('labour-total-cost-val').innerText = `₹${totalLabourCost.toLocaleString()}`;
+      document.getElementById('ws-cost-labour-rollup').innerText = `₹${totalLabourCost.toLocaleString()}`;
+      recalcInternalCosting();
+    }
+
+    function addLabourRow() {
+      if (!activeEvent) return alert('Open an event first.');
+      if (!activeEvent.labourGroups) activeEvent.labourGroups = [];
+      activeEvent.labourGroups.push({ role: 'Helper / Loader', men: 4, days: 1, rate: 1000 });
+      markUnsaved();
+      renderLabourRows();
+    }
+
+    // AUTOMATED INTERNAL COST & STOCK SHORTAGE RADAR
+    async function recalcInternalCosting() {
+      if (!activeEvent) return;
+      const pbItems = await dbGetAll('pricebook');
+      let autoCatalogCost = 0;
+
+      (activeEvent.scopeItems || []).forEach(sc => {
+        const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === (sc.name || '').toLowerCase());
+        if (match) autoCatalogCost += (sc.req || 0) * (match.internal || 0);
+      });
+      document.getElementById('ws-cost-auto-scope').innerText = `₹${Math.round(autoCatalogCost).toLocaleString()}`;
+
+      let labourRollup = 0;
+      (activeEvent.labourGroups || []).forEach(lg => {
+        labourRollup += (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
+      });
+      document.getElementById('ws-cost-labour-rollup').innerText = `₹${Math.round(labourRollup).toLocaleString()}`;
+
+      const flwTotal = (activeEvent.flowers || []).reduce((sum, f) => sum + (f.qty * f.rate), 0);
+      document.getElementById('ws-flowers-total-outflow').innerText = `₹${Math.round(flwTotal).toLocaleString()}`;
+
+      const fabric = parseFloat(document.getElementById('c-fabric').value) || 0;
+      const flex = parseFloat(document.getElementById('c-flex').value) || 0;
+      const frame = parseFloat(document.getElementById('c-frame').value) || 0;
+      const rentals = parseFloat(document.getElementById('c-rentals').value) || 0;
+      const generator = parseFloat(document.getElementById('c-generator').value) || 0;
+      const sound = parseFloat(document.getElementById('c-sound').value) || 0;
+      const transTotal = parseFloat(document.getElementById('c-trans-total').value) || 0;
+
+      const totalOutflow = autoCatalogCost + labourRollup + flwTotal + fabric + flex + frame + rentals + generator + sound + transTotal;
+      const rev = activeEvent.quoteGrand || 0;
+      const profit = rev - totalOutflow;
+      const margin = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
+
+      document.getElementById('ws-cost-total').innerText = `₹${Math.round(totalOutflow).toLocaleString()}`;
+      document.getElementById('ws-cost-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('ws-cost-margin').innerText = `${margin}% Margin`;
+    }
+
+    async function checkLiveStockShortages() {
+      if (!activeEvent) return;
+      const invItems = await dbGetAll('inventory');
+      const shortages = [];
+
+      (activeEvent.scopeItems || []).forEach(sc => {
+        const asset = invItems.find(i => i.name.toLowerCase() === (sc.name || '').toLowerCase());
+        if (asset && sc.req > asset.stock) {
+          shortages.push(`Shortage of ${sc.req - asset.stock} ${sc.unit} for ${sc.name} (Need: ${sc.req}, Available: ${asset.stock})`);
+        }
+      });
+
+      const shortageBox = document.getElementById('dash-shortage-box');
+      const shortageList = document.getElementById('dash-shortage-list');
+      if (shortages.length > 0) {
+        shortageList.innerHTML = shortages.map(s => `<div>• ${escapeHTML(s)}</div>`).join('');
+        shortageBox.classList.remove('hidden');
+      } else {
+        shortageBox.classList.add('hidden');
+      }
+    }
+
+    function renderChecklistGrid() {
+      const container = document.getElementById('ws-checklist-grid');
+      container.innerHTML = checklistStages.map(stg => `
+        <label class="flex items-center gap-2 p-1.5 border rounded bg-slate-50">
+          <input type="checkbox" id="${stg.id}" onchange="markUnsaved();" class="rounded">
+          <span>${stg.label}</span>
+        </label>
+      `).join('');
+    }
+
+    // PRICE BOOK PICKER MODAL
+    async function openPriceBookPicker(mode) {
+      targetPickerMode = mode;
+      document.getElementById('picker-search-filter').value = '';
+      await renderPriceBookPickerList();
+      document.getElementById('modal-pb-picker').classList.remove('hidden');
+    }
+
+    function closePriceBookPicker() { document.getElementById('modal-pb-picker').classList.add('hidden'); }
+
+    async function renderPriceBookPickerList() {
+      const query = (document.getElementById('picker-search-filter').value || '').toLowerCase();
+      const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query) || it.category.toLowerCase().includes(query));
+      const container = document.getElementById('picker-items-list');
+      container.innerHTML = items.map(it => `
+        <div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')">
+          <div>
+            <span class="font-bold text-slate-800 text-xs">${escapeHTML(it.name)}</span>
+            <span class="text-[10px] text-slate-400 block">${escapeHTML(it.category)} • ${escapeHTML(it.unit)}</span>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-indigo-900 block text-xs">₹${it.selling.toLocaleString()}</span>
+            <span class="text-[10px] text-slate-400">Cost: ₹${it.internal.toLocaleString()}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function selectItemFromPicker(id) {
+      const it = await dbGet('pricebook', id);
+      if (!it || !activeEvent) return;
+      if (targetPickerMode === 'quotation') {
+        activeEvent.quoteItems.push({ name: it.name, qty: 1, unit: it.unit, rate: it.selling });
+        markUnsaved();
+        renderQuotationRows();
+        recalcQuotation();
+      } else {
+        activeEvent.scopeItems.push({ id: it.id, name: it.name, req: 1, loaded: 0, ret: 0, dam: 0, unit: it.unit });
+        markUnsaved();
+        renderScopeRows();
+      }
+      closePriceBookPicker();
+    }
+
+    async function renderPriceBookTable() {
+      const items = await dbGetAll('pricebook');
+      const tbody = document.getElementById('pricebook-tbody');
+      tbody.innerHTML = items.map(it => `
+        <tr>
+          <td class="py-1.5 font-bold">${escapeHTML(it.name)}</td>
+          <td class="py-1.5">${escapeHTML(it.category)}</td>
+          <td class="py-1.5 text-center">${escapeHTML(it.unit)}</td>
+          <td class="py-1.5 text-right font-bold text-indigo-900">₹${it.selling.toLocaleString()}</td>
+          <td class="py-1.5 text-right text-slate-600">₹${it.internal.toLocaleString()}</td>
+          <td class="py-1.5 text-center"><button onclick="deletePriceBookItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function openPriceBookEditModal() {
+      const name = prompt('Item Name:');
+      if (!name) return;
+      const category = prompt('Category (Furniture, Decoration, Flowers, Lighting, Tent):') || 'Decoration';
+      const unit = prompt('Unit (Nos, Rnft, Sqft, Bunch):') || 'Nos';
+      const selling = parseFloat(prompt('Selling Rate (₹):')) || 0;
+      const internal = parseFloat(prompt('Internal Cost (₹):')) || 0;
+      await dbPut('pricebook', { id: 'pb_' + Date.now(), name, category, unit, selling, internal });
+      renderPriceBookTable();
+    }
+
+    async function deletePriceBookItem(id) {
+      if (confirm('Delete from Master Price Book?')) { await dbDelete('pricebook', id); renderPriceBookTable(); }
+    }
+
+    // INVENTORY PERSISTENCE
+    async function renderInventoryMaster() {
+      const items = await dbGetAll('inventory');
+      const tbody = document.getElementById('inventory-master-tbody');
+      tbody.innerHTML = items.map(it => `
+        <tr>
+          <td class="py-1.5 font-bold">${escapeHTML(it.name)}</td>
+          <td class="py-1.5 text-center font-bold">${it.stock}</td>
+          <td class="py-1.5 text-center text-slate-500">${escapeHTML(it.location || 'Main Warehouse')}</td>
+          <td class="py-1.5 text-center"><button onclick="deleteInventoryItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function openInventoryAddModal() {
+      const name = prompt('Asset Name:');
+      if (!name) return;
+      const stock = parseInt(prompt('Total Stock Count:')) || 0;
+      const location = prompt('Storage Location (e.g. Rack A1):') || 'Main Warehouse';
+      await dbPut('inventory', { id: 'inv_' + Date.now(), name, stock, location });
+      renderInventoryMaster();
+      checkLiveStockShortages();
+    }
+
+    async function deleteInventoryItem(id) {
+      if (confirm('Delete asset?')) { await dbDelete('inventory', id); renderInventoryMaster(); checkLiveStockShortages(); }
+    }
+
+    // EVENTS & DASHBOARD
+    async function renderEventsList() {
+      const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
+      const events = (await dbGetAll('events')).filter(e => 
+        (e.client || '').toLowerCase().includes(query) || 
+        (e.venue || '').toLowerCase().includes(query) || 
+        (e.id || '').toLowerCase().includes(query)
+      );
+      const container = document.getElementById('events-master-list');
+      container.innerHTML = events.map(e => `
+        <div class="py-2.5 flex justify-between items-center hover:bg-slate-50">
+          <div>
+            <span class="font-bold text-slate-900 text-xs">${escapeHTML(e.client || 'Untitled')}</span>
+            <span class="text-[10px] text-slate-400 block">${e.id} • ${escapeHTML(e.venue || 'No Venue')} • ${e.date || 'No Date'}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2 py-1 rounded text-xs font-bold">Open</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function openEventById(id) {
+      activeEvent = await dbGet('events', id);
+      loadActiveEventIntoUI();
+      navTo('workspace');
+      switchWsTab('overview');
+    }
+
+    async function updateDashboard() {
+      const events = await dbGetAll('events');
+      const pbItems = await dbGetAll('pricebook');
+      const totalContract = events.reduce((sum, e) => sum + (e.quoteGrand || 0), 0);
+      let totalCost = 0;
+
+      events.forEach(e => {
+        let evScopeCost = 0;
+        (e.scopeItems || []).forEach(sc => {
+          const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === (sc.name || '').toLowerCase());
+          if (match) evScopeCost += (sc.req || 0) * (match.internal || 0);
+        });
+
+        let labourRollup = 0;
+        (e.labourGroups || []).forEach(lg => {
+          labourRollup += (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
+        });
+
+        const c = e.costs || {};
+        const flw = (e.flowers || []).reduce((sf, f) => sf + (f.qty * f.rate), 0);
+        totalCost += evScopeCost + labourRollup + flw + (c.fabric || 0) + (c.flex || 0) + (c.frame || 0) + (c.rentals || 0) + (c.generator || 0) + (c.sound || 0) + (c.transTotal || 0);
+      });
+
+      const totalProfit = totalContract - totalCost;
+      const margin = totalContract > 0 ? ((totalProfit / totalContract) * 100).toFixed(1) : 0;
+
+      document.getElementById('dash-total-events').innerText = events.length;
+      document.getElementById('dash-confirmed-events').innerText = `${events.filter(e => e.status === 'Confirmed').length} Confirmed`;
+      document.getElementById('dash-total-contract').innerText = `₹${(totalContract/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-outflow').innerText = `₹${(totalCost/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-profit').innerText = `₹${Math.round(totalProfit).toLocaleString()}`;
+      document.getElementById('dash-profit-margin').innerText = `${margin}% Margin`;
+
+      const upBox = document.getElementById('dash-upcoming-container');
+      const sorted = [...events].sort((a,b) => (a.date || '').localeCompare(b.date || '')).slice(0, 5);
+      upBox.innerHTML = sorted.map(e => `
+        <div class="p-2.5 border rounded-lg flex justify-between items-center bg-slate-50">
+          <div>
+            <span class="font-bold text-slate-900 block">${e.date || 'TBD'} — ${escapeHTML(e.venue || 'Venue TBD')}</span>
+            <span class="text-[10px] text-slate-500">${escapeHTML(e.client)} • ₹${Math.round(e.quoteGrand || 0).toLocaleString()}</span>
+          </div>
+          <span class="text-[9px] px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-900 border border-amber-200">${e.status}</span>
+        </div>
+      `).join('');
+
+      checkLiveStockShortages();
+    }
+
+    // PRINT DOCUMENT HUB
+    async function openPrintModal(type) {
+      if (!activeEvent) return alert('Open an event first.');
+      const content = document.getElementById('print-sheet-content');
+      const settings = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '' };
+
+      if (type === 'quotation') {
+        const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
+        const advance = activeEvent.quoteAdvance || 0;
+        const balance = Math.max(0, (activeEvent.quoteGrand || 0) - advance);
+
+        content.innerHTML = `
+          <div class="flex justify-between items-start border-b-2 border-black pb-3">
+            <div>
+              <h1 class="text-xl font-black uppercase text-black tracking-wider">${escapeHTML(settings.name)}</h1>
+              <p class="text-[10px] text-slate-600">Luxury Event & Wedding Decorators</p>
+              <p class="text-[9px] text-slate-500">Phone: ${escapeHTML(settings.phone || '-')} | GSTIN: ${escapeHTML(settings.gst || 'N/A')}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-mono font-bold block">${activeEvent.id}</span>
+              <span class="text-[10px] text-slate-500">Date: ${new Date().toLocaleDateString('en-GB')}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-2.5 rounded border mt-2">
+            <div>
+              <p class="text-slate-400 text-[9px] uppercase font-bold">Client Details</p>
+              <p class="font-bold text-slate-900">${escapeHTML(activeEvent.client)}</p>
+              <p class="text-slate-600">${escapeHTML(activeEvent.phone || '-')}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-slate-400 text-[9px] uppercase font-bold">Event & Venue</p>
+              <p class="font-bold text-slate-900">${activeEvent.date || '-'}</p>
+              <p class="text-slate-600">${escapeHTML(activeEvent.venue || '-')}</p>
+            </div>
+          </div>
+
+          <table class="w-full text-left border-collapse text-xs border mt-3">
+            <thead>
+              <tr class="bg-black text-amber-400 text-[10px]">
+                <th class="p-1.5 border">Item Description</th>
+                <th class="p-1.5 text-center w-16 border">Qty</th>
+                <th class="p-1.5 text-center w-16 border">Unit</th>
+                <th class="p-1.5 text-right w-20 border">Rate</th>
+                <th class="p-1.5 text-right w-24 border">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(activeEvent.quoteItems || []).map(it => `
+                <tr>
+                  <td class="p-1.5 border font-semibold">${escapeHTML(it.name)}</td>
+                  <td class="p-1.5 border text-center">${it.qty}</td>
+                  <td class="p-1.5 border text-center">${escapeHTML(it.unit)}</td>
+                  <td class="p-1.5 border text-right">₹${it.rate.toLocaleString()}</td>
+                  <td class="p-1.5 border text-right font-bold">₹${(it.qty * it.rate).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="flex justify-end pt-2">
+            <div class="w-64 space-y-1 text-xs">
+              <div class="flex justify-between"><span class="text-slate-500">Items Subtotal:</span><span>₹${subtotal.toLocaleString()}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Transport:</span><span>₹${(activeEvent.quoteTransport || 0).toLocaleString()}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Labour:</span><span>₹${(activeEvent.quoteLabour || 0).toLocaleString()}</span></div>
+              <div class="flex justify-between text-rose-600"><span class="text-slate-500">Discount:</span><span>- ₹${(activeEvent.quoteDiscount || 0).toLocaleString()}</span></div>
+              <div class="flex justify-between border-t pt-1 font-black text-sm text-indigo-950">
+                <span>Grand Total:</span><span>₹${Math.round(activeEvent.quoteGrand || 0).toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between font-bold text-emerald-700">
+                <span>Advance Paid:</span><span>₹${advance.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between font-black text-rose-700 border-t pt-1">
+                <span>Balance Due:</span><span>₹${Math.round(balance).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'jobsheet') {
+        content.innerHTML = `
+          <div class="flex justify-between items-center border-b-2 border-black pb-2">
+            <h1 class="text-lg font-black uppercase tracking-wider">VANJI DECORATORS — PRODUCTION JOB SHEET</h1>
+            <p class="text-xs font-mono font-bold">${activeEvent.id}</p>
+          </div>
+          <div class="text-xs bg-slate-50 p-2 rounded border mt-2">
+            Venue: <strong>${escapeHTML(activeEvent.venue)}</strong> | Client: <strong>${escapeHTML(activeEvent.client)}</strong> | Showtime: <strong>${activeEvent.schedule?.event || 'TBD'}</strong>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mt-2 border rounded p-1.5">
+            <div>Setup: <strong>${activeEvent.schedule?.setup || 'TBD'}</strong></div>
+            <div>Teardown: <strong>${activeEvent.schedule?.teardown || 'TBD'}</strong></div>
+          </div>
+          <h3 class="font-bold text-xs uppercase mt-3 mb-1">Required Equipment & Scope</h3>
+          <table class="w-full text-left border-collapse text-xs border">
+            <thead><tr class="bg-black text-amber-400 text-[10px]"><th class="p-1.5 border">Item</th><th class="p-1.5 text-center w-20 border">Qty</th><th class="p-1.5 text-center w-20 border">Check</th></tr></thead>
+            <tbody>
+              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border font-semibold">${escapeHTML(it.name)}</td><td class="p-1.5 border text-center font-bold">${it.req} ${escapeHTML(it.unit)}</td><td class="p-1.5 border text-center font-mono">[ &nbsp; ]</td></tr>`).join('')}
+            </tbody>
+          </table>
+          <h3 class="font-bold text-xs uppercase mt-3 mb-1">Assigned Labour Crew Deployment</h3>
+          <table class="w-full text-left border-collapse text-xs border">
+            <thead><tr class="bg-black text-amber-400 text-[10px]"><th class="p-1.5 border">Role / Crew</th><th class="p-1.5 text-center w-20 border">Workers</th><th class="p-1.5 text-center w-20 border">Days</th></tr></thead>
+            <tbody>
+              ${(activeEvent.labourGroups || []).map(lg => `<tr><td class="p-1.5 border">${escapeHTML(lg.role)}</td><td class="p-1.5 border text-center font-bold">${lg.men}</td><td class="p-1.5 border text-center">${lg.days}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (type === 'warehouse') {
+        content.innerHTML = `
+          <div class="flex justify-between items-center border-b-2 border-black pb-2">
+            <h1 class="text-lg font-black uppercase tracking-wider">VANJI DECORATORS — LOADING & RETURN AUDIT</h1>
+            <p class="text-xs font-mono font-bold">${activeEvent.id}</p>
+          </div>
+          <p class="text-xs mt-1">Event: <strong>${escapeHTML(activeEvent.client)}</strong> | Venue: <strong>${escapeHTML(activeEvent.venue)}</strong></p>
+          <table class="w-full text-left border-collapse text-xs border mt-3">
+            <thead>
+              <tr class="bg-black text-amber-400 text-[10px]">
+                <th class="p-1.5 border">Item</th>
+                <th class="p-1.5 text-center border">Required</th>
+                <th class="p-1.5 text-center border">Loaded</th>
+                <th class="p-1.5 text-center border">Returned</th>
+                <th class="p-1.5 text-center border text-rose-300">Damage</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border">${escapeHTML(it.name)}</td><td class="p-1.5 border text-center">${it.req}</td><td class="p-1.5 border text-center">${it.loaded || 0}</td><td class="p-1.5 border text-center">${it.ret || 0}</td><td class="p-1.5 border text-center text-rose-600 font-bold">${it.dam || 0}</td></tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="grid grid-cols-2 gap-4 border-t pt-4 text-center text-[10px] text-slate-500 mt-6">
+            <div>Warehouse Dispatch Signature: _____________</div>
+            <div>Return Auditor Signature: _____________</div>
+          </div>
+        `;
+      }
+      document.getElementById('modal-print-hub').classList.remove('hidden');
+    }
+
+    // SETTINGS & BACKUP ENGINE
+    function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey').value; }
+    async function loadAppSettings() {
+      const s = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '', aikey: '' };
+      document.getElementById('set-name').value = s.name || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-gst').value = s.gst || '';
+      document.getElementById('set-aikey').value = s.aikey || '';
+    }
+
+    async function saveAppSettings() {
+      const s = {
+        name: document.getElementById('set-name').value.trim(),
+        phone: document.getElementById('set-phone').value.trim(),
+        gst: document.getElementById('set-gst').value.trim(),
+        aikey: document.getElementById('set-aikey').value.trim()
+      };
+      await dbPut('settings', { key: 'main', val: s });
+      localStorage.setItem('vanji_aikey', s.aikey);
+      alert('Settings saved.');
+    }
+
+    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
+    async function exportFullBackup() {
+      const payload = {
+        app: 'Vanji Decorators Studio',
+        version: '8.0',
+        exportedAt: new Date().toISOString(),
+        events: await dbGetAll('events'),
+        pricebook: await dbGetAll('pricebook'),
+        inventory: await dbGetAll('inventory'),
+        settings: (await dbGet('settings', 'main'))?.val || {}
+      };
+      const a = document.createElement('a');
+      a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      a.download = `Vanji_Production_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importFullBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          for (const evRec of (data.events || [])) await dbPut('events', evRec);
+          for (const pb of (data.pricebook || [])) await dbPut('pricebook', pb);
+          for (const inv of (data.inventory || [])) await dbPut('inventory', inv);
+          if (data.settings) await dbPut('settings', { key: 'main', val: data.settings });
+          alert('Database restored successfully!');
+          location.reload();
+        } catch (err) {
+          alert('Failed to parse backup JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.onload = checkExistingAuth;
   </script>
 </body>
 </html>
