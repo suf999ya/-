@@ -25,7 +25,9 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-28">
 
-  <!-- 0. LOGIN LOCK OVERLAY -->
+  <!-- ========================================== -->
+  <!-- 0. LOGIN LOCK OVERLAY                      -->
+  <!-- ========================================== -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
       <img src="logo.png.PNG" alt="Vanji Logo" class="h-16 w-16 mx-auto object-contain rounded-full border border-amber-400/40 p-1" onerror="this.style.display='none'">
@@ -53,8 +55,11 @@
     </div>
   </div>
 
-  <!-- MAIN SYSTEM INTERFACE -->
+  <!-- ========================================== -->
+  <!-- MAIN SYSTEM INTERFACE                      -->
+  <!-- ========================================== -->
   <div id="app-container" class="hidden">
+    <!-- APP HEADER -->
     <header class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
       <div class="flex items-center gap-2.5">
         <img src="logo.png.PNG" alt="Vanji" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
@@ -74,6 +79,7 @@
       </div>
     </header>
 
+    <!-- NAVIGATION BAR -->
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
       <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950">🏠 Dashboard</button>
       <button onclick="navTo('events')" id="pnav-events" class="py-2.5 px-3 border-b-2 border-transparent">📁 Events</button>
@@ -241,7 +247,6 @@
           <div id="ai-variations-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
 
-        <!-- Single Plan Output Card with Generated Visual Design -->
         <div id="ai-plan-output-card" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -253,7 +258,6 @@
             </button>
           </div>
 
-          <!-- AI GENERATED CONCEPT IMAGE DISPLAY -->
           <div id="ai-concept-image-wrapper" class="space-y-1.5">
             <span class="text-[10px] uppercase font-bold text-slate-400 block">AI Visual Decor Concept Render</span>
             <div class="relative rounded-xl border border-amber-900/40 bg-zinc-900 overflow-hidden min-h-[200px] flex items-center justify-center shadow-inner">
@@ -307,6 +311,7 @@
           <div class="flex gap-1.5">
             <button onclick="cloneCurrentEvent()" class="bg-zinc-800 text-amber-300 border border-zinc-700 text-[11px] px-2.5 py-1 rounded font-semibold">📋 Clone</button>
             <button onclick="saveActiveEventToStore()" class="bg-amber-700 text-white text-[11px] px-3 py-1 rounded font-bold">Save</button>
+            <button onclick="if(activeEvent) deleteEventById(activeEvent.id);" class="bg-rose-950 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded font-bold">🗑️ Delete</button>
           </div>
         </div>
 
@@ -321,7 +326,7 @@
           <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
         </nav>
 
-        <!-- OVERVIEW TAB -->
+        <!-- TAB A: OVERVIEW -->
         <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label><input id="inp-client-name" type="text" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()"></div>
@@ -345,7 +350,7 @@
           </div>
         </div>
 
-        <!-- QUOTATION TAB -->
+        <!-- TAB B: QUOTATION -->
         <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -421,7 +426,7 @@
           </div>
         </div>
 
-        <!-- SCOPE TAB -->
+        <!-- TAB C: SCOPE -->
         <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -449,7 +454,7 @@
           </table>
         </div>
 
-        <!-- INTERNAL COSTING TAB -->
+        <!-- TAB D: INTERNAL COSTING -->
         <div id="ws-tab-costing" class="hidden space-y-3 text-xs">
           <div class="bg-black text-white p-4 rounded-xl shadow border border-amber-900/60 flex justify-between items-center">
             <div><span class="text-[10px] text-slate-400 uppercase font-bold">Contract Value</span><p class="text-xl font-black text-amber-400" id="ws-cost-rev">₹0</p></div>
@@ -484,7 +489,7 @@
           </div>
         </div>
 
-        <!-- FLOWERS TAB -->
+        <!-- TAB E: FLOWERS -->
         <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Procurement</h3>
@@ -497,7 +502,7 @@
           </div>
         </div>
 
-        <!-- SCHEDULE TAB -->
+        <!-- TAB F: SCHEDULE -->
         <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-500 font-semibold mb-1">Truck Dispatch</label><input id="s-dispatch" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
@@ -507,12 +512,12 @@
           </div>
         </div>
 
-        <!-- CHECKLIST TAB -->
+        <!-- TAB G: CHECKLIST -->
         <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
         </div>
 
-        <!-- PRINT DOCS TAB -->
+        <!-- TAB H: PRINT DOCS -->
         <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Client Quotation</button>
@@ -1128,7 +1133,6 @@
         btn.disabled = true;
       }
 
-      // 1. Text & Scope Generation Payload with Venue Photo Attachment
       const promptText = `You are senior architectural designer for Vanji Decorators. 
       Inspect the attached venue photograph carefully (if provided) and tailor an executable luxury wedding decoration proposal to the hall's exact architecture.
       - Event: ${occasion} | Style: ${style} | Palette: ${palette}
@@ -1157,7 +1161,6 @@
         if (apiKey) {
           const parts = [{ text: promptText }];
           if (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) {
-            // Attach venue photos directly so AI actually evaluates the photo
             activeEvent.venuePhotos.slice(0, 3).forEach(p => {
               parts.unshift({
                 inlineData: { mimeType: p.mime, data: p.data.split(',')[1] }
@@ -1213,7 +1216,6 @@
         if (varContainer) varContainer.classList.add('hidden');
         renderGeneratedPlan(resultJson);
 
-        // 2. Trigger Concept Image Render based on AI Prompt
         renderAiConceptImage(resultJson.imagePrompt, apiKey);
 
       } catch (err) {
@@ -1239,7 +1241,6 @@
 
       try {
         if (apiKey) {
-          // Attempt Imagen 3 Generation via Gemini REST
           const imgRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1258,7 +1259,6 @@
         console.warn("Imagen generation fallback applied:", err);
       }
 
-      // High-resolution realistic wedding decor placeholder if no API key or Imagen quota limit hit
       if (!generatedSrc) {
         generatedSrc = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
       }
@@ -1418,6 +1418,31 @@
       loadActiveEventIntoUI();
       navTo('workspace');
       switchWsTab('overview');
+    }
+
+    // EVENT DELETION LOGIC
+    async function deleteEventById(id) {
+      if (!confirm(`Are you sure you want to permanently delete event ${id}? This cannot be undone.`)) return;
+
+      await dbDelete('events', id);
+
+      if (activeEvent && activeEvent.id === id) {
+        activeEvent = null;
+        const badgeEl = document.getElementById('active-event-badge');
+        const wsIdEl = document.getElementById('ws-event-id');
+        const wsNameEl = document.getElementById('ws-event-name');
+        const wsSubEl = document.getElementById('ws-event-subtitle');
+
+        if (badgeEl) badgeEl.innerText = 'NO EVENT';
+        if (wsIdEl) wsIdEl.innerText = '-';
+        if (wsNameEl) wsNameEl.innerText = 'Select an Event';
+        if (wsSubEl) wsSubEl.innerText = 'Venue: - | Date: -';
+        navTo('events');
+      }
+
+      await renderEventsList();
+      await updateDashboard();
+      alert(`Event ${id} has been deleted.`);
     }
 
     // EVENT LIFECYCLE MANAGEMENT
@@ -2007,7 +2032,7 @@
       if (confirm('Delete asset?')) { await dbDelete('inventory', id); renderInventoryMaster(); checkLiveStockShortages(); }
     }
 
-    // EVENTS & DASHBOARD
+    // MASTER EVENTS LIST
     async function renderEventsList() {
       if (!db) return;
       const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
@@ -2024,8 +2049,9 @@
             <span class="font-bold text-slate-900 text-xs">${escapeHTML(e.client || 'Untitled')}</span>
             <span class="text-[10px] text-slate-400 block">${e.id} • ${escapeHTML(e.venue || 'No Venue')} • ${e.date || 'No Date'}</span>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2 py-1 rounded text-xs font-bold">Open</button>
+          <div class="flex items-center gap-1.5">
+            <button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded text-xs font-bold">Open</button>
+            <button onclick="deleteEventById('${e.id}')" class="bg-rose-50 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-600 hover:text-white">🗑️</button>
           </div>
         </div>
       `).join('');
