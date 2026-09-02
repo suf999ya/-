@@ -699,6 +699,67 @@
       { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
     ];
 
+    const AI_TOOLS_DECLARATION = [{
+      function_declarations: [
+        {
+          name: "updateClientDetails",
+          description: "Fills or updates client information, date, venue, status, and event type.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              clientName: { type: "STRING", description: "Full name of the client" },
+              phone: { type: "STRING", description: "Phone or WhatsApp number" },
+              eventDate: { type: "STRING", description: "Date in YYYY-MM-DD format" },
+              venue: { type: "STRING", description: "Venue name and address" },
+              eventType: { type: "STRING", description: "Occasion: Nikah, Reception, Sangeet, Wedding, etc." },
+              status: { type: "STRING", enum: ["Inquiry", "Hold", "Quotation Sent", "Confirmed", "Production", "Completed"] }
+            }
+          }
+        },
+        {
+          name: "setScheduleTimetable",
+          description: "Sets the logistics and production schedule timestamps.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              dispatch: { type: "STRING", description: "Truck dispatch datetime" },
+              setup: { type: "STRING", description: "Setup start datetime" },
+              eventStart: { type: "STRING", description: "Event commences datetime" },
+              teardown: { type: "STRING", description: "Teardown datetime" }
+            }
+          }
+        },
+        {
+          name: "addScopeAndQuotationItem",
+          description: "Selects items from the Master Price Book and adds them to client quote and production scope.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              itemId: { type: "STRING", description: "Price book item ID (e.g., pb_1, pb_2, pb_3)" },
+              quantity: { type: "NUMBER", description: "Quantity required" }
+            },
+            required: ["itemId", "quantity"]
+          }
+        },
+        {
+          name: "queryProjectFinancials",
+          description: "Answers questions regarding contract value, internal costs, and net profit margins.",
+          parameters: { type: "OBJECT", properties: {} }
+        },
+        {
+          name: "navigateInterface",
+          description: "Switches pages or tabs inside the application.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              page: { type: "STRING", enum: ["dashboard", "events", "workspace", "design", "pricebook", "inventory", "labour", "settings"] }
+            },
+            required: ["page"]
+          }
+        }
+      ]
+    }];
+
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>'"]/g, tag => ({
@@ -1231,4 +1292,561 @@
           });
           const data = await res.json();
           let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-          raw = raw.replace(/```json/g, '').replace(/
+          raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+          resultJson = JSON.parse(raw);
+        } else {
+          resultJson = {
+            title: `${style} — ${occasion}`,
+            narrative: `Custom floral styling for your ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope using ${palette} arrangements, cascading backdrops, and warm stage wash illumination.`,
+            imagePrompt: `Indian wedding stage decorated with ${style}, ${palette}, floral arches and sofa.`,
+            materials: [{ id: "pb_3", qty: 40 }, { id: "pb_2", qty: 2 }],
+            setupPlan: ["Day 1: Structure erection", "Day 2: Floral Mandi fixing"]
+          };
+        }
+
+        const hydratedMaterials = [];
+        (resultJson.materials || []).forEach(m => {
+          const matched = pbItems.find(p => p.id === m.id);
+          if (matched) {
+            hydratedMaterials.push({ id: matched.id, name: matched.name, qty: m.qty || 1, unit: matched.unit, selling: matched.selling, internal: matched.internal });
+          }
+        });
+        resultJson.materials = hydratedMaterials;
+
+        currentGeneratedPlan = resultJson;
+        document.getElementById('ai-variations-container').classList.add('hidden');
+        renderGeneratedPlan(resultJson);
+        renderDecoratedVenuePhoto(resultJson.imagePrompt, palette, style, apiKey);
+      } catch (err) {
+        alert('Could not synthesize AI plan. Check your API key.');
+      } finally {
+        if (btn) { btn.innerText = '✨ Decorate Uploaded Venue Photo'; btn.disabled = false; }
+      }
+    }
+
+    async function synthesizeMultipleBotanicalDesigns() {
+      const concepts = [
+        { id: "c1", name: "Traditional Temple Marigold", floralProfile: "Orange Genda, Mogra strings, brass Urlis", narrative: "Auspicious South Indian layout with fragrant jasmine bells and marigold waterfall arches." },
+        { id: "c2", name: "European Pastel Cloud", floralProfile: "Blush Hydrangeas, Peach Roses, Baby's Breath", narrative: "Modern minimalist luxury with curved floral arcs and poly-satin drapery." },
+        { id: "c3", name: "Contemporary Orchid Truss", floralProfile: "White Dendrobium Orchids, Gold Trusses", narrative: "High-contrast architectural stage accented with geometric gold trusses and warm amber wash." }
+      ];
+
+      const container = document.getElementById('ai-variations-grid');
+      const wrapper = document.getElementById('ai-variations-container');
+      if (!container || !wrapper) return;
+
+      container.innerHTML = concepts.map(c => `
+        <div class="p-3 bg-white border border-amber-200 rounded-xl shadow-sm flex flex-col justify-between space-y-2 text-xs">
+          <div>
+            <span class="text-[9px] uppercase font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">${c.name}</span>
+            <p class="font-semibold text-slate-800 mt-1">${c.narrative}</p>
+            <div class="mt-2 text-[10px] bg-slate-50 p-1.5 rounded border"><strong class="text-amber-950 block">Botanical Variety:</strong><span>${c.floralProfile}</span></div>
+          </div>
+          <button onclick="applyDesignToStage('${escapeHTML(c.name)}', '${escapeHTML(c.floralProfile)}')" class="w-full bg-black hover:bg-zinc-800 text-amber-400 font-bold py-1.5 rounded text-[11px]">
+            Apply Concept
+          </button>
+        </div>
+      `).join('');
+      wrapper.classList.remove('hidden');
+    }
+
+    function applyDesignToStage(name, flowers) {
+      document.getElementById('ai-custom-directive').value = `${name} using ${flowers}`;
+      synthesizeCompleteAiDecorPlan();
+    }
+
+    async function renderDecoratedVenuePhoto(imagePrompt, palette, style, apiKey) {
+      const loader = document.getElementById('ai-concept-loader');
+      const imgEl = document.getElementById('ai-concept-img');
+      const saveBtn = document.getElementById('btn-save-concept-img');
+
+      if (loader) loader.classList.remove('hidden');
+      if (imgEl) imgEl.classList.add('hidden');
+      if (saveBtn) saveBtn.classList.add('hidden');
+
+      let renderedDataUrl = null;
+      const userPhoto = (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) ? activeEvent.venuePhotos[0] : null;
+
+      if (apiKey) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ instances: [{ prompt: imagePrompt }], parameters: { sampleCount: 1, aspectRatio: "16:9" } })
+          });
+          const imgData = await res.json();
+          const base64Bytes = imgData.predictions?.[0]?.bytesBase64Encoded;
+          if (base64Bytes) renderedDataUrl = `data:image/jpeg;base64,${base64Bytes}`;
+        } catch (e) {}
+      }
+
+      if (!renderedDataUrl && userPhoto) {
+        renderedDataUrl = await overlayDecorOnUserPhoto(userPhoto.data, palette, style);
+      }
+      if (!renderedDataUrl) {
+        renderedDataUrl = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+      }
+
+      currentRenderedImageData = renderedDataUrl;
+      if (imgEl) {
+        imgEl.src = renderedDataUrl;
+        imgEl.onload = () => {
+          if (loader) loader.classList.add('hidden');
+          imgEl.classList.remove('hidden');
+          if (saveBtn) saveBtn.classList.remove('hidden');
+        };
+      }
+    }
+
+    function overlayDecorOnUserPhoto(base64Image, palette, style) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width || 1280;
+          canvas.height = img.height || 720;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const w = canvas.width;
+          const h = canvas.height;
+
+          // Stage backdrop drapes overlay
+          ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+          ctx.fillRect(w * 0.22, h * 0.18, w * 0.56, h * 0.52);
+
+          // Gold border trim
+          ctx.strokeStyle = "#FBBF24";
+          ctx.lineWidth = 6;
+          ctx.strokeRect(w * 0.22, h * 0.18, w * 0.56, h * 0.52);
+
+          // Floral Arch garland across top of backdrop
+          for (let i = 0; i < 50; i++) {
+            ctx.beginPath();
+            let fx = w * 0.22 + (w * 0.56) * (i / 50);
+            let fy = h * 0.18 + Math.sin((i / 50) * Math.PI) * -30;
+            ctx.arc(fx, fy, 16, 0, Math.PI * 2);
+            ctx.fillStyle = (i % 2 === 0) ? "#FDE047" : "#F43F5E";
+            ctx.fill();
+          }
+
+          // Luxury Sofa Center Stage
+          ctx.fillStyle = "#D97706";
+          ctx.fillRect(w * 0.38, h * 0.52, w * 0.24, h * 0.12);
+          ctx.strokeStyle = "#FEF3C7";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(w * 0.38, h * 0.52, w * 0.24, h * 0.12);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.92));
+        };
+        img.src = base64Image;
+      });
+    }
+
+    function refreshDecorDesign() {
+      synthesizeCompleteAiDecorPlan("Provide a fresh creative design iteration.");
+    }
+
+    function applyQuickDecorModifier(directive) {
+      document.getElementById('ai-custom-directive').value = directive;
+      synthesizeCompleteAiDecorPlan(directive);
+    }
+
+    function saveAiRenderedImageToEvent() {
+      if (!activeEvent) return alert('Open an event first.');
+      if (!currentRenderedImageData) return alert('No image rendered.');
+      if (!activeEvent.venuePhotos) activeEvent.venuePhotos = [];
+      activeEvent.venuePhotos.push({ id: 'ai_render_' + Date.now(), category: 'AI Render', mime: 'image/jpeg', data: currentRenderedImageData });
+      renderVenuePhotosGrid();
+      markUnsaved();
+      alert('Concept image saved to event.');
+    }
+
+    function renderGeneratedPlan(plan) {
+      document.getElementById('ai-plan-title').innerText = plan.title || 'Proposal';
+      document.getElementById('ai-plan-narrative').innerText = plan.narrative || '';
+      const tbody = document.getElementById('ai-plan-items-tbody');
+      let total = 0;
+      if (tbody) {
+        tbody.innerHTML = (plan.materials || []).map(m => {
+          const lineTotal = (m.qty || 1) * m.selling;
+          total += lineTotal;
+          const name = m.name || 'Custom Asset';
+          const unit = m.unit || 'Nos';
+          const selling = m.selling || 0;
+          return `<tr><td class="p-1.5 border font-semibold">${escapeHTML(name)}</td><td class="p-1.5 border text-center">${m.qty}</td><td class="p-1.5 border text-center">${escapeHTML(unit)}</td><td class="p-1.5 border text-right">₹${selling.toLocaleString()}</td><td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td></tr>`;
+        }).join('');
+      }
+      document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
+      document.getElementById('ai-plan-output-card').classList.remove('hidden');
+    }
+
+    // PIPELINE & EVENT UTILITIES
+    function pushAiScopeToActiveEvent() {
+      if (!activeEvent) return alert('Open an event first.');
+      (currentGeneratedPlan?.materials || []).forEach(m => {
+        activeEvent.scopeItems.push({ id: m.id, name: m.name || 'Asset', req: m.qty, loaded: 0, ret: 0, dam: 0, unit: m.unit || 'Nos' });
+      });
+      alert('Added to Scope!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('scope');
+    }
+
+    function pushAiQuoteToActiveEvent() {
+      if (!activeEvent) return alert('Open an event first.');
+      (currentGeneratedPlan?.materials || []).forEach(m => {
+        activeEvent.quoteItems.push({ name: m.name || 'Asset', qty: m.qty, unit: m.unit || 'Nos', rate: m.selling || 0 });
+      });
+      alert('Added to Quotation!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('quotation');
+    }
+
+    function pushAiScheduleToActiveEvent() {
+      if (!activeEvent) return alert('Open an event first.');
+      activeEvent.notes = (activeEvent.notes || '') + "\n--- Setup Sequence ---\n" + (currentGeneratedPlan?.setupPlan || []).join("\n");
+      alert('Appended to Notes!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview');
+    }
+
+    async function deleteEventById(id) {
+      if (!confirm(`Permanently delete event ${id}?`)) return;
+      await dbDelete('events', id);
+      if (activeEvent && activeEvent.id === id) {
+        activeEvent = null;
+        document.getElementById('active-event-badge').innerText = 'NO EVENT';
+        document.getElementById('ws-event-id').innerText = '-';
+        document.getElementById('ws-event-name').innerText = 'Select an Event';
+        ['inp-client-name', 'inp-client-phone', 'inp-event-date', 'inp-venue', 'inp-event-type', 'inp-event-notes'].forEach(elId => { const el = document.getElementById(elId); if(el) el.value=''; });
+        navTo('events');
+      }
+      await renderEventsList(); await updateDashboard();
+    }
+
+    async function createNewEventFlow() {
+      const year = new Date().getFullYear();
+      const allEvents = await dbGetAll('events');
+      let maxSeq = 0;
+      allEvents.forEach(e => {
+        const m = (e.id || '').match(new RegExp(`^VEP-${year}-(\\d{4})$`));
+        if (m && parseInt(m[1]) > maxSeq) maxSeq = parseInt(m[1]);
+      });
+      const newId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+      activeEvent = {
+        id: newId, client: '', phone: '', date: '', venue: '', status: 'Confirmed', type: 'Wedding', notes: '',
+        dimensions: { width: 40, depth: 12, height: 18, walkway: 30 }, venuePhotos: [], quoteItems: [],
+        quoteTransport: 0, quoteLabour: 0, quoteDiscount: 0, quoteTaxMode: 'none', quoteAdvance: 0, quoteGrand: 0,
+        scopeItems: [], costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, transTotal: 0 },
+        flowers: [], labourGroups: [{ role: 'Florist Master', men: 2, days: 2, rate: 1500 }, { role: 'Setup Labour', men: 6, days: 2, rate: 1200 }],
+        schedule: { dispatch: '', setup: '', event: '', teardown: '' }, checklists: {}
+      };
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview');
+    }
+
+    function loadActiveEventIntoUI() {
+      if (!activeEvent) return;
+      activeEvent.dimensions = activeEvent.dimensions || { width: 40, depth: 12, height: 18, walkway: 30 };
+      activeEvent.labourGroups = activeEvent.labourGroups || [
+        { role: 'Florist Master', men: 2, days: 2, rate: 1500 },
+        { role: 'Setup Labour', men: 6, days: 2, rate: 1200 }
+      ];
+      activeEvent.scopeItems = activeEvent.scopeItems || [];
+      activeEvent.quoteItems = activeEvent.quoteItems || [];
+      activeEvent.flowers = activeEvent.flowers || [];
+
+      document.getElementById('active-event-badge').innerText = activeEvent.id;
+      document.getElementById('ws-event-id').innerText = activeEvent.id;
+      document.getElementById('ws-event-name').innerText = activeEvent.client || 'Untitled Event';
+      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
+
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val !== undefined && val !== null ? val : ''; };
+      setVal('inp-client-name', activeEvent.client); setVal('inp-client-phone', activeEvent.phone);
+      setVal('inp-event-date', activeEvent.date); setVal('inp-venue', activeEvent.venue);
+      setVal('inp-event-status', activeEvent.status || 'Confirmed'); setVal('inp-event-type', activeEvent.type || '');
+      setVal('inp-event-notes', activeEvent.notes || '');
+
+      renderVenuePhotosGrid(); renderQuotationRows(); renderScopeRows(); renderFlowerRows(); renderLabourRows(); recalcQuotation();
+    }
+
+    async function saveActiveEventToStore(isSilent = false) {
+      if (!activeEvent) return;
+      const getVal = (id, fb) => document.getElementById(id)?.value || fb;
+      activeEvent.client = getVal('inp-client-name', activeEvent.client).trim();
+      activeEvent.phone = getVal('inp-client-phone', activeEvent.phone).trim();
+      activeEvent.date = getVal('inp-event-date', activeEvent.date);
+      activeEvent.venue = getVal('inp-venue', activeEvent.venue).trim();
+      activeEvent.status = getVal('inp-event-status', activeEvent.status);
+      activeEvent.type = getVal('inp-event-type', activeEvent.type);
+      activeEvent.notes = getVal('inp-event-notes', activeEvent.notes);
+
+      syncEventDimensions();
+      activeEvent.quoteTransport = parseFloat(getVal('ws-quote-transport', 0)) || 0;
+      activeEvent.quoteLabour = parseFloat(getVal('ws-quote-labour', 0)) || 0;
+      activeEvent.quoteDiscount = parseFloat(getVal('ws-quote-discount', 0)) || 0;
+      activeEvent.quoteTaxMode = getVal('ws-quote-taxmode', 'none');
+      activeEvent.quoteAdvance = parseFloat(getVal('ws-quote-advance', 0)) || 0;
+
+      await dbPut('events', activeEvent);
+      isDirty = false;
+      const ind = document.getElementById('save-status-indicator');
+      if (ind) { ind.innerText = '● Saved'; ind.className = 'text-[9px] text-emerald-400 font-semibold'; }
+      if (!isSilent) alert(`Event ${activeEvent.id} saved.`);
+      updateDashboard();
+    }
+
+    async function cloneCurrentEvent() {
+      if (!activeEvent) return;
+      if (!confirm('Duplicate event?')) return;
+      const newId = `VEP-${new Date().getFullYear()}-${String(Math.floor(Math.random()*9000)+1000)}`;
+      const newEvent = JSON.parse(JSON.stringify(activeEvent));
+      newEvent.id = newId; newEvent.client += ' (Copy)';
+      activeEvent = newEvent; await dbPut('events', activeEvent); loadActiveEventIntoUI(); alert(`Cloned to ${newId}`);
+    }
+
+    function renderQuotationRows() {
+      const tbody = document.getElementById('ws-quote-items-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = (activeEvent.quoteItems || []).map((it, idx) => `
+        <tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.quoteItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.quoteItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
+        <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
+        <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); markUnsaved(); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td></tr>
+      `).join('');
+    }
+
+    function addCustomQuotationRow() { activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 }); markUnsaved(); renderQuotationRows(); }
+
+    function recalcQuotation() {
+      const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
+      const transport = parseFloat(document.getElementById('ws-quote-transport')?.value || 0) || 0;
+      const labour = parseFloat(document.getElementById('ws-quote-labour')?.value || 0) || 0;
+      const discount = parseFloat(document.getElementById('ws-quote-discount')?.value || 0) || 0;
+      const net = Math.max(0, (subtotal + transport + labour) - discount);
+      const taxMode = document.getElementById('ws-quote-taxmode')?.value || 'none';
+      let taxable = net, gst = 0, grand = net;
+      if (taxMode === 'extra18') { gst = Math.round(net * 0.18); grand = net + gst; }
+      else if (taxMode === 'incl18') { taxable = Math.round(net / 1.18); gst = net - taxable; grand = net; }
+      const advance = parseFloat(document.getElementById('ws-quote-advance')?.value || 0) || 0;
+      activeEvent.quoteGrand = grand;
+      
+      document.getElementById('ws-quote-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+      document.getElementById('ws-quote-taxable').innerText = `₹${taxable.toLocaleString()}`;
+      document.getElementById('ws-quote-gstval').innerText = `₹${gst.toLocaleString()}`;
+      document.getElementById('ws-quote-grand').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      document.getElementById('ws-quote-balance').innerText = `₹${Math.max(0, grand - advance).toLocaleString()}`;
+      document.getElementById('ws-cost-rev').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      recalcInternalCosting();
+    }
+
+    function renderScopeRows() {
+      const tbody = document.getElementById('ws-scope-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = (activeEvent.scopeItems || []).map((it, idx) => `
+        <tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.scopeItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+        <td class="py-1 px-1 w-12"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.scopeItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-[10px]"></td>
+        <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); markUnsaved(); renderScopeRows(); recalcInternalCosting();" class="text-rose-500 font-bold">✕</button></td></tr>
+      `).join('');
+    }
+
+    function addCustomScopeRow() { activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' }); markUnsaved(); renderScopeRows(); }
+
+    function renderFlowerRows() {
+      const container = document.getElementById('ws-flowers-container');
+      if (!container) return;
+      container.innerHTML = (activeEvent.flowers || []).map((f, i) => `
+        <div class="flex gap-2 items-center"><input type="text" value="${escapeHTML(f.name)}" oninput="activeEvent.flowers[${i}].name=this.value; markUnsaved();" class="flex-grow border rounded p-1 text-xs">
+        <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-16 border rounded p-1 text-center text-xs">
+        <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-20 border rounded p-1 text-right text-xs">
+        <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
+        <button onclick="activeEvent.flowers.splice(${i},1); markUnsaved(); renderFlowerRows(); recalcInternalCosting();" class="text-rose-500 font-bold px-1.5">✕</button></div>
+      `).join('');
+      recalcInternalCosting();
+    }
+
+    function addFlowerRow() { activeEvent.flowers.push({ name: '', qty: 1, rate: 0 }); markUnsaved(); renderFlowerRows(); }
+
+    function renderLabourRows() {
+      if (!activeEvent) return;
+      const tbody = document.getElementById('labour-table-tbody');
+      if (!tbody) return;
+      let totalCost = 0;
+      tbody.innerHTML = activeEvent.labourGroups.map((lg, i) => {
+        const line = (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
+        totalCost += line;
+        return `<tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(lg.role)}" oninput="activeEvent.labourGroups[${i}].role=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${lg.men}" oninput="activeEvent.labourGroups[${i}].men=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${lg.days}" oninput="activeEvent.labourGroups[${i}].days=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-24"><input type="number" value="${lg.rate}" oninput="activeEvent.labourGroups[${i}].rate=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-right text-xs"></td>
+        <td class="py-1 pl-1 text-right font-bold w-24">₹${line.toLocaleString()}</td>
+        <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.labourGroups.splice(${i},1); markUnsaved(); renderLabourRows();" class="text-rose-500 font-bold">✕</button></td></tr>`;
+      }).join('');
+      document.getElementById('labour-total-cost-val').innerText = `₹${totalCost.toLocaleString()}`;
+      document.getElementById('ws-cost-labour-rollup').innerText = `₹${totalCost.toLocaleString()}`;
+      recalcInternalCosting();
+    }
+
+    function addLabourRow() { activeEvent.labourGroups.push({ role: 'Loader / Helper', men: 4, days: 1, rate: 1000 }); markUnsaved(); renderLabourRows(); }
+
+    async function recalcInternalCosting() {
+      if (!activeEvent || !db) return;
+      const pbItems = await dbGetAll('pricebook');
+      let autoCost = 0;
+      (activeEvent.scopeItems || []).forEach(sc => {
+        const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === sc.name.toLowerCase());
+        if(match) autoCost += sc.req * match.internal;
+      });
+      document.getElementById('ws-cost-auto-scope').innerText = `₹${Math.round(autoCost).toLocaleString()}`;
+      let labourCost = (activeEvent.labourGroups || []).reduce((sum, lg) => sum + ((lg.men || 0) * (lg.days || 0) * (lg.rate || 0)), 0);
+      let flowerCost = (activeEvent.flowers || []).reduce((sum, f) => sum + ((f.qty || 0) * (f.rate || 0)), 0);
+      document.getElementById('ws-flowers-total-outflow').innerText = `₹${Math.round(flowerCost).toLocaleString()}`;
+
+      const getC = (id) => parseFloat(document.getElementById(id)?.value || 0) || 0;
+      const totalOutflow = autoCost + labourCost + flowerCost + getC('c-fabric') + getC('c-flex') + getC('c-frame') + getC('c-rentals') + getC('c-generator') + getC('c-sound') + getC('c-trans-total');
+      const rev = activeEvent.quoteGrand || 0;
+      const profit = rev - totalOutflow;
+      const margin = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
+
+      document.getElementById('ws-cost-total').innerText = `₹${Math.round(totalOutflow).toLocaleString()}`;
+      document.getElementById('ws-cost-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('ws-cost-margin').innerText = `${margin}% Margin`;
+    }
+
+    async function checkLiveStockShortages() {
+      if (!activeEvent || !db) return;
+      const invItems = await dbGetAll('inventory');
+      const shortages = [];
+      (activeEvent.scopeItems || []).forEach(sc => {
+        const asset = invItems.find(i => i.name.toLowerCase() === (sc.name || '').toLowerCase());
+        if (asset && sc.req > asset.stock) shortages.push(`Shortage of ${sc.req - asset.stock} ${sc.unit} for ${sc.name}`);
+      });
+      const box = document.getElementById('dash-shortage-box');
+      const list = document.getElementById('dash-shortage-list');
+      if (shortages.length > 0) {
+        if(list) list.innerHTML = shortages.map(s => `<div>• ${escapeHTML(s)}</div>`).join('');
+        if(box) box.classList.remove('hidden');
+      } else if(box) { box.classList.add('hidden'); }
+    }
+
+    function renderChecklistGrid() {
+      const container = document.getElementById('ws-checklist-grid');
+      if (!container) return;
+      container.innerHTML = checklistStages.map(stg => `<label class="flex items-center gap-2 p-1.5 border rounded bg-slate-50"><input type="checkbox" id="${stg.id}" onchange="markUnsaved();" class="rounded"><span>${stg.label}</span></label>`).join('');
+    }
+
+    async function openPriceBookPicker(mode) { targetPickerMode = mode; document.getElementById('picker-search-filter').value = ''; await renderPriceBookPickerList(); document.getElementById('modal-pb-picker').classList.remove('hidden'); }
+    function closePriceBookPicker() { document.getElementById('modal-pb-picker').classList.add('hidden'); }
+    async function renderPriceBookPickerList() {
+      const query = (document.getElementById('picker-search-filter')?.value || '').toLowerCase();
+      const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query));
+      document.getElementById('picker-items-list').innerHTML = items.map(it => `<div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')"><div><span class="font-bold text-slate-800 text-xs">${escapeHTML(it.name)}</span><span class="text-[10px] text-slate-400 block">${escapeHTML(it.category)} • ${escapeHTML(it.unit)}</span></div><div class="text-right"><span class="font-bold text-indigo-900 block text-xs">₹${it.selling.toLocaleString()}</span></div></div>`).join('');
+    }
+    async function selectItemFromPicker(id) {
+      const it = await dbGet('pricebook', id);
+      if (!it || !activeEvent) return;
+      if (targetPickerMode === 'quotation') { activeEvent.quoteItems.push({ name: it.name, qty: 1, unit: it.unit, rate: it.selling }); renderQuotationRows(); recalcQuotation(); }
+      else { activeEvent.scopeItems.push({ id: it.id, name: it.name, req: 1, loaded: 0, ret: 0, dam: 0, unit: it.unit }); renderScopeRows(); }
+      closePriceBookPicker(); markUnsaved();
+    }
+
+    async function renderPriceBookTable() {
+      if (!db) return;
+      const items = await dbGetAll('pricebook');
+      const tbody = document.getElementById('pricebook-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = items.map(it => `<tr><td class="py-1.5 font-bold">${escapeHTML(it.name)}</td><td class="py-1.5">${escapeHTML(it.category)}</td><td class="py-1.5 text-center">${escapeHTML(it.unit)}</td><td class="py-1.5 text-right font-bold text-indigo-900">₹${it.selling.toLocaleString()}</td><td class="py-1.5 text-right text-slate-600">₹${it.internal.toLocaleString()}</td><td class="py-1.5 text-center"><button onclick="deletePriceBookItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td></tr>`).join('');
+    }
+    async function openPriceBookEditModal() {
+      const name = prompt('Item Name:'); if (!name) return;
+      const category = prompt('Category:') || 'Decoration'; const unit = prompt('Unit:') || 'Nos';
+      const selling = parseFloat(prompt('Selling ₹:')) || 0; const internal = parseFloat(prompt('Internal Cost ₹:')) || 0;
+      await dbPut('pricebook', { id: 'pb_' + Date.now(), name, category, unit, selling, internal }); renderPriceBookTable();
+    }
+    async function deletePriceBookItem(id) { if (confirm('Delete?')) { await dbDelete('pricebook', id); renderPriceBookTable(); } }
+
+    async function renderInventoryMaster() {
+      if (!db) return;
+      const items = await dbGetAll('inventory');
+      const tbody = document.getElementById('inventory-master-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = items.map(it => `<tr><td class="py-1.5 font-bold">${escapeHTML(it.name)}</td><td class="py-1.5 text-center font-bold">${it.stock}</td><td class="py-1.5 text-center text-slate-500">${escapeHTML(it.location || '')}</td><td class="py-1.5 text-center"><button onclick="deleteInventoryItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td></tr>`).join('');
+    }
+    async function openInventoryAddModal() {
+      const name = prompt('Asset Name:'); if (!name) return;
+      const stock = parseInt(prompt('Stock Count:')) || 0; const location = prompt('Location:') || 'Warehouse';
+      await dbPut('inventory', { id: 'inv_' + Date.now(), name, stock, location }); renderInventoryMaster(); checkLiveStockShortages();
+    }
+    async function deleteInventoryItem(id) { if (confirm('Delete?')) { await dbDelete('inventory', id); renderInventoryMaster(); checkLiveStockShortages(); } }
+
+    async function renderEventsList() {
+      if (!db) return;
+      const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
+      const events = (await dbGetAll('events')).filter(e => (e.client || '').toLowerCase().includes(query) || (e.venue || '').toLowerCase().includes(query) || (e.id || '').toLowerCase().includes(query));
+      const container = document.getElementById('events-master-list');
+      if (!container) return;
+      container.innerHTML = events.map(e => `<div class="py-2.5 flex justify-between items-center hover:bg-slate-50"><div><span class="font-bold text-slate-900 text-xs">${escapeHTML(e.client || 'Untitled')}</span><span class="text-[10px] text-slate-400 block">${e.id} • ${escapeHTML(e.venue || 'No Venue')} • ${e.date || 'No Date'}</span></div><div class="flex items-center gap-1.5"><button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded text-xs font-bold">Open</button><button onclick="deleteEventById('${e.id}')" class="bg-rose-50 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold">🗑️</button></div></div>`).join('');
+    }
+
+    async function openEventById(id) { activeEvent = await dbGet('events', id); loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview'); }
+
+    async function updateDashboard() {
+      if (!db) return;
+      const events = await dbGetAll('events'); const pbItems = await dbGetAll('pricebook');
+      const totalContract = events.reduce((sum, e) => sum + (e.quoteGrand || 0), 0);
+      let totalCost = 0;
+      events.forEach(e => {
+        let scCost = 0; (e.scopeItems || []).forEach(sc => { const m = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === sc.name.toLowerCase()); if(m) scCost += sc.req * m.internal; });
+        let labCost = (e.labourGroups || []).reduce((s, lg) => s + (lg.men * lg.days * lg.rate), 0);
+        let flwCost = (e.flowers || []).reduce((s, f) => s + (f.qty * f.rate), 0);
+        totalCost += scCost + labCost + flwCost + Object.values(e.costs || {}).reduce((a,b)=>a+b, 0);
+      });
+      const profit = totalContract - totalCost;
+      document.getElementById('dash-total-events').innerText = events.length;
+      document.getElementById('dash-confirmed-events').innerText = `${events.filter(e => e.status === 'Confirmed').length} Confirmed`;
+      document.getElementById('dash-total-contract').innerText = `₹${(totalContract/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-outflow').innerText = `₹${(totalCost/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('dash-profit-margin').innerText = `${totalContract > 0 ? ((profit/totalContract)*100).toFixed(1) : 0}% Margin`;
+      checkLiveStockShortages();
+    }
+
+    function openPrintModal(type) {
+      if (!activeEvent) return alert('Open an event first.');
+      const content = document.getElementById('print-sheet-content');
+      const settings = (dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS' };
+      content.innerHTML = `<h1 class="text-xl font-black uppercase">${escapeHTML(settings.name)}</h1><p class="text-xs">${activeEvent.id} | Client: ${escapeHTML(activeEvent.client)} | Venue: ${escapeHTML(activeEvent.venue)}</p>`;
+      document.getElementById('modal-print-hub').classList.remove('hidden');
+    }
+
+    function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey')?.value || ''; }
+    async function loadAppSettings() {
+      const s = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '', aikey: '' };
+      document.getElementById('set-name').value = s.name || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-gst').value = s.gst || '';
+      document.getElementById('set-aikey').value = s.aikey || '';
+    }
+    async function saveAppSettings() {
+      const s = { name: document.getElementById('set-name').value.trim(), phone: document.getElementById('set-phone').value.trim(), gst: document.getElementById('set-gst').value.trim(), aikey: document.getElementById('set-aikey').value.trim() };
+      await dbPut('settings', { key: 'main', val: s }); localStorage.setItem('vanji_aikey', s.aikey); alert('Settings saved.');
+    }
+
+    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
+    async function exportFullBackup() {
+      const payload = { app: 'Vanji Studio', events: await dbGetAll('events'), pricebook: await dbGetAll('pricebook'), inventory: await dbGetAll('inventory') };
+      const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload)); a.download = `Vanji_Backup.json`; a.click();
+    }
+    function importFullBackup(e) {
+      const reader = new FileReader();
+      reader.onload = async (ev) => { const d = JSON.parse(ev.target.result); for(let evRec of (d.events||[])) await dbPut('events', evRec); alert('Restored!'); location.reload(); };
+      reader.readAsText(e.target.files[0]);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
+    else checkExistingAuth();
+  </script>
+</body>
+</html>
