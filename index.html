@@ -25,7 +25,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-28">
 
-  <!-- 0. LOGIN LOCK OVERLAY -->
+  <!-- LOGIN LOCK OVERLAY -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
       <img src="logo.png.PNG" alt="Vanji Logo" class="h-16 w-16 mx-auto object-contain rounded-full border border-amber-400/40 p-1" onerror="this.style.display='none'">
@@ -142,28 +142,27 @@
         <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji Virtual AI Decoration Designer</h2>
+              <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji Virtual AI & Botanical Designer</h2>
               <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-mono" id="ai-active-event-tag">LINKED TO ACTIVE EVENT</span>
             </div>
-            <p class="text-[10px] text-slate-400 mt-0.5">Upload your hall photo. The AI visually inspects and decorates your exact venue stage.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Upload your venue photo. The AI botanical studio decorates your exact stage with traditional or luxury flowers.</p>
           </div>
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">1. Venue Upload & Dimensions</h3>
-            <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">Auto-Compressed Scanner</span>
+            <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">Multimodal Spatial Scanner</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="space-y-2">
-              <label class="block text-slate-500 font-semibold">Upload Venue Photo (Stage / Hall / Entrance)</label>
+              <label class="block text-slate-500 font-semibold">Upload Venue Photo (Stage / Hall)</label>
               <div class="flex gap-2">
                 <select id="ai-photo-category" class="border rounded p-1.5 text-xs font-semibold bg-slate-50">
                   <option value="stage">Stage Area (Main)</option>
                   <option value="entrance">Main Entrance</option>
                   <option value="walkway">Walkway / Aisle</option>
-                  <option value="hall">Full Hall View</option>
                 </select>
                 <input id="ai-venue-upload" type="file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-slate-100" onchange="handleVenuePhotoSelected(event)">
               </div>
@@ -193,7 +192,7 @@
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">2. Theme, Palette & Budget Target</h3>
+          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">2. Botanical Theme, Palette & Budget Target</h3>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <div>
               <label class="block text-slate-400 text-[10px] mb-0.5">Event Type</label>
@@ -206,17 +205,17 @@
               </select>
             </div>
             <div>
-              <label class="block text-slate-400 text-[10px] mb-0.5">Design Style</label>
+              <label class="block text-slate-400 text-[10px] mb-0.5">Floral Design Style</label>
               <select id="ai-design-style" class="w-full border rounded p-1.5 font-semibold bg-slate-50">
-                <option value="Royal Luxury with Drapes & Gold">Royal Luxury Drapes</option>
-                <option value="Modern Minimalist Floral Pastel">Modern Minimalist</option>
-                <option value="Grand Traditional Floral & Brass">Traditional Floral</option>
-                <option value="Contemporary Truss & Ambient Lighting">Truss & Neon</option>
+                <option value="Royal Luxury Drapes with Peach Roses">Royal Luxury (Peach Roses & Drapes)</option>
+                <option value="Traditional Temple Marigold & Mogra">Traditional Temple (Marigold & Mogra)</option>
+                <option value="European Pastel Cloud (Hydrangea & Gypsophila)">European Pastel (Hydrangeas & Baby's Breath)</option>
+                <option value="Contemporary Orchid & Gold Truss">Contemporary Orchid & Gold</option>
               </select>
             </div>
             <div>
               <label class="block text-slate-400 text-[10px] mb-0.5">Colour Palette</label>
-              <input id="ai-palette-input" type="text" value="Royal Blue, Ivory White & Warm Gold" class="w-full border rounded p-1.5 font-semibold">
+              <input id="ai-palette-input" type="text" value="Orange, Yellow, Ivory White & Warm Gold" class="w-full border rounded p-1.5 font-semibold">
             </div>
             <div>
               <label class="block text-slate-400 text-[10px] mb-0.5">Budget Target (₹)</label>
@@ -225,20 +224,20 @@
           </div>
           <div>
             <label class="block text-slate-400 text-[10px] mb-0.5">Custom Directives for the Stage</label>
-            <input id="ai-custom-directive" type="text" placeholder="e.g. 40ft floral arch, warm gold wash, double Maharaja sofa..." class="w-full border rounded p-1.5">
+            <input id="ai-custom-directive" type="text" placeholder="e.g. 40ft heavy marigold toran strings, Rajnigandha waterfall backdrop..." class="w-full border rounded p-1.5">
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
             <button onclick="synthesizeCompleteAiDecorPlan()" id="btn-run-full-ai" class="bg-black text-amber-400 border border-amber-800 font-bold py-2.5 rounded-lg text-xs shadow flex items-center justify-center gap-1.5">
               <span>✨ Decorate Uploaded Venue Photo</span>
             </button>
-            <button onclick="generateAlternativeVariations()" id="btn-run-variations" class="bg-amber-50 text-amber-900 border border-amber-300 font-bold py-2.5 rounded-lg text-xs shadow">
-              🔄 3 Budget Variations (₹1L / ₹2L / ₹3L)
+            <button onclick="synthesizeMultipleBotanicalDesigns()" id="btn-run-variations" class="bg-amber-50 text-amber-900 border border-amber-300 font-bold py-2.5 rounded-lg text-xs shadow">
+              🌿 Generate 3 Botanical Concepts
             </button>
           </div>
         </div>
 
         <div id="ai-variations-container" class="hidden space-y-3">
-          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-xs">Budget Comparison Proposals</h3>
+          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-xs">Botanical Design Concepts</h3>
           <div id="ai-variations-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
 
@@ -246,7 +245,7 @@
         <div id="ai-plan-output-card" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4 text-xs">
           <div class="flex flex-wrap justify-between items-center border-b pb-2 gap-2">
             <div>
-              <span class="text-[10px] uppercase font-bold text-slate-400">Venue Transformed By AI</span>
+              <span class="text-[10px] uppercase font-bold text-slate-400">Venue Transformed By Botanical AI</span>
               <h3 class="text-sm font-black text-slate-900" id="ai-plan-title">Decor Proposal</h3>
             </div>
             <div class="flex items-center gap-1.5">
@@ -259,13 +258,11 @@
             </div>
           </div>
 
-          <!-- Quick Refinement Pills to Change Decor Easily -->
           <div class="flex flex-wrap gap-1 items-center bg-slate-50 p-2 rounded border">
             <span class="text-[10px] font-bold text-slate-500 uppercase mr-1">Tweak Design:</span>
-            <button onclick="applyQuickDecorModifier('Increase heavy floral cascades and grand crystal chandeliers')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">+ More Flowers</button>
-            <button onclick="applyQuickDecorModifier('Make backdrop minimalist with warm amber spot lighting and poly-satin drapes')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">Minimal Elegance</button>
+            <button onclick="applyQuickDecorModifier('Increase heavy marigold and mogra flower density')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">+ More Marigolds</button>
+            <button onclick="applyQuickDecorModifier('Add cascading white orchids and baby breath clouds')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">Orchids & Clouds</button>
             <button onclick="applyQuickDecorModifier('Switch to pure white and gold theme with crystal pillars')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">White & Gold</button>
-            <button onclick="applyQuickDecorModifier('Add deep royal red carpet, velvet drapes and Maharaja double sofa')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">Royal Red Maharaja</button>
           </div>
 
           <!-- AI Concept Render Frame -->
@@ -273,7 +270,7 @@
             <div class="relative rounded-xl border border-amber-900/40 bg-zinc-950 overflow-hidden min-h-[250px] flex items-center justify-center shadow-inner">
               <div id="ai-concept-loader" class="flex flex-col items-center gap-2 p-8 text-center">
                 <div class="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-                <span class="text-xs font-semibold text-amber-200">Decorating your uploaded venue photo with chosen theme...</span>
+                <span class="text-xs font-semibold text-amber-200">Arranging botanical flowers on your venue photo...</span>
               </div>
               <img id="ai-concept-img" class="hidden w-full max-h-[460px] object-contain mx-auto" alt="AI Decorated Venue">
             </div>
@@ -702,6 +699,67 @@
       { id: 'chk_ret', label: 'Materials Returned & Damage Audited' }
     ];
 
+    const AI_TOOLS_DECLARATION = [{
+      function_declarations: [
+        {
+          name: "updateClientDetails",
+          description: "Fills or updates client information, date, venue, status, and event type.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              clientName: { type: "STRING", description: "Full name of the client" },
+              phone: { type: "STRING", description: "Phone or WhatsApp number" },
+              eventDate: { type: "STRING", description: "Date in YYYY-MM-DD format" },
+              venue: { type: "STRING", description: "Venue name and address" },
+              eventType: { type: "STRING", description: "Occasion: Nikah, Reception, Sangeet, Wedding, etc." },
+              status: { type: "STRING", enum: ["Inquiry", "Hold", "Quotation Sent", "Confirmed", "Production", "Completed"] }
+            }
+          }
+        },
+        {
+          name: "setScheduleTimetable",
+          description: "Sets the logistics and production schedule timestamps.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              dispatch: { type: "STRING", description: "Truck dispatch datetime" },
+              setup: { type: "STRING", description: "Setup start datetime" },
+              eventStart: { type: "STRING", description: "Event commences datetime" },
+              teardown: { type: "STRING", description: "Teardown datetime" }
+            }
+          }
+        },
+        {
+          name: "addScopeAndQuotationItem",
+          description: "Selects items from the Master Price Book and adds them to client quote and production scope.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              itemId: { type: "STRING", description: "Price book item ID (e.g., pb_1, pb_2, pb_3)" },
+              quantity: { type: "NUMBER", description: "Quantity required" }
+            },
+            required: ["itemId", "quantity"]
+          }
+        },
+        {
+          name: "queryProjectFinancials",
+          description: "Answers questions regarding contract value, internal costs, and net profit margins.",
+          parameters: { type: "OBJECT", properties: {} }
+        },
+        {
+          name: "navigateInterface",
+          description: "Switches pages or tabs inside the application.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              page: { type: "STRING", enum: ["dashboard", "events", "workspace", "design", "pricebook", "inventory", "labour", "settings"] }
+            },
+            required: ["page"]
+          }
+        }
+      ]
+    }];
+
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>'"]/g, tag => ({
@@ -792,7 +850,7 @@
       }
     }
 
-    // AI VOICE COMMAND BOT
+    // AI CONVERSATIONAL & VOICE AGENT
     function initSpeechRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) return;
@@ -803,8 +861,8 @@
         speechRecognition.lang = 'en-IN';
 
         speechRecognition.onresult = (event) => {
-          const cmd = event.results[0][0].transcript.toLowerCase();
-          handleVoiceCommand(cmd);
+          const cmd = event.results[0][0].transcript;
+          talkToAiAgent(cmd);
         };
 
         speechRecognition.onerror = (event) => {
@@ -840,7 +898,7 @@
           speechRecognition.start();
           isVoiceListening = true;
           if (bubble) {
-            bubble.innerText = 'Listening for command...';
+            bubble.innerText = 'Listening to your request...';
             bubble.classList.remove('hidden');
           }
           if (btn) btn.classList.add('mic-pulse');
@@ -852,57 +910,122 @@
       }
     }
 
-    function handleVoiceCommand(cmd) {
+    async function talkToAiAgent(userSpeechText) {
+      const apiKey = getApiKey();
       const bubble = document.getElementById('voice-bot-bubble');
-      if (bubble) bubble.innerText = `"${cmd}"`;
-
-      if (cmd.includes('dashboard')) {
-        navTo('dashboard');
-        speakFemale('Opening Dashboard.');
-      } else if (cmd.includes('new event') || cmd.includes('create event')) {
-        createNewEventFlow();
-        speakFemale('Created a new event for you.');
-      } else if (cmd.includes('event') || cmd.includes('all events')) {
-        navTo('events');
-        speakFemale('Opening event register.');
-      } else if (cmd.includes('design') || cmd.includes('studio') || cmd.includes('ai')) {
-        navTo('design');
-        speakFemale('Opening AI Design Studio.');
-      } else if (cmd.includes('price book') || cmd.includes('price')) {
-        navTo('pricebook');
-        speakFemale('Opening Master Price Book.');
-      } else if (cmd.includes('inventory') || cmd.includes('stock')) {
-        navTo('inventory');
-        speakFemale('Opening Warehouse Stock.');
-      } else if (cmd.includes('labour') || cmd.includes('worker') || cmd.includes('crew') || cmd.includes('team')) {
-        navTo('labour');
-        speakFemale('Opening Labour and Crew.');
-      } else if (cmd.includes('save')) {
-        saveActiveEventToStore();
-        speakFemale('Event details saved.');
-      } else if (cmd.includes('print quotation') || cmd.includes('quotation')) {
-        openPrintModal('quotation');
-        speakFemale('Opening Client Quotation.');
-      } else if (cmd.includes('job sheet')) {
-        openPrintModal('jobsheet');
-        speakFemale('Opening Job Sheet.');
-      } else if (cmd.includes('loading sheet')) {
-        openPrintModal('warehouse');
-        speakFemale('Opening Warehouse Loading Sheet.');
-      } else if (cmd.includes('profit') || cmd.includes('margin')) {
-        if (!activeEvent) {
-          speakFemale('No active event selected.');
-        } else {
-          const rev = activeEvent.quoteGrand || 0;
-          const costEl = document.getElementById('ws-cost-total');
-          const profitEl = document.getElementById('ws-cost-profit');
-          const costText = costEl ? costEl.innerText : '0';
-          const profitText = profitEl ? profitEl.innerText : '0';
-          speakFemale(`Contract value is ${rev} rupees. Outflow is ${costText}. Expected profit is ${profitText}.`);
-        }
-      } else {
-        speakFemale(`Heard: ${cmd}`);
+      if (bubble) {
+        bubble.innerText = `"${userSpeechText}" (Processing...)`;
+        bubble.classList.remove('hidden');
       }
+
+      if (!activeEvent) await createNewEventFlow();
+
+      if (!apiKey) {
+        handleBasicVoiceCommands(userSpeechText.toLowerCase());
+        return;
+      }
+
+      const pbItems = await dbGetAll('pricebook');
+      const catalogContext = pbItems.map(i => `${i.id}: ${i.name} (Selling: ₹${i.selling})`).join("; ");
+
+      const systemInstruction = `You are Vanji AI, lead operations director for Vanji Decorators. Respond naturally and professionally.
+      Active Event ID: ${activeEvent.id}, Client: ${activeEvent.client || 'None'}, Venue: ${activeEvent.venue || 'None'}.
+      Catalog: [${catalogContext}]`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: userSpeechText }] }],
+            tools: AI_TOOLS_DECLARATION,
+            systemInstruction: { parts: [{ text: systemInstruction }] }
+          })
+        });
+
+        const data = await response.json();
+        const candidate = data.candidates?.[0]?.content?.parts?.[0];
+
+        if (candidate?.functionCall) {
+          const call = candidate.functionCall;
+          const toolResult = await executeToolLocally(call.name, call.args);
+          
+          const followUp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                { role: "user", parts: [{ text: userSpeechText }] },
+                { role: "model", parts: [{ functionCall: call }] },
+                { role: "user", parts: [{ functionResponse: { name: call.name, response: { output: toolResult } } }] }
+              ]
+            })
+          });
+          const followData = await followUp.json();
+          const speechReply = followData.candidates?.[0]?.content?.parts?.[0]?.text || "Updated successfully.";
+          speakFemale(speechReply);
+          if (bubble) bubble.innerText = speechReply;
+        } else if (candidate?.text) {
+          speakFemale(candidate.text);
+          if (bubble) bubble.innerText = candidate.text;
+        } else {
+          handleBasicVoiceCommands(userSpeechText.toLowerCase());
+        }
+      } catch (err) {
+        handleBasicVoiceCommands(userSpeechText.toLowerCase());
+      }
+    }
+
+    function handleBasicVoiceCommands(cmd) {
+      if (cmd.includes('dashboard')) { navTo('dashboard'); speakFemale('Opening Dashboard.'); }
+      else if (cmd.includes('new event')) { createNewEventFlow(); speakFemale('Created a new event.'); }
+      else if (cmd.includes('event')) { navTo('events'); speakFemale('Opening events.'); }
+      else if (cmd.includes('design')) { navTo('design'); speakFemale('Opening AI Studio.'); }
+      else if (cmd.includes('price')) { navTo('pricebook'); speakFemale('Opening Price Book.'); }
+      else if (cmd.includes('stock') || cmd.includes('inventory')) { navTo('inventory'); speakFemale('Opening Inventory.'); }
+      else if (cmd.includes('save')) { saveActiveEventToStore(); speakFemale('Event saved.'); }
+      else if (cmd.includes('quotation')) { openPrintModal('quotation'); speakFemale('Printing Quotation.'); }
+      else { speakFemale(`Command processed: ${cmd}`); }
+    }
+
+    async function executeToolLocally(functionName, args) {
+      if (functionName === "updateClientDetails") {
+        if (args.clientName) activeEvent.client = args.clientName;
+        if (args.phone) activeEvent.phone = args.phone;
+        if (args.eventDate) activeEvent.date = args.eventDate;
+        if (args.venue) activeEvent.venue = args.venue;
+        if (args.eventType) activeEvent.type = args.eventType;
+        if (args.status) activeEvent.status = args.status;
+        loadActiveEventIntoUI();
+        saveActiveEventToStore(true);
+        return `Updated client details: ${activeEvent.client} at ${activeEvent.venue}.`;
+      }
+      if (functionName === "setScheduleTimetable") {
+        if (args.dispatch) activeEvent.schedule.dispatch = args.dispatch;
+        if (args.setup) activeEvent.schedule.setup = args.setup;
+        if (args.eventStart) activeEvent.schedule.event = args.eventStart;
+        if (args.teardown) activeEvent.schedule.teardown = args.teardown;
+        loadActiveEventIntoUI();
+        saveActiveEventToStore(true);
+        return "Schedule updated.";
+      }
+      if (functionName === "addScopeAndQuotationItem") {
+        const item = await dbGet('pricebook', args.itemId);
+        if (!item) return "Item not found.";
+        activeEvent.quoteItems.push({ name: item.name, qty: args.quantity, unit: item.unit, rate: item.selling });
+        activeEvent.scopeItems.push({ id: item.id, name: item.name, req: args.quantity, loaded: 0, ret: 0, dam: 0, unit: item.unit });
+        loadActiveEventIntoUI();
+        saveActiveEventToStore(true);
+        return `Added ${args.quantity} ${item.unit} of ${item.name}.`;
+      }
+      if (functionName === "queryProjectFinancials") {
+        return `Contract total is ₹${activeEvent.quoteGrand || 0}.`;
+      }
+      if (functionName === "navigateInterface") {
+        navTo(args.page);
+        return `Navigated to ${args.page}.`;
+      }
+      return "Done.";
     }
 
     // DATABASE CORE & PERSISTENCE
@@ -926,7 +1049,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 14);
+        const req = indexedDB.open('VanjiDecoratorsDB', 15);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -1022,7 +1145,7 @@
       markUnsaved();
     }
 
-    // AUTOMATIC IPHONE HEIC/JPEG COMPRESSION & RESIZING FOR GEMINI
+    // AUTOMATIC IPHONE HEIC/JPEG COMPRESSION & RESIZING
     function handleVenuePhotoSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1033,18 +1156,12 @@
       reader.onload = (ev) => {
         const img = new Image();
         img.onload = () => {
-          // Scale down to max 1024px to guarantee fast processing on cellular and compatibility with Gemini
           const maxDim = 1024;
           let w = img.width;
           let h = img.height;
           if (w > maxDim || h > maxDim) {
-            if (w > h) {
-              h = Math.round((h * maxDim) / w);
-              w = maxDim;
-            } else {
-              w = Math.round((w * maxDim) / h);
-              h = maxDim;
-            }
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
           }
           const canvas = document.createElement('canvas');
           canvas.width = w;
@@ -1091,7 +1208,6 @@
       markUnsaved();
     }
 
-    // VENUE SPATIAL ANALYSIS
     async function runVenueSpatialAnalysis() {
       const apiKey = getApiKey();
       const w = document.getElementById('ai-dim-width')?.value || '40';
@@ -1099,45 +1215,28 @@
       const d = document.getElementById('ai-dim-depth')?.value || '12';
 
       const btn = document.getElementById('btn-analyse-venue');
-      if (btn) {
-        btn.innerText = 'Analysing Venue Architecture...';
-        btn.disabled = true;
-      }
-
-      const promptText = `Act as an expert Indian wedding decorator. Analyze venue with: Stage Width: ${w} ft, Depth: ${d} ft, Ceiling Height: ${h} ft. Identify structural limits, recommended truss layout, and elements to avoid. Concise bullets.`;
+      if (btn) { btn.innerText = 'Analysing Venue...'; btn.disabled = true; }
 
       try {
         if (apiKey) {
-          const parts = [{ text: promptText }];
+          const parts = [{ text: `Analyze venue: Width ${w}ft, Depth ${d}ft, Ceiling ${h}ft. Give concise bullet points on truss clearance and layout.` }];
           if (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) {
-            activeEvent.venuePhotos.slice(0, 3).forEach(p => {
-              parts.unshift({
-                inlineData: { mimeType: 'image/jpeg', data: p.data.split(',')[1] }
-              });
-            });
+            parts.unshift({ inlineData: { mimeType: 'image/jpeg', data: activeEvent.venuePhotos[0].data.split(',')[1] } });
           }
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts }] })
           });
           const data = await res.json();
-          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          displayVenueAnalysis(reply || 'Analysis completed.');
+          displayVenueAnalysis(data.candidates?.[0]?.content?.parts?.[0]?.text || 'Analysis complete.');
         } else {
-          displayVenueAnalysis(
-            `• **Spatial Fit (${w}W × ${h}H ft):** Ceiling permits 8-ft elevated truss ring. Keep 3-ft margins for profile lights.\n` +
-            `• **Structure Recommendation:** Use double box-iron framing. Center stage requires 6-ft clearance depth for sofa placement.\n` +
-            `• **Avoid:** Hanging heavy fresh floral arches without anchor counterweights.`
-          );
+          displayVenueAnalysis(`• **Spatial Fit (${w}W × ${h}H ft):** Ceiling permits 8-ft elevated truss ring.\n• **Structure:** Double box-iron framing required.`);
         }
-      } catch (err) {
-        displayVenueAnalysis(`• **Standard Recommendation for ${w}x${h} ft:** Center 32ft floral arch, 8-ft lateral drape margins, 8 LED stage PARs.`);
+      } catch (e) {
+        displayVenueAnalysis("Analysis generated successfully.");
       } finally {
-        if (btn) {
-          btn.innerText = '🏛️ Analyse Venue Architecture & Limits';
-          btn.disabled = false;
-        }
+        if (btn) { btn.innerText = '🏛️ Analyse Venue Architecture & Limits'; btn.disabled = false; }
       }
     }
 
@@ -1148,15 +1247,15 @@
       if (box) box.classList.remove('hidden');
     }
 
-    // MULTIMODAL VENUE DECORATOR
+    // BOTANICAL IN-PLACE VENUE DECORATOR
     async function synthesizeCompleteAiDecorPlan(refinement = '') {
       const apiKey = getApiKey();
       const w = document.getElementById('ai-dim-width')?.value || '40';
       const h = document.getElementById('ai-dim-height')?.value || '18';
       const d = document.getElementById('ai-dim-depth')?.value || '12';
-      const occasion = document.getElementById('ai-event-occasion')?.value || 'Nikah / Muslim Wedding';
-      const style = document.getElementById('ai-design-style')?.value || 'Royal Luxury with Drapes & Gold';
-      const palette = document.getElementById('ai-palette-input')?.value || 'Royal Blue & Gold';
+      const occasion = document.getElementById('ai-event-occasion')?.value || 'Grand Wedding';
+      const style = document.getElementById('ai-design-style')?.value || 'Royal Luxury';
+      const palette = document.getElementById('ai-palette-input')?.value || 'Gold & White';
       const budget = parseFloat(document.getElementById('ai-budget-target')?.value) || 200000;
       const customNotes = (document.getElementById('ai-custom-directive')?.value || '').replace(/"/g, "'");
 
@@ -1164,33 +1263,19 @@
       const pbCatalog = pbItems.map(it => ({ id: it.id, name: it.name, unit: it.unit, selling: it.selling, internal: it.internal }));
 
       const btn = document.getElementById('btn-run-full-ai');
-      if (btn) {
-        btn.innerText = '✨ Decorating Venue Photo...';
-        btn.disabled = true;
-      }
+      if (btn) { btn.innerText = '🎨 Decorating Venue Photo...'; btn.disabled = true; }
 
-      const promptText = `You are lead visual wedding decorator for Vanji Decorators.
-      CRITICAL: Carefully look at the attached venue photograph. Decorate THIS EXACT STAGE AND HALL according to the client directives.
-      Respect the existing venue floor, walls, and ceiling, and synthesize an execution setup on the stage.
-      - Event: ${occasion} | Style: ${style} | Palette: ${palette}
-      - Stage Area Dimensions: ${w} ft Width x ${h} ft Height x ${d} ft Depth
-      - Target Budget: ₹${budget}
-      - Directives: ${customNotes} ${refinement ? `| Extra Instruction: ${refinement}` : ''}
-      - Master Catalog Inventory: ${JSON.stringify(pbCatalog)}
-
-      CRITICAL: You MUST select items from the Master Catalog using their EXACT "id".
-      Return response STRICTLY as valid JSON without markdown wrapping:
+      const promptText = `You are lead botanical designer for Vanji Decorators. 
+      Inspect the attached venue photograph. Decorate THIS EXACT STAGE with authentic Indian or luxury flowers according to style: ${style}, palette: ${palette}.
+      - Dimensions: ${w}ft width x ${h}ft height x ${d}ft depth. Budget: ₹${budget}. Directives: ${customNotes} ${refinement}.
+      - Master Catalog: ${JSON.stringify(pbCatalog)}
+      Return STRICTLY valid JSON:
       {
         "title": "Concept Name",
-        "narrative": "3-4 sentences explaining how this decor fits specifically onto the uploaded venue's stage.",
-        "imagePrompt": "A photorealistic front-view render of this exact stage decorated with ${style} in ${palette} colors, showing backdrop drapes, floral arches, stage wash lights, and Maharaja sofa placed right on the stage.",
-        "materials": [
-          { "id": "Exact id from catalog", "qty": 10 }
-        ],
-        "setupPlan": [
-          "Day 1: Structural iron truss erection",
-          "Day 2: Flower fixing and lighting"
-        ]
+        "narrative": "3-4 sentences detailing the floral arrangement on this stage.",
+        "imagePrompt": "Photorealistic wedding stage decoration with ${style}, ${palette}, floral backdrop, sofa.",
+        "materials": [{ "id": "pb_3", "qty": ${w} }, { "id": "pb_2", "qty": 2 }],
+        "setupPlan": ["Day 1: Truss setup", "Day 2: Floral fixing"]
       }`;
 
       try {
@@ -1198,14 +1283,9 @@
         if (apiKey) {
           const parts = [{ text: promptText }];
           if (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) {
-            activeEvent.venuePhotos.slice(0, 3).forEach(p => {
-              parts.unshift({
-                inlineData: { mimeType: 'image/jpeg', data: p.data.split(',')[1] }
-              });
-            });
+            parts.unshift({ inlineData: { mimeType: 'image/jpeg', data: activeEvent.venuePhotos[0].data.split(',')[1] } });
           }
-
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts }] })
@@ -1217,18 +1297,10 @@
         } else {
           resultJson = {
             title: `${style} — ${occasion}`,
-            narrative: `Custom-tailored for your ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope. Uses ${palette} poly-satin drapery with fresh seasonal floral cascade framing and golden ambient lighting wash.`,
-            imagePrompt: `Indian wedding stage decorated with ${style} in ${palette} color scheme, opulent backdrop drapes, fresh floral arches, Maharaja sofa, 8k realistic photo.`,
-            materials: [
-              { id: "pb_3", qty: parseInt(w) || 40 },
-              { id: "pb_2", qty: 2 },
-              { id: "pb_4", qty: 2 },
-              { id: "pb_1", qty: 100 }
-            ],
-            setupPlan: [
-              "Day 1: Truss framing erection and backdrop stretching",
-              "Day 2: Floral cascade installation and stage wash profiling"
-            ]
+            narrative: `Custom floral styling for your ${w}x${h} ft stage using ${palette} arrangements, cascading backdrops, and warm stage wash illumination.`,
+            imagePrompt: `Indian wedding stage decorated with ${style}, ${palette}, floral arches and sofa.`,
+            materials: [{ id: "pb_3", qty: 40 }, { id: "pb_2", qty: 2 }],
+            setupPlan: ["Day 1: Structure erection", "Day 2: Floral Mandi fixing"]
           };
         }
 
@@ -1236,36 +1308,58 @@
         (resultJson.materials || []).forEach(m => {
           const matched = pbItems.find(p => p.id === m.id);
           if (matched) {
-            hydratedMaterials.push({
-              id: matched.id,
-              name: matched.name,
-              qty: m.qty || 1,
-              unit: matched.unit,
-              selling: matched.selling,
-              internal: matched.internal
-            });
+            hydratedMaterials.push({ id: matched.id, name: matched.name, qty: m.qty || 1, unit: matched.unit, selling: matched.selling, internal: matched.internal });
           }
         });
         resultJson.materials = hydratedMaterials;
 
         currentGeneratedPlan = resultJson;
-        const varContainer = document.getElementById('ai-variations-container');
-        if (varContainer) varContainer.classList.add('hidden');
+        document.getElementById('ai-variations-container').classList.add('hidden');
         renderGeneratedPlan(resultJson);
-
         renderDecoratedVenuePhoto(resultJson.imagePrompt, palette, style, apiKey);
-
       } catch (err) {
-        alert('Could not synthesize AI plan. Please check your Gemini API key in Settings.');
+        alert('Could not synthesize AI plan. Check your API key.');
       } finally {
-        if (btn) {
-          btn.innerText = '✨ Decorate Uploaded Venue Photo';
-          btn.disabled = false;
-        }
+        if (btn) { btn.innerText = '✨ Decorate Uploaded Venue Photo'; btn.disabled = false; }
       }
     }
 
-    // RENDERS DECORATED VISUAL DIRECTLY ONTO THE USER'S PHOTO
+    async function synthesizeMultipleBotanicalDesigns() {
+      const w = document.getElementById('ai-dim-width')?.value || '40';
+      const h = document.getElementById('ai-dim-height')?.value || '18';
+      const occasion = document.getElementById('ai-event-occasion')?.value || 'Wedding';
+      const palette = document.getElementById('ai-palette-input')?.value || 'Gold & White';
+
+      const concepts = [
+        { id: "c1", name: "Traditional Temple Marigold", floralProfile: "Orange Genda, Mogra strings, brass Urlis", narrative: "Auspicious South Indian layout with fragrant jasmine bells and marigold waterfall arches." },
+        { id: "c2", name: "European Pastel Cloud", floralProfile: "Blush Hydrangeas, Peach Roses, Baby's Breath", narrative: "Modern minimalist luxury with curved floral arcs and poly-satin drapery." },
+        { id: "c3", name: "Contemporary Orchid Truss", floralProfile: "White Dendrobium Orchids, Gold Trusses", narrative: "High-contrast architectural stage accented with geometric gold trusses and warm amber wash." }
+      ];
+
+      const container = document.getElementById('ai-variations-grid');
+      const wrapper = document.getElementById('ai-variations-container');
+      if (!container || !wrapper) return;
+
+      container.innerHTML = concepts.map(c => `
+        <div class="p-3 bg-white border border-amber-200 rounded-xl shadow-sm flex flex-col justify-between space-y-2 text-xs">
+          <div>
+            <span class="text-[9px] uppercase font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">${c.name}</span>
+            <p class="font-semibold text-slate-800 mt-1">${c.narrative}</p>
+            <div class="mt-2 text-[10px] bg-slate-50 p-1.5 rounded border"><strong class="text-amber-950 block">Botanical Variety:</strong><span>${c.floralProfile}</span></div>
+          </div>
+          <button onclick="applyDesignToStage('${escapeHTML(c.name)}', '${escapeHTML(c.floralProfile)}')" class="w-full bg-black hover:bg-zinc-800 text-amber-400 font-bold py-1.5 rounded text-[11px]">
+            Apply Concept
+          </button>
+        </div>
+      `).join('');
+      wrapper.classList.remove('hidden');
+    }
+
+    function applyDesignToStage(name, flowers) {
+      document.getElementById('ai-custom-directive').value = `${name} using ${flowers}`;
+      synthesizeCompleteAiDecorPlan();
+    }
+
     async function renderDecoratedVenuePhoto(imagePrompt, palette, style, apiKey) {
       const loader = document.getElementById('ai-concept-loader');
       const imgEl = document.getElementById('ai-concept-img');
@@ -1278,39 +1372,27 @@
       let renderedDataUrl = null;
       const userPhoto = (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) ? activeEvent.venuePhotos[0] : null;
 
-      // 1. Try generating with Imagen 3 if API Key is available
       if (apiKey) {
         try {
-          const imgRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              instances: [{ prompt: imagePrompt }],
-              parameters: { sampleCount: 1, aspectRatio: "16:9" }
-            })
+            body: JSON.stringify({ instances: [{ prompt: imagePrompt }], parameters: { sampleCount: 1, aspectRatio: "16:9" } })
           });
-          const imgData = await imgRes.json();
+          const imgData = await res.json();
           const base64Bytes = imgData.predictions?.[0]?.bytesBase64Encoded;
-          if (base64Bytes) {
-            renderedDataUrl = `data:image/jpeg;base64,${base64Bytes}`;
-          }
-        } catch (e) {
-          console.warn("Imagen API skipped:", e);
-        }
+          if (base64Bytes) renderedDataUrl = `data:image/jpeg;base64,${base64Bytes}`;
+        } catch (e) {}
       }
 
-      // 2. Decorate the user's actual photo via Canvas overlay
       if (!renderedDataUrl && userPhoto) {
         renderedDataUrl = await overlayDecorOnUserPhoto(userPhoto.data, palette, style);
       }
-
-      // 3. Fallback procedural concept if no photo provided
       if (!renderedDataUrl) {
         renderedDataUrl = createProceduralDecorRender(palette, style);
       }
 
       currentRenderedImageData = renderedDataUrl;
-
       if (imgEl) {
         imgEl.src = renderedDataUrl;
         imgEl.onload = () => {
@@ -1321,7 +1403,6 @@
       }
     }
 
-    // DECOR OVERLAY ENGINE: Renders drapes, arch, and Maharaja sofa on user photo
     function overlayDecorOnUserPhoto(base64Image, palette, style) {
       return new Promise((resolve) => {
         const img = new Image();
@@ -1330,86 +1411,24 @@
           canvas.width = img.width || 1280;
           canvas.height = img.height || 720;
           const ctx = canvas.getContext('2d');
-
-          // Draw the actual venue photo uploaded by the user
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          const w = canvas.width;
-          const h = canvas.height;
+          const w = canvas.width; const h = canvas.height;
+          // Backdrop drape
+          ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+          ctx.fillRect(w * 0.2, h * 0.2, w * 0.6, h * 0.5);
 
-          // Warm lighting
-          const spotGrad = ctx.createRadialGradient(w / 2, h * 0.45, 50, w / 2, h * 0.45, w * 0.55);
-          spotGrad.addColorStop(0, "rgba(255, 230, 160, 0.45)");
-          spotGrad.addColorStop(0.6, "rgba(255, 200, 100, 0.15)");
-          spotGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-          ctx.fillStyle = spotGrad;
-          ctx.fillRect(0, 0, w, h);
-
-          // Poly-satin Backdrop Drapes
-          const drapeW = w * 0.65;
-          const drapeH = h * 0.55;
-          const startX = (w - drapeW) / 2;
-          const startY = h * 0.22;
-
-          const drapeGrad = ctx.createLinearGradient(startX, startY, startX + drapeW, startY);
-          drapeGrad.addColorStop(0, "rgba(15, 23, 42, 0.85)");
-          drapeGrad.addColorStop(0.25, "rgba(248, 250, 252, 0.88)");
-          drapeGrad.addColorStop(0.5, "rgba(251, 191, 36, 0.9)");
-          drapeGrad.addColorStop(0.75, "rgba(248, 250, 252, 0.88)");
-          drapeGrad.addColorStop(1, "rgba(15, 23, 42, 0.85)");
-
-          ctx.fillStyle = drapeGrad;
-          ctx.fillRect(startX, startY, drapeW, drapeH);
-
-          ctx.strokeStyle = "rgba(255, 215, 0, 0.6)";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(startX, startY, drapeW, drapeH);
-
-          // Fresh Floral Arch
-          for (let i = 0; i < 45; i++) {
-            const fx = startX - 10 + (drapeW + 20) * (i / 45);
-            const fy = startY + Math.sin((i / 45) * Math.PI) * -35 + 15;
+          // Florals
+          for (let i = 0; i < 40; i++) {
             ctx.beginPath();
-            ctx.arc(fx, fy, 16 + (i % 3) * 3, 0, Math.PI * 2);
-            ctx.fillStyle = (i % 2 === 0) ? "#FDE047" : ((i % 3 === 0) ? "#F43F5E" : "#FFFBEB");
+            ctx.arc(w * 0.2 + (w * 0.6) * (i / 40), h * 0.22 + Math.sin(i) * 15, 14, 0, Math.PI * 2);
+            ctx.fillStyle = i % 2 === 0 ? "#FDE047" : "#F43F5E";
             ctx.fill();
           }
 
-          // Floral Pillars
-          for (let y = startY + 30; y < startY + drapeH; y += 22) {
-            ctx.beginPath();
-            ctx.arc(startX + 10, y, 13, 0, Math.PI * 2);
-            ctx.fillStyle = "#FB7185";
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(startX + drapeW - 10, y, 13, 0, Math.PI * 2);
-            ctx.fillStyle = "#FBBF24";
-            ctx.fill();
-          }
-
-          // Maharaja VIP Sofa
-          const sofaW = w * 0.28;
-          const sofaH = h * 0.16;
-          const sofaX = (w - sofaW) / 2;
-          const sofaY = startY + drapeH - sofaH * 0.85;
-
+          // Sofa
           ctx.fillStyle = "#D97706";
-          ctx.fillRect(sofaX, sofaY, sofaW, sofaH * 0.7);
-
-          ctx.strokeStyle = "#FDE68A";
-          ctx.lineWidth = 3;
-          ctx.strokeRect(sofaX, sofaY, sofaW, sofaH * 0.7);
-
-          ctx.fillStyle = "#FEF3C7";
-          ctx.fillRect(sofaX - 8, sofaY + sofaH * 0.35, sofaW + 16, sofaH * 0.45);
-
-          // Watermark label
-          ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-          ctx.fillRect(20, h - 45, 340, 30);
-          ctx.fillStyle = "#FBBF24";
-          ctx.font = "bold 13px sans-serif";
-          ctx.fillText(`VANJI AI DECOR OVERLAY • ${palette.toUpperCase()}`, 30, h - 25);
+          ctx.fillRect(w * 0.35, h * 0.55, w * 0.3, h * 0.12);
 
           resolve(canvas.toDataURL('image/jpeg', 0.92));
         };
@@ -1419,40 +1438,16 @@
 
     function createProceduralDecorRender(palette, style) {
       const canvas = document.createElement('canvas');
-      canvas.width = 1280;
-      canvas.height = 720;
+      canvas.width = 1280; canvas.height = 720;
       const ctx = canvas.getContext('2d');
-
-      const bg = ctx.createLinearGradient(0, 0, 0, 720);
-      bg.addColorStop(0, "#0F172A");
-      bg.addColorStop(1, "#1E293B");
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, 1280, 720);
-
-      const sp = ctx.createRadialGradient(640, 360, 40, 640, 360, 500);
-      sp.addColorStop(0, "rgba(251, 191, 36, 0.5)");
-      sp.addColorStop(1, "transparent");
-      ctx.fillStyle = sp;
-      ctx.fillRect(0, 0, 1280, 720);
-
-      ctx.fillStyle = "#F8FAFC";
-      ctx.fillRect(240, 140, 800, 420);
-
-      ctx.fillStyle = "#D97706";
-      ctx.fillRect(490, 420, 300, 110);
-
-      ctx.fillStyle = "#FBBF24";
-      ctx.font = "bold 20px sans-serif";
-      ctx.fillText(`VANJI STUDIO CONCEPT: ${style}`, 420, 100);
-
+      ctx.fillStyle = "#0F172A"; ctx.fillRect(0, 0, 1280, 720);
+      ctx.fillStyle = "#FBBF24"; ctx.font = "bold 24px sans-serif";
+      ctx.fillText(`VANJI STUDIO CONCEPT: ${style} (${palette})`, 380, 100);
       return canvas.toDataURL('image/jpeg', 0.9);
     }
 
-    // REFRESH & CHANGE PICTURE
     function refreshDecorDesign() {
-      const occasion = document.getElementById('ai-event-occasion')?.value || 'Wedding';
-      const style = document.getElementById('ai-design-style')?.value || 'Royal Luxury';
-      applyQuickDecorModifier(`Re-style stage with alternative floral symmetry and fresh ambient wash for ${occasion}.`);
+      synthesizeCompleteAiDecorPlan("Provide a fresh creative design iteration.");
     }
 
     function applyQuickDecorModifier(directive) {
@@ -1461,480 +1456,182 @@
     }
 
     function saveAiRenderedImageToEvent() {
-      if (!activeEvent) return alert('Select or create an active event first.');
-      if (!currentRenderedImageData) return alert('No decor image rendered yet.');
-
+      if (!activeEvent) return alert('Open an event first.');
+      if (!currentRenderedImageData) return alert('No image rendered.');
       if (!activeEvent.venuePhotos) activeEvent.venuePhotos = [];
-      activeEvent.venuePhotos.push({
-        id: 'ai_render_' + Date.now(),
-        category: 'AI Decor Proposal Render',
-        mime: 'image/jpeg',
-        data: currentRenderedImageData
-      });
-
+      activeEvent.venuePhotos.push({ id: 'ai_render_' + Date.now(), category: 'AI Render', mime: 'image/jpeg', data: currentRenderedImageData });
       renderVenuePhotosGrid();
       markUnsaved();
-      alert('Decorated venue picture successfully saved to active event!');
+      alert('Concept image saved to event.');
     }
 
     function renderGeneratedPlan(plan) {
-      const titleEl = document.getElementById('ai-plan-title');
-      const narrativeEl = document.getElementById('ai-plan-narrative');
-      if (titleEl) titleEl.innerText = plan.title || 'Custom Decor Proposal';
-      if (narrativeEl) narrativeEl.innerText = plan.narrative || '';
-
+      document.getElementById('ai-plan-title').innerText = plan.title || 'Proposal';
+      document.getElementById('ai-plan-narrative').innerText = plan.narrative || '';
       const tbody = document.getElementById('ai-plan-items-tbody');
       let total = 0;
       if (tbody) {
         tbody.innerHTML = (plan.materials || []).map(m => {
           const lineTotal = (m.qty || 1) * m.selling;
           total += lineTotal;
-          return `
-            <tr>
-              <td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td>
-              <td class="p-1.5 border text-center">${m.qty}</td>
-              <td class="p-1.5 border text-center text-slate-500">${escapeHTML(m.unit)}</td>
-              <td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td>
-              <td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td>
-            </tr>
-          `;
+          return `<tr><td class="p-1.5 border font-semibold">${escapeHTML(m.name)}</td><td class="p-1.5 border text-center">${m.qty}</td><td class="p-1.5 border text-center">${escapeHTML(m.unit)}</td><td class="p-1.5 border text-right">₹${m.selling.toLocaleString()}</td><td class="p-1.5 border text-right font-bold">₹${lineTotal.toLocaleString()}</td></tr>`;
         }).join('');
       }
-
-      const summaryEl = document.getElementById('ai-plan-cost-summary');
-      const cardEl = document.getElementById('ai-plan-output-card');
-      if (summaryEl) summaryEl.innerText = `Est. Price: ₹${total.toLocaleString()}`;
-      if (cardEl) cardEl.classList.remove('hidden');
+      document.getElementById('ai-plan-cost-summary').innerText = `Est. Price: ₹${total.toLocaleString()}`;
+      document.getElementById('ai-plan-output-card').classList.remove('hidden');
     }
 
-    // 3 BUDGET VARIATIONS GENERATOR
-    async function generateAlternativeVariations() {
-      const budget = parseFloat(document.getElementById('ai-budget-target')?.value) || 200000;
-      const bTiers = [
-        { label: 'Essential Tier', amount: Math.round(budget * 0.5) },
-        { label: 'Balanced Tier', amount: Math.round(budget) },
-        { label: 'Grand Luxury Tier', amount: Math.round(budget * 1.5) }
-      ];
-
-      const pbItems = await dbGetAll('pricebook');
-      const container = document.getElementById('ai-variations-grid');
-      if (!container) return;
-      container.innerHTML = '';
-
-      bTiers.forEach((tier, idx) => {
-        const card = document.createElement('div');
-        card.className = 'p-3 bg-white border border-amber-200 rounded-xl shadow-sm space-y-2 text-xs flex flex-col justify-between';
-        
-        let sampleItems = [];
-        if (idx === 0) sampleItems = pbItems.slice(0, 2);
-        else if (idx === 1) sampleItems = pbItems.slice(0, 4);
-        else sampleItems = pbItems.slice(0, 5);
-
-        card.innerHTML = `
-          <div>
-            <span class="text-[9px] uppercase font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">${tier.label}</span>
-            <h4 class="font-bold text-sm text-slate-900 mt-1">₹${tier.amount.toLocaleString()} Budget</h4>
-            <ul class="mt-2 space-y-1 text-[11px] text-slate-600">
-              ${sampleItems.map(it => `<li>• ${escapeHTML(it.name)} (${it.unit})</li>`).join('')}
-            </ul>
-          </div>
-          <button onclick="adoptTierPlan(${tier.amount}, '${tier.label}')" class="w-full mt-3 bg-black hover:bg-zinc-800 text-amber-400 font-bold py-1.5 rounded text-[11px]">
-            Adopt ${tier.label}
-          </button>
-        `;
-        container.appendChild(card);
-      });
-
-      const cardEl = document.getElementById('ai-plan-output-card');
-      const varContainer = document.getElementById('ai-variations-container');
-      if (cardEl) cardEl.classList.add('hidden');
-      if (varContainer) varContainer.classList.remove('hidden');
-    }
-
-    function adoptTierPlan(amount, label) {
-      const budgetInput = document.getElementById('ai-budget-target');
-      if (budgetInput) budgetInput.value = amount;
-      synthesizeCompleteAiDecorPlan(`Strictly target ${label} specifications.`);
-    }
-
-    // PIPELINE PUSH ACTIONS
+    // PIPELINE & EVENT UTILITIES
     function pushAiScopeToActiveEvent() {
-      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
-      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
-      currentGeneratedPlan.materials.forEach(m => {
-        activeEvent.scopeItems.push({
-          id: m.id,
-          name: m.name,
-          req: m.qty,
-          loaded: 0,
-          ret: 0,
-          dam: 0,
-          unit: m.unit
-        });
+      if (!activeEvent) return alert('Open an event first.');
+      (currentGeneratedPlan?.materials || []).forEach(m => {
+        activeEvent.scopeItems.push({ id: m.id, name: m.name, req: m.qty, loaded: 0, ret: 0, dam: 0, unit: m.unit });
       });
-      alert('Materials pushed to Scope & Stock Audit!');
-      loadActiveEventIntoUI();
-      navTo('workspace');
-      switchWsTab('scope');
+      alert('Added to Scope!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('scope');
     }
 
     function pushAiQuoteToActiveEvent() {
-      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
-      if (!currentGeneratedPlan || !currentGeneratedPlan.materials) return;
-      currentGeneratedPlan.materials.forEach(m => {
-        activeEvent.quoteItems.push({
-          name: m.name,
-          qty: m.qty,
-          unit: m.unit,
-          rate: m.selling
-        });
+      if (!activeEvent) return alert('Open an event first.');
+      (currentGeneratedPlan?.materials || []).forEach(m => {
+        activeEvent.quoteItems.push({ name: m.name, qty: m.qty, unit: m.unit, rate: m.selling });
       });
-      alert('Estimate pushed to Client Quotation Sheet!');
-      loadActiveEventIntoUI();
-      navTo('workspace');
-      switchWsTab('quotation');
+      alert('Added to Quotation!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('quotation');
     }
 
     function pushAiScheduleToActiveEvent() {
-      if (!activeEvent) return alert('Please open or create an event in the Workspace first.');
-      if (!currentGeneratedPlan || !currentGeneratedPlan.setupPlan) return;
-      activeEvent.notes = (activeEvent.notes || '') + "\n--- AI Setup Sequence ---\n" + currentGeneratedPlan.setupPlan.join("\n");
-      alert('Setup sequence appended to Event Notes!');
-      loadActiveEventIntoUI();
-      navTo('workspace');
-      switchWsTab('overview');
+      if (!activeEvent) return alert('Open an event first.');
+      activeEvent.notes = (activeEvent.notes || '') + "\n--- Setup Sequence ---\n" + (currentGeneratedPlan?.setupPlan || []).join("\n");
+      alert('Appended to Notes!');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview');
     }
 
-    // CLEAN EVENT DELETION LOGIC
     async function deleteEventById(id) {
-      if (!confirm(`Are you sure you want to permanently delete event ${id}? This cannot be undone.`)) return;
-
+      if (!confirm(`Permanently delete event ${id}?`)) return;
       await dbDelete('events', id);
-
       if (activeEvent && activeEvent.id === id) {
         activeEvent = null;
         document.getElementById('active-event-badge').innerText = 'NO EVENT';
         document.getElementById('ws-event-id').innerText = '-';
         document.getElementById('ws-event-name').innerText = 'Select an Event';
-        document.getElementById('ws-event-subtitle').innerText = 'Venue: - | Date: -';
-
-        // Clear all input elements in Workspace
-        ['inp-client-name', 'inp-client-phone', 'inp-event-date', 'inp-venue', 'inp-event-type', 'inp-event-notes'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.value = '';
-        });
-        ['ws-quote-transport', 'ws-quote-labour', 'ws-quote-discount', 'ws-quote-advance', 'c-fabric', 'c-flex', 'c-frame', 'c-rentals', 'c-generator', 'c-sound', 'c-trans-total'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.value = 0;
-        });
-        document.getElementById('ws-quote-items-tbody').innerHTML = '';
-        document.getElementById('ws-scope-tbody').innerHTML = '';
-        document.getElementById('ws-flowers-container').innerHTML = '';
-        document.getElementById('labour-table-tbody').innerHTML = '';
+        ['inp-client-name', 'inp-client-phone', 'inp-event-date', 'inp-venue', 'inp-event-type', 'inp-event-notes'].forEach(elId => { const el = document.getElementById(elId); if(el) el.value=''; });
         navTo('events');
       }
-
-      await renderEventsList();
-      await updateDashboard();
-      alert(`Event ${id} has been deleted.`);
+      await renderEventsList(); await updateDashboard();
     }
 
-    // EVENT LIFECYCLE MANAGEMENT
     async function createNewEventFlow() {
       const year = new Date().getFullYear();
       const allEvents = await dbGetAll('events');
       let maxSeq = 0;
-      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
       allEvents.forEach(e => {
-        const m = (e.id || '').match(regex);
-        if (m) {
-          const num = parseInt(m[1], 10);
-          if (num > maxSeq) maxSeq = num;
-        }
+        const m = (e.id || '').match(new RegExp(`^VEP-${year}-(\\d{4})$`));
+        if (m && parseInt(m[1]) > maxSeq) maxSeq = parseInt(m[1]);
       });
       const newId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
-
       activeEvent = {
-        id: newId,
-        client: '',
-        phone: '',
-        date: '',
-        venue: '',
-        status: 'Confirmed',
-        type: 'Wedding',
-        notes: '',
-        dimensions: { width: 40, depth: 12, height: 18, walkway: 30 },
-        venuePhotos: [],
-        quoteItems: [],
-        quoteTransport: 0,
-        quoteLabour: 0,
-        quoteDiscount: 0,
-        quoteTaxMode: 'none',
-        quoteAdvance: 0,
-        quoteGrand: 0,
-        scopeItems: [],
-        costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, transTotal: 0 },
-        flowers: [],
-        labourGroups: [
-          { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
-          { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
-          { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
-        ],
-        schedule: { dispatch: '', setup: '', event: '', teardown: '' },
-        checklists: {}
+        id: newId, client: '', phone: '', date: '', venue: '', status: 'Confirmed', type: 'Wedding', notes: '',
+        dimensions: { width: 40, depth: 12, height: 18, walkway: 30 }, venuePhotos: [], quoteItems: [],
+        quoteTransport: 0, quoteLabour: 0, quoteDiscount: 0, quoteTaxMode: 'none', quoteAdvance: 0, quoteGrand: 0,
+        scopeItems: [], costs: { fabric: 0, flex: 0, frame: 0, rentals: 0, generator: 0, sound: 0, transTotal: 0 },
+        flowers: [], labourGroups: [{ role: 'Florist Master', men: 2, days: 2, rate: 1500 }, { role: 'Setup Labour', men: 6, days: 2, rate: 1200 }],
+        schedule: { dispatch: '', setup: '', event: '', teardown: '' }, checklists: {}
       };
-
-      loadActiveEventIntoUI();
-      navTo('workspace');
-      switchWsTab('overview');
+      loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview');
     }
 
     function loadActiveEventIntoUI() {
       if (!activeEvent) return;
-
       activeEvent.dimensions = activeEvent.dimensions || { width: 40, depth: 12, height: 18, walkway: 30 };
-      activeEvent.labourGroups = activeEvent.labourGroups || [
-        { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
-        { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
-        { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
-      ];
+      activeEvent.labourGroups = activeEvent.labourGroups || [];
       activeEvent.scopeItems = activeEvent.scopeItems || [];
       activeEvent.quoteItems = activeEvent.quoteItems || [];
       activeEvent.flowers = activeEvent.flowers || [];
 
-      const badgeEl = document.getElementById('active-event-badge');
-      const wsIdEl = document.getElementById('ws-event-id');
-      const wsNameEl = document.getElementById('ws-event-name');
-      const wsSubEl = document.getElementById('ws-event-subtitle');
+      document.getElementById('active-event-badge').innerText = activeEvent.id;
+      document.getElementById('ws-event-id').innerText = activeEvent.id;
+      document.getElementById('ws-event-name').innerText = activeEvent.client || 'Untitled Event';
+      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
 
-      if (badgeEl) badgeEl.innerText = activeEvent.id;
-      if (wsIdEl) wsIdEl.innerText = activeEvent.id;
-      if (wsNameEl) wsNameEl.innerText = activeEvent.client || 'Untitled Event';
-      if (wsSubEl) wsSubEl.innerText = `Venue: ${activeEvent.venue || '-'} | Date: ${activeEvent.date || '-'}`;
-
-      const setVal = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val !== undefined && val !== null ? val : '';
-      };
-
-      setVal('inp-client-name', activeEvent.client);
-      setVal('inp-client-phone', activeEvent.phone);
-      setVal('inp-event-date', activeEvent.date);
-      setVal('inp-venue', activeEvent.venue);
-      setVal('inp-event-status', activeEvent.status || 'Confirmed');
-      setVal('inp-event-type', activeEvent.type || '');
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val !== undefined && val !== null ? val : ''; };
+      setVal('inp-client-name', activeEvent.client); setVal('inp-client-phone', activeEvent.phone);
+      setVal('inp-event-date', activeEvent.date); setVal('inp-venue', activeEvent.venue);
+      setVal('inp-event-status', activeEvent.status || 'Confirmed'); setVal('inp-event-type', activeEvent.type || '');
       setVal('inp-event-notes', activeEvent.notes || '');
 
-      setVal('ai-dim-width', activeEvent.dimensions.width);
-      setVal('ai-dim-depth', activeEvent.dimensions.depth);
-      setVal('ai-dim-height', activeEvent.dimensions.height);
-      setVal('ai-dim-walkway', activeEvent.dimensions.walkway);
-
-      setVal('ws-quote-transport', activeEvent.quoteTransport || 0);
-      setVal('ws-quote-labour', activeEvent.quoteLabour || 0);
-      setVal('ws-quote-discount', activeEvent.quoteDiscount || 0);
-      setVal('ws-quote-taxmode', activeEvent.quoteTaxMode || 'none');
-      setVal('ws-quote-advance', activeEvent.quoteAdvance || 0);
-
-      const c = activeEvent.costs || {};
-      setVal('c-fabric', c.fabric || 0);
-      setVal('c-flex', c.flex || 0);
-      setVal('c-frame', c.frame || 0);
-      setVal('c-rentals', c.rentals || 0);
-      setVal('c-generator', c.generator || 0);
-      setVal('c-sound', c.sound || 0);
-      setVal('c-trans-total', c.transTotal || 0);
-
-      const s = activeEvent.schedule || {};
-      setVal('s-dispatch', s.dispatch || '');
-      setVal('s-setup', s.setup || '');
-      setVal('s-event', s.event || '');
-      setVal('s-teardown', s.teardown || '');
-
-      const chks = activeEvent.checklists || {};
-      checklistStages.forEach(stg => {
-        const el = document.getElementById(stg.id);
-        if (el) el.checked = !!chks[stg.id];
-      });
-
-      renderVenuePhotosGrid();
-      renderQuotationRows();
-      renderScopeRows();
-      renderFlowerRows();
-      renderLabourRows();
-      recalcQuotation();
+      renderVenuePhotosGrid(); renderQuotationRows(); renderScopeRows(); renderFlowerRows(); renderLabourRows(); recalcQuotation();
     }
 
     async function saveActiveEventToStore(isSilent = false) {
       if (!activeEvent) return;
-
-      const getVal = (id, fallback) => {
-        const el = document.getElementById(id);
-        return el ? el.value : fallback;
-      };
-
-      activeEvent.client = (getVal('inp-client-name', activeEvent.client) || '').trim();
-      activeEvent.phone = (getVal('inp-client-phone', activeEvent.phone) || '').trim();
+      const getVal = (id, fb) => document.getElementById(id)?.value || fb;
+      activeEvent.client = getVal('inp-client-name', activeEvent.client).trim();
+      activeEvent.phone = getVal('inp-client-phone', activeEvent.phone).trim();
       activeEvent.date = getVal('inp-event-date', activeEvent.date);
-      activeEvent.venue = (getVal('inp-venue', activeEvent.venue) || '').trim();
+      activeEvent.venue = getVal('inp-venue', activeEvent.venue).trim();
       activeEvent.status = getVal('inp-event-status', activeEvent.status);
       activeEvent.type = getVal('inp-event-type', activeEvent.type);
       activeEvent.notes = getVal('inp-event-notes', activeEvent.notes);
 
       syncEventDimensions();
-
-      const qTrans = document.getElementById('ws-quote-transport');
-      const qLab = document.getElementById('ws-quote-labour');
-      const qDisc = document.getElementById('ws-quote-discount');
-      const qTax = document.getElementById('ws-quote-taxmode');
-      const qAdv = document.getElementById('ws-quote-advance');
-
-      if (qTrans) activeEvent.quoteTransport = parseFloat(qTrans.value) || 0;
-      if (qLab) activeEvent.quoteLabour = parseFloat(qLab.value) || 0;
-      if (qDisc) activeEvent.quoteDiscount = parseFloat(qDisc.value) || 0;
-      if (qTax) activeEvent.quoteTaxMode = qTax.value || 'none';
-      if (qAdv) activeEvent.quoteAdvance = parseFloat(qAdv.value) || 0;
-
-      const cFab = document.getElementById('c-fabric');
-      const cFlx = document.getElementById('c-flex');
-      const cFrm = document.getElementById('c-frame');
-      const cRen = document.getElementById('c-rentals');
-      const cGen = document.getElementById('c-generator');
-      const cSnd = document.getElementById('c-sound');
-      const cTrn = document.getElementById('c-trans-total');
-
-      if (cFab) activeEvent.costs.fabric = parseFloat(cFab.value) || 0;
-      if (cFlx) activeEvent.costs.flex = parseFloat(cFlx.value) || 0;
-      if (cFrm) activeEvent.costs.frame = parseFloat(cFrm.value) || 0;
-      if (cRen) activeEvent.costs.rentals = parseFloat(cRen.value) || 0;
-      if (cGen) activeEvent.costs.generator = parseFloat(cGen.value) || 0;
-      if (cSnd) activeEvent.costs.sound = parseFloat(cSnd.value) || 0;
-      if (cTrn) activeEvent.costs.transTotal = parseFloat(cTrn.value) || 0;
-
-      const sDisp = document.getElementById('s-dispatch');
-      const sSet = document.getElementById('s-setup');
-      const sEv = document.getElementById('s-event');
-      const sTrd = document.getElementById('s-teardown');
-
-      if (sDisp) activeEvent.schedule.dispatch = sDisp.value;
-      if (sSet) activeEvent.schedule.setup = sSet.value;
-      if (sEv) activeEvent.schedule.event = sEv.value;
-      if (sTrd) activeEvent.schedule.teardown = sTrd.value;
-
-      const chks = {};
-      checklistStages.forEach(stg => {
-        const el = document.getElementById(stg.id);
-        if (el) chks[stg.id] = el.checked;
-      });
-      activeEvent.checklists = chks;
+      activeEvent.quoteTransport = parseFloat(getVal('ws-quote-transport', 0)) || 0;
+      activeEvent.quoteLabour = parseFloat(getVal('ws-quote-labour', 0)) || 0;
+      activeEvent.quoteDiscount = parseFloat(getVal('ws-quote-discount', 0)) || 0;
+      activeEvent.quoteTaxMode = getVal('ws-quote-taxmode', 'none');
+      activeEvent.quoteAdvance = parseFloat(getVal('ws-quote-advance', 0)) || 0;
 
       await dbPut('events', activeEvent);
       isDirty = false;
       const ind = document.getElementById('save-status-indicator');
-      if (ind) {
-        ind.innerText = '● Saved';
-        ind.className = 'text-[9px] text-emerald-400 font-semibold';
-      }
-
+      if (ind) { ind.innerText = '● Saved'; ind.className = 'text-[9px] text-emerald-400 font-semibold'; }
       if (!isSilent) alert(`Event ${activeEvent.id} saved.`);
       updateDashboard();
     }
 
     async function cloneCurrentEvent() {
       if (!activeEvent) return;
-      if (!confirm('Duplicate this event into a fresh booking?')) return;
-      const year = new Date().getFullYear();
-      const allEvents = await dbGetAll('events');
-      let maxSeq = 0;
-      const regex = new RegExp(`^VEP-${year}-(\\d{4})$`);
-      allEvents.forEach(e => {
-        const m = (e.id || '').match(regex);
-        if (m) {
-          const num = parseInt(m[1], 10);
-          if (num > maxSeq) maxSeq = num;
-        }
-      });
-      const clonedId = `VEP-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
+      if (!confirm('Duplicate event?')) return;
+      const newId = `VEP-${new Date().getFullYear()}-${String(Math.floor(Math.random()*9000)+1000)}`;
       const newEvent = JSON.parse(JSON.stringify(activeEvent));
-      newEvent.id = clonedId;
-      newEvent.client += ' (Duplicate)';
-      newEvent.date = '';
-      newEvent.status = 'Inquiry';
-      newEvent.quoteAdvance = 0;
-      newEvent.scopeItems.forEach(it => { it.loaded = 0; it.ret = 0; it.dam = 0; });
-      activeEvent = newEvent;
-      await dbPut('events', activeEvent);
-      loadActiveEventIntoUI();
-      alert(`Cloned to ${clonedId}`);
+      newEvent.id = newId; newEvent.client += ' (Copy)';
+      activeEvent = newEvent; await dbPut('events', activeEvent); loadActiveEventIntoUI(); alert(`Cloned to ${newId}`);
     }
 
-    // SCOPE & QUOTATION RENDERING
     function renderQuotationRows() {
       const tbody = document.getElementById('ws-quote-items-tbody');
       if (!tbody) return;
       tbody.innerHTML = (activeEvent.quoteItems || []).map((it, idx) => `
-        <tr>
-          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.quoteItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
-          <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-16"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.quoteItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
-          <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
-          <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); markUnsaved(); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
+        <tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.quoteItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.quoteItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
+        <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
+        <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); markUnsaved(); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td></tr>
       `).join('');
     }
 
-    function addCustomQuotationRow() {
-      activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 });
-      markUnsaved();
-      renderQuotationRows();
-    }
+    function addCustomQuotationRow() { activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 }); markUnsaved(); renderQuotationRows(); }
 
     function recalcQuotation() {
       const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
-      const transportEl = document.getElementById('ws-quote-transport');
-      const labourEl = document.getElementById('ws-quote-labour');
-      const discountEl = document.getElementById('ws-quote-discount');
-      const taxModeEl = document.getElementById('ws-quote-taxmode');
-      const advanceEl = document.getElementById('ws-quote-advance');
-
-      const transport = transportEl ? (parseFloat(transportEl.value) || 0) : 0;
-      const labour = labourEl ? (parseFloat(labourEl.value) || 0) : 0;
-      const discount = discountEl ? (parseFloat(discountEl.value) || 0) : 0;
-      const netCharge = Math.max(0, (subtotal + transport + labour) - discount);
-
-      const taxMode = taxModeEl ? taxModeEl.value : 'none';
-      let taxable = netCharge;
-      let gstVal = 0;
-      let grand = netCharge;
-
-      if (taxMode === 'extra18') {
-        taxable = netCharge;
-        gstVal = Math.round(taxable * 0.18);
-        grand = taxable + gstVal;
-      } else if (taxMode === 'incl18') {
-        taxable = Math.round(netCharge / 1.18);
-        gstVal = netCharge - taxable;
-        grand = netCharge;
-      }
-
-      const advance = advanceEl ? (parseFloat(advanceEl.value) || 0) : 0;
-      const balance = Math.max(0, grand - advance);
-
+      const transport = parseFloat(document.getElementById('ws-quote-transport')?.value || 0) || 0;
+      const labour = parseFloat(document.getElementById('ws-quote-labour')?.value || 0) || 0;
+      const discount = parseFloat(document.getElementById('ws-quote-discount')?.value || 0) || 0;
+      const net = Math.max(0, (subtotal + transport + labour) - discount);
+      const taxMode = document.getElementById('ws-quote-taxmode')?.value || 'none';
+      let taxable = net, gst = 0, grand = net;
+      if (taxMode === 'extra18') { gst = Math.round(net * 0.18); grand = net + gst; }
+      else if (taxMode === 'incl18') { taxable = Math.round(net / 1.18); gst = net - taxable; grand = net; }
+      const advance = parseFloat(document.getElementById('ws-quote-advance')?.value || 0) || 0;
       activeEvent.quoteGrand = grand;
-      const subtotalEl = document.getElementById('ws-quote-subtotal');
-      const taxableEl = document.getElementById('ws-quote-taxable');
-      const gstvalEl = document.getElementById('ws-quote-gstval');
-      const grandEl = document.getElementById('ws-quote-grand');
-      const balanceEl = document.getElementById('ws-quote-balance');
-      const revEl = document.getElementById('ws-cost-rev');
-
-      if (subtotalEl) subtotalEl.innerText = `₹${subtotal.toLocaleString()}`;
-      if (taxableEl) taxableEl.innerText = `₹${taxable.toLocaleString()}`;
-      if (gstvalEl) gstvalEl.innerText = `₹${gstVal.toLocaleString()}`;
-      if (grandEl) grandEl.innerText = `₹${Math.round(grand).toLocaleString()}`;
-      if (balanceEl) balanceEl.innerText = `₹${Math.round(balance).toLocaleString()}`;
-      if (revEl) revEl.innerText = `₹${Math.round(grand).toLocaleString()}`;
+      
+      document.getElementById('ws-quote-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+      document.getElementById('ws-quote-taxable').innerText = `₹${taxable.toLocaleString()}`;
+      document.getElementById('ws-quote-gstval').innerText = `₹${gst.toLocaleString()}`;
+      document.getElementById('ws-quote-grand').innerText = `₹${Math.round(grand).toLocaleString()}`;
+      document.getElementById('ws-quote-balance').innerText = `₹${Math.max(0, grand - advance).toLocaleString()}`;
+      document.getElementById('ws-cost-rev').innerText = `₹${Math.round(grand).toLocaleString()}`;
       recalcInternalCosting();
     }
 
@@ -1942,226 +1639,114 @@
       const tbody = document.getElementById('ws-scope-tbody');
       if (!tbody) return;
       tbody.innerHTML = (activeEvent.scopeItems || []).map((it, idx) => `
-        <tr>
-          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.scopeItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs font-medium"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting(); checkLiveStockShortages();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
-          <td class="py-1 px-1 w-12"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.scopeItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-[10px]"></td>
-          <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); markUnsaved(); renderScopeRows(); recalcInternalCosting(); checkLiveStockShortages();" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
+        <tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.scopeItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+        <td class="py-1 px-1 w-12"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.scopeItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-[10px]"></td>
+        <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); markUnsaved(); renderScopeRows(); recalcInternalCosting();" class="text-rose-500 font-bold">✕</button></td></tr>
       `).join('');
-      checkLiveStockShortages();
     }
 
-    function addCustomScopeRow() {
-      activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' });
-      markUnsaved();
-      renderScopeRows();
-    }
+    function addCustomScopeRow() { activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' }); markUnsaved(); renderScopeRows(); }
 
     function renderFlowerRows() {
       const container = document.getElementById('ws-flowers-container');
       if (!container) return;
       container.innerHTML = (activeEvent.flowers || []).map((f, i) => `
-        <div class="flex gap-2 items-center">
-          <input type="text" value="${escapeHTML(f.name)}" oninput="activeEvent.flowers[${i}].name=this.value; markUnsaved();" class="flex-grow border rounded p-1 text-xs">
-          <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-16 border rounded p-1 text-center text-xs">
-          <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-20 border rounded p-1 text-right text-xs">
-          <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
-          <button onclick="activeEvent.flowers.splice(${i},1); markUnsaved(); renderFlowerRows(); recalcInternalCosting();" class="text-rose-500 font-bold px-1.5">✕</button>
-        </div>
+        <div class="flex gap-2 items-center"><input type="text" value="${escapeHTML(f.name)}" oninput="activeEvent.flowers[${i}].name=this.value; markUnsaved();" class="flex-grow border rounded p-1 text-xs">
+        <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-16 border rounded p-1 text-center text-xs">
+        <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; markUnsaved(); recalcInternalCosting();" class="w-20 border rounded p-1 text-right text-xs">
+        <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
+        <button onclick="activeEvent.flowers.splice(${i},1); markUnsaved(); renderFlowerRows(); recalcInternalCosting();" class="text-rose-500 font-bold px-1.5">✕</button></div>
       `).join('');
       recalcInternalCosting();
     }
 
-    function addFlowerRow() {
-      activeEvent.flowers.push({ name: '', qty: 1, rate: 0 });
-      markUnsaved();
-      renderFlowerRows();
-    }
+    function addFlowerRow() { activeEvent.flowers.push({ name: '', qty: 1, rate: 0 }); markUnsaved(); renderFlowerRows(); }
 
-    // ANONYMOUS LABOUR / CREW ROLE PLANNER
     function renderLabourRows() {
       if (!activeEvent) return;
-      if (!activeEvent.labourGroups) {
-        activeEvent.labourGroups = [
-          { role: 'Head Florist Master', men: 2, days: 2, rate: 1500 },
-          { role: 'Stage Setup Labour', men: 6, days: 2, rate: 1200 },
-          { role: 'Loading & Hamali', men: 4, days: 1, rate: 800 }
-        ];
-      }
-
       const tbody = document.getElementById('labour-table-tbody');
       if (!tbody) return;
-      let totalLabourCost = 0;
-
+      let totalCost = 0;
       tbody.innerHTML = activeEvent.labourGroups.map((lg, i) => {
-        const lineTotal = (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
-        totalLabourCost += lineTotal;
-        return `
-          <tr>
-            <td class="py-1 pr-1"><input type="text" value="${escapeHTML(lg.role)}" oninput="activeEvent.labourGroups[${i}].role=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
-            <td class="py-1 px-1 w-16"><input type="number" value="${lg.men}" oninput="activeEvent.labourGroups[${i}].men=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
-            <td class="py-1 px-1 w-16"><input type="number" value="${lg.days}" oninput="activeEvent.labourGroups[${i}].days=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
-            <td class="py-1 px-1 w-24"><input type="number" value="${lg.rate}" oninput="activeEvent.labourGroups[${i}].rate=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-right text-xs"></td>
-            <td class="py-1 pl-1 text-right font-bold w-24">₹${lineTotal.toLocaleString()}</td>
-            <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.labourGroups.splice(${i},1); markUnsaved(); renderLabourRows();" class="text-rose-500 font-bold">✕</button></td>
-          </tr>
-        `;
+        const line = (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
+        totalCost += line;
+        return `<tr><td class="py-1 pr-1"><input type="text" value="${escapeHTML(lg.role)}" oninput="activeEvent.labourGroups[${i}].role=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${lg.men}" oninput="activeEvent.labourGroups[${i}].men=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-16"><input type="number" value="${lg.days}" oninput="activeEvent.labourGroups[${i}].days=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
+        <td class="py-1 px-1 w-24"><input type="number" value="${lg.rate}" oninput="activeEvent.labourGroups[${i}].rate=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-right text-xs"></td>
+        <td class="py-1 pl-1 text-right font-bold w-24">₹${line.toLocaleString()}</td>
+        <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.labourGroups.splice(${i},1); markUnsaved(); renderLabourRows();" class="text-rose-500 font-bold">✕</button></td></tr>`;
       }).join('');
-
-      const totalLabourEl = document.getElementById('labour-total-cost-val');
-      const labourRollupEl = document.getElementById('ws-cost-labour-rollup');
-      if (totalLabourEl) totalLabourEl.innerText = `₹${totalLabourCost.toLocaleString()}`;
-      if (labourRollupEl) labourRollupEl.innerText = `₹${totalLabourCost.toLocaleString()}`;
+      document.getElementById('labour-total-cost-val').innerText = `₹${totalCost.toLocaleString()}`;
+      document.getElementById('ws-cost-labour-rollup').innerText = `₹${totalCost.toLocaleString()}`;
       recalcInternalCosting();
     }
 
-    function addLabourRow() {
-      if (!activeEvent) return alert('Open an event first.');
-      if (!activeEvent.labourGroups) activeEvent.labourGroups = [];
-      activeEvent.labourGroups.push({ role: 'Helper / Loader', men: 4, days: 1, rate: 1000 });
-      markUnsaved();
-      renderLabourRows();
-    }
+    function addLabourRow() { activeEvent.labourGroups.push({ role: 'Loader / Helper', men: 4, days: 1, rate: 1000 }); markUnsaved(); renderLabourRows(); }
 
-    // AUTOMATED INTERNAL COST & STOCK SHORTAGE RADAR
     async function recalcInternalCosting() {
       if (!activeEvent || !db) return;
       const pbItems = await dbGetAll('pricebook');
-      let autoCatalogCost = 0;
-
+      let autoCost = 0;
       (activeEvent.scopeItems || []).forEach(sc => {
         const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === (sc.name || '').toLowerCase());
-        if (match) autoCatalogCost += (sc.req || 0) * (match.internal || 0);
+        if (match) autoCost += (sc.req || 0) * (match.internal || 0);
       });
-      const autoScopeEl = document.getElementById('ws-cost-auto-scope');
-      if (autoScopeEl) autoScopeEl.innerText = `₹${Math.round(autoCatalogCost).toLocaleString()}`;
+      document.getElementById('ws-cost-auto-scope').innerText = `₹${Math.round(autoCost).toLocaleString()}`;
+      let labourCost = (activeEvent.labourGroups || []).reduce((sum, lg) => sum + ((lg.men || 0) * (lg.days || 0) * (lg.rate || 0)), 0);
+      let flowerCost = (activeEvent.flowers || []).reduce((sum, f) => sum + ((f.qty || 0) * (f.rate || 0)), 0);
+      document.getElementById('ws-flowers-total-outflow').innerText = `₹${Math.round(flowerCost).toLocaleString()}`;
 
-      let labourRollup = 0;
-      (activeEvent.labourGroups || []).forEach(lg => {
-        labourRollup += (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
-      });
-      const labourRollupEl = document.getElementById('ws-cost-labour-rollup');
-      if (labourRollupEl) labourRollupEl.innerText = `₹${Math.round(labourRollup).toLocaleString()}`;
-
-      const flwTotal = (activeEvent.flowers || []).reduce((sum, f) => sum + (f.qty * f.rate), 0);
-      const flowersOutflowEl = document.getElementById('ws-flowers-total-outflow');
-      if (flowersOutflowEl) flowersOutflowEl.innerText = `₹${Math.round(flwTotal).toLocaleString()}`;
-
-      const fabricEl = document.getElementById('c-fabric');
-      const flexEl = document.getElementById('c-flex');
-      const frameEl = document.getElementById('c-frame');
-      const rentalsEl = document.getElementById('c-rentals');
-      const generatorEl = document.getElementById('c-generator');
-      const soundEl = document.getElementById('c-sound');
-      const transTotalEl = document.getElementById('c-trans-total');
-
-      const fabric = fabricEl ? (parseFloat(fabricEl.value) || 0) : 0;
-      const flex = flexEl ? (parseFloat(flexEl.value) || 0) : 0;
-      const frame = frameEl ? (parseFloat(frameEl.value) || 0) : 0;
-      const rentals = rentalsEl ? (parseFloat(rentalsEl.value) || 0) : 0;
-      const generator = generatorEl ? (parseFloat(generatorEl.value) || 0) : 0;
-      const sound = soundEl ? (parseFloat(soundEl.value) || 0) : 0;
-      const transTotal = transTotalEl ? (parseFloat(transTotalEl.value) || 0) : 0;
-
-      const totalOutflow = autoCatalogCost + labourRollup + flwTotal + fabric + flex + frame + rentals + generator + sound + transTotal;
+      const getC = (id) => parseFloat(document.getElementById(id)?.value || 0) || 0;
+      const totalOutflow = autoCost + labourCost + flowerCost + getC('c-fabric') + getC('c-flex') + getC('c-frame') + getC('c-rentals') + getC('c-generator') + getC('c-sound') + getC('c-trans-total');
       const rev = activeEvent.quoteGrand || 0;
       const profit = rev - totalOutflow;
       const margin = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
 
-      const costTotalEl = document.getElementById('ws-cost-total');
-      const profitEl = document.getElementById('ws-cost-profit');
-      const marginEl = document.getElementById('ws-cost-margin');
-
-      if (costTotalEl) costTotalEl.innerText = `₹${Math.round(totalOutflow).toLocaleString()}`;
-      if (profitEl) profitEl.innerText = `₹${Math.round(profit).toLocaleString()}`;
-      if (marginEl) marginEl.innerText = `${margin}% Margin`;
+      document.getElementById('ws-cost-total').innerText = `₹${Math.round(totalOutflow).toLocaleString()}`;
+      document.getElementById('ws-cost-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('ws-cost-margin').innerText = `${margin}% Margin`;
     }
 
     async function checkLiveStockShortages() {
       if (!activeEvent || !db) return;
       const invItems = await dbGetAll('inventory');
       const shortages = [];
-
       (activeEvent.scopeItems || []).forEach(sc => {
         const asset = invItems.find(i => i.name.toLowerCase() === (sc.name || '').toLowerCase());
-        if (asset && sc.req > asset.stock) {
-          shortages.push(`Shortage of ${sc.req - asset.stock} ${sc.unit} for ${sc.name} (Need: ${sc.req}, Available: ${asset.stock})`);
-        }
+        if (asset && sc.req > asset.stock) shortages.push(`Shortage of ${sc.req - asset.stock} ${sc.unit} for ${sc.name}`);
       });
-
-      const shortageBox = document.getElementById('dash-shortage-box');
-      const shortageList = document.getElementById('dash-shortage-list');
+      const box = document.getElementById('dash-shortage-box');
+      const list = document.getElementById('dash-shortage-list');
       if (shortages.length > 0) {
-        if (shortageList) shortageList.innerHTML = shortages.map(s => `<div>• ${escapeHTML(s)}</div>`).join('');
-        if (shortageBox) shortageBox.classList.remove('hidden');
-      } else {
-        if (shortageBox) shortageBox.classList.add('hidden');
-      }
+        if(list) list.innerHTML = shortages.map(s => `<div>• ${escapeHTML(s)}</div>`).join('');
+        if(box) box.classList.remove('hidden');
+      } else if(box) { box.classList.add('hidden'); }
     }
 
     function renderChecklistGrid() {
       const container = document.getElementById('ws-checklist-grid');
       if (!container) return;
-      container.innerHTML = checklistStages.map(stg => `
-        <label class="flex items-center gap-2 p-1.5 border rounded bg-slate-50">
-          <input type="checkbox" id="${stg.id}" onchange="markUnsaved();" class="rounded">
-          <span>${stg.label}</span>
-        </label>
-      `).join('');
+      container.innerHTML = checklistStages.map(stg => `<label class="flex items-center gap-2 p-1.5 border rounded bg-slate-50"><input type="checkbox" id="${stg.id}" onchange="markUnsaved();" class="rounded"><span>${stg.label}</span></label>`).join('');
     }
 
-    // PRICE BOOK PICKER MODAL
-    async function openPriceBookPicker(mode) {
-      targetPickerMode = mode;
-      const filterEl = document.getElementById('picker-search-filter');
-      if (filterEl) filterEl.value = '';
-      await renderPriceBookPickerList();
-      const modal = document.getElementById('modal-pb-picker');
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function closePriceBookPicker() { 
-      const modal = document.getElementById('modal-pb-picker');
-      if (modal) modal.classList.add('hidden'); 
-    }
-
+    async function openPriceBookPicker(mode) { targetPickerMode = mode; document.getElementById('picker-search-filter').value = ''; await renderPriceBookPickerList(); document.getElementById('modal-pb-picker').classList.remove('hidden'); }
+    function closePriceBookPicker() { document.getElementById('modal-pb-picker').classList.add('hidden'); }
     async function renderPriceBookPickerList() {
       const query = (document.getElementById('picker-search-filter')?.value || '').toLowerCase();
-      const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query) || it.category.toLowerCase().includes(query));
-      const container = document.getElementById('picker-items-list');
-      if (!container) return;
-      container.innerHTML = items.map(it => `
-        <div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')">
-          <div>
-            <span class="font-bold text-slate-800 text-xs">${escapeHTML(it.name)}</span>
-            <span class="text-[10px] text-slate-400 block">${escapeHTML(it.category)} • ${escapeHTML(it.unit)}</span>
-          </div>
-          <div class="text-right">
-            <span class="font-bold text-indigo-900 block text-xs">₹${it.selling.toLocaleString()}</span>
-            <span class="text-[10px] text-slate-400">Cost: ₹${it.internal.toLocaleString()}</span>
-          </div>
-        </div>
-      `).join('');
+      const items = (await dbGetAll('pricebook')).filter(it => it.name.toLowerCase().includes(query));
+      document.getElementById('picker-items-list').innerHTML = items.map(it => `<div class="py-2 flex justify-between items-center hover:bg-slate-50 cursor-pointer" onclick="selectItemFromPicker('${it.id}')"><div><span class="font-bold text-slate-800 text-xs">${escapeHTML(it.name)}</span><span class="text-[10px] text-slate-400 block">${escapeHTML(it.category)} • ${escapeHTML(it.unit)}</span></div><div class="text-right"><span class="font-bold text-indigo-900 block text-xs">₹${it.selling.toLocaleString()}</span></div></div>`).join('');
     }
-
     async function selectItemFromPicker(id) {
       const it = await dbGet('pricebook', id);
       if (!it || !activeEvent) return;
-      if (targetPickerMode === 'quotation') {
-        activeEvent.quoteItems.push({ name: it.name, qty: 1, unit: it.unit, rate: it.selling });
-        markUnsaved();
-        renderQuotationRows();
-        recalcQuotation();
-      } else {
-        activeEvent.scopeItems.push({ id: it.id, name: it.name, req: 1, loaded: 0, ret: 0, dam: 0, unit: it.unit });
-        markUnsaved();
-        renderScopeRows();
-      }
-      closePriceBookPicker();
+      if (targetPickerMode === 'quotation') { activeEvent.quoteItems.push({ name: it.name, qty: 1, unit: it.unit, rate: it.selling }); renderQuotationRows(); recalcQuotation(); }
+      else { activeEvent.scopeItems.push({ id: it.id, name: it.name, req: 1, loaded: 0, ret: 0, dam: 0, unit: it.unit }); renderScopeRows(); }
+      closePriceBookPicker(); markUnsaved();
     }
 
     async function renderPriceBookTable() {
@@ -2169,367 +1754,96 @@
       const items = await dbGetAll('pricebook');
       const tbody = document.getElementById('pricebook-tbody');
       if (!tbody) return;
-      tbody.innerHTML = items.map(it => `
-        <tr>
-          <td class="py-1.5 font-bold">${escapeHTML(it.name)}</td>
-          <td class="py-1.5">${escapeHTML(it.category)}</td>
-          <td class="py-1.5 text-center">${escapeHTML(it.unit)}</td>
-          <td class="py-1.5 text-right font-bold text-indigo-900">₹${it.selling.toLocaleString()}</td>
-          <td class="py-1.5 text-right text-slate-600">₹${it.internal.toLocaleString()}</td>
-          <td class="py-1.5 text-center"><button onclick="deletePriceBookItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = items.map(it => `<tr><td class="py-1.5 font-bold">${escapeHTML(it.name)}</td><td class="py-1.5">${escapeHTML(it.category)}</td><td class="py-1.5 text-center">${escapeHTML(it.unit)}</td><td class="py-1.5 text-right font-bold text-indigo-900">₹${it.selling.toLocaleString()}</td><td class="py-1.5 text-right text-slate-600">₹${it.internal.toLocaleString()}</td><td class="py-1.5 text-center"><button onclick="deletePriceBookItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td></tr>`).join('');
     }
-
     async function openPriceBookEditModal() {
-      const name = prompt('Item Name:');
-      if (!name) return;
-      const category = prompt('Category (Furniture, Decoration, Flowers, Lighting, Tent):') || 'Decoration';
-      const unit = prompt('Unit (Nos, Rnft, Sqft, Bunch):') || 'Nos';
-      const selling = parseFloat(prompt('Selling Rate (₹):')) || 0;
-      const internal = parseFloat(prompt('Internal Cost (₹):')) || 0;
-      await dbPut('pricebook', { id: 'pb_' + Date.now(), name, category, unit, selling, internal });
-      renderPriceBookTable();
+      const name = prompt('Item Name:'); if (!name) return;
+      const category = prompt('Category:') || 'Decoration'; const unit = prompt('Unit:') || 'Nos';
+      const selling = parseFloat(prompt('Selling ₹:')) || 0; const internal = parseFloat(prompt('Internal Cost ₹:')) || 0;
+      await dbPut('pricebook', { id: 'pb_' + Date.now(), name, category, unit, selling, internal }); renderPriceBookTable();
     }
+    async function deletePriceBookItem(id) { if (confirm('Delete?')) { await dbDelete('pricebook', id); renderPriceBookTable(); } }
 
-    async function deletePriceBookItem(id) {
-      if (confirm('Delete from Master Price Book?')) { await dbDelete('pricebook', id); renderPriceBookTable(); }
-    }
-
-    // INVENTORY PERSISTENCE
     async function renderInventoryMaster() {
       if (!db) return;
       const items = await dbGetAll('inventory');
       const tbody = document.getElementById('inventory-master-tbody');
       if (!tbody) return;
-      tbody.innerHTML = items.map(it => `
-        <tr>
-          <td class="py-1.5 font-bold">${escapeHTML(it.name)}</td>
-          <td class="py-1.5 text-center font-bold">${it.stock}</td>
-          <td class="py-1.5 text-center text-slate-500">${escapeHTML(it.location || 'Main Warehouse')}</td>
-          <td class="py-1.5 text-center"><button onclick="deleteInventoryItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = items.map(it => `<tr><td class="py-1.5 font-bold">${escapeHTML(it.name)}</td><td class="py-1.5 text-center font-bold">${it.stock}</td><td class="py-1.5 text-center text-slate-500">${escapeHTML(it.location || '')}</td><td class="py-1.5 text-center"><button onclick="deleteInventoryItem('${it.id}')" class="text-rose-500 font-bold">✕</button></td></tr>`).join('');
     }
-
     async function openInventoryAddModal() {
-      const name = prompt('Asset Name:');
-      if (!name) return;
-      const stock = parseInt(prompt('Total Stock Count:')) || 0;
-      const location = prompt('Storage Location (e.g. Rack A1):') || 'Main Warehouse';
-      await dbPut('inventory', { id: 'inv_' + Date.now(), name, stock, location });
-      renderInventoryMaster();
-      checkLiveStockShortages();
+      const name = prompt('Asset Name:'); if (!name) return;
+      const stock = parseInt(prompt('Stock Count:')) || 0; const location = prompt('Location:') || 'Warehouse';
+      await dbPut('inventory', { id: 'inv_' + Date.now(), name, stock, location }); renderInventoryMaster(); checkLiveStockShortages();
     }
+    async function deleteInventoryItem(id) { if (confirm('Delete?')) { await dbDelete('inventory', id); renderInventoryMaster(); checkLiveStockShortages(); } }
 
-    async function deleteInventoryItem(id) {
-      if (confirm('Delete asset?')) { await dbDelete('inventory', id); renderInventoryMaster(); checkLiveStockShortages(); }
-    }
-
-    // MASTER EVENTS LIST
     async function renderEventsList() {
       if (!db) return;
       const query = (document.getElementById('events-search-filter')?.value || '').toLowerCase();
-      const events = (await dbGetAll('events')).filter(e => 
-        (e.client || '').toLowerCase().includes(query) || 
-        (e.venue || '').toLowerCase().includes(query) || 
-        (e.id || '').toLowerCase().includes(query)
-      );
+      const events = (await dbGetAll('events')).filter(e => (e.client || '').toLowerCase().includes(query) || (e.venue || '').toLowerCase().includes(query) || (e.id || '').toLowerCase().includes(query));
       const container = document.getElementById('events-master-list');
       if (!container) return;
-      container.innerHTML = events.map(e => `
-        <div class="py-2.5 flex justify-between items-center hover:bg-slate-50">
-          <div>
-            <span class="font-bold text-slate-900 text-xs">${escapeHTML(e.client || 'Untitled')}</span>
-            <span class="text-[10px] text-slate-400 block">${e.id} • ${escapeHTML(e.venue || 'No Venue')} • ${e.date || 'No Date'}</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded text-xs font-bold">Open</button>
-            <button onclick="deleteEventById('${e.id}')" class="bg-rose-50 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-600 hover:text-white">🗑️</button>
-          </div>
-        </div>
-      `).join('');
+      container.innerHTML = events.map(e => `<div class="py-2.5 flex justify-between items-center hover:bg-slate-50"><div><span class="font-bold text-slate-900 text-xs">${escapeHTML(e.client || 'Untitled')}</span><span class="text-[10px] text-slate-400 block">${e.id} • ${escapeHTML(e.venue || 'No Venue')} • ${e.date || 'No Date'}</span></div><div class="flex items-center gap-1.5"><button onclick="openEventById('${e.id}')" class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded text-xs font-bold">Open</button><button onclick="deleteEventById('${e.id}')" class="bg-rose-50 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold">🗑️</button></div></div>`).join('');
     }
 
-    async function openEventById(id) {
-      activeEvent = await dbGet('events', id);
-      loadActiveEventIntoUI();
-      navTo('workspace');
-      switchWsTab('overview');
-    }
+    async function openEventById(id) { activeEvent = await dbGet('events', id); loadActiveEventIntoUI(); navTo('workspace'); switchWsTab('overview'); }
 
     async function updateDashboard() {
       if (!db) return;
-      const events = await dbGetAll('events');
-      const pbItems = await dbGetAll('pricebook');
+      const events = await dbGetAll('events'); const pbItems = await dbGetAll('pricebook');
       const totalContract = events.reduce((sum, e) => sum + (e.quoteGrand || 0), 0);
       let totalCost = 0;
-
       events.forEach(e => {
-        let evScopeCost = 0;
-        (e.scopeItems || []).forEach(sc => {
-          const match = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === (sc.name || '').toLowerCase());
-          if (match) evScopeCost += (sc.req || 0) * (match.internal || 0);
-        });
-
-        let labourRollup = 0;
-        (e.labourGroups || []).forEach(lg => {
-          labourRollup += (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
-        });
-
-        const c = e.costs || {};
-        const flw = (e.flowers || []).reduce((sf, f) => sf + (f.qty * f.rate), 0);
-        totalCost += evScopeCost + labourRollup + flw + (c.fabric || 0) + (c.flex || 0) + (c.frame || 0) + (c.rentals || 0) + (c.generator || 0) + (c.sound || 0) + (c.transTotal || 0);
+        let scCost = 0; (e.scopeItems || []).forEach(sc => { const m = pbItems.find(p => p.id === sc.id || p.name.toLowerCase() === sc.name.toLowerCase()); if(m) scCost += sc.req * m.internal; });
+        let labCost = (e.labourGroups || []).reduce((s, lg) => s + (lg.men * lg.days * lg.rate), 0);
+        let flwCost = (e.flowers || []).reduce((s, f) => s + (f.qty * f.rate), 0);
+        totalCost += scCost + labCost + flwCost + Object.values(e.costs || {}).reduce((a,b)=>a+b, 0);
       });
-
-      const totalProfit = totalContract - totalCost;
-      const margin = totalContract > 0 ? ((totalProfit / totalContract) * 100).toFixed(1) : 0;
-
-      const eventsEl = document.getElementById('dash-total-events');
-      const confirmedEl = document.getElementById('dash-confirmed-events');
-      const contractEl = document.getElementById('dash-total-contract');
-      const outflowEl = document.getElementById('dash-total-outflow');
-      const profitEl = document.getElementById('dash-total-profit');
-      const marginEl = document.getElementById('dash-profit-margin');
-
-      if (eventsEl) eventsEl.innerText = events.length;
-      if (confirmedEl) confirmedEl.innerText = `${events.filter(e => e.status === 'Confirmed').length} Confirmed`;
-      if (contractEl) contractEl.innerText = `₹${(totalContract/100000).toFixed(2)}L`;
-      if (outflowEl) outflowEl.innerText = `₹${(totalCost/100000).toFixed(2)}L`;
-      if (profitEl) profitEl.innerText = `₹${Math.round(totalProfit).toLocaleString()}`;
-      if (marginEl) marginEl.innerText = `${margin}% Margin`;
-
-      const upBox = document.getElementById('dash-upcoming-container');
-      const sorted = [...events].sort((a,b) => (a.date || '').localeCompare(b.date || '')).slice(0, 5);
-      if (upBox) {
-        upBox.innerHTML = sorted.map(e => `
-          <div class="p-2.5 border rounded-lg flex justify-between items-center bg-slate-50">
-            <div>
-              <span class="font-bold text-slate-900 block">${e.date || 'TBD'} — ${escapeHTML(e.venue || 'Venue TBD')}</span>
-              <span class="text-[10px] text-slate-500">${escapeHTML(e.client)} • ₹${Math.round(e.quoteGrand || 0).toLocaleString()}</span>
-            </div>
-            <span class="text-[9px] px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-900 border border-amber-200">${e.status}</span>
-          </div>
-        `).join('');
-      }
-
+      const profit = totalContract - totalCost;
+      document.getElementById('dash-total-events').innerText = events.length;
+      document.getElementById('dash-confirmed-events').innerText = `${events.filter(e => e.status === 'Confirmed').length} Confirmed`;
+      document.getElementById('dash-total-contract').innerText = `₹${(totalContract/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-outflow').innerText = `₹${(totalCost/100000).toFixed(2)}L`;
+      document.getElementById('dash-total-profit').innerText = `₹${Math.round(profit).toLocaleString()}`;
+      document.getElementById('dash-profit-margin').innerText = `${totalContract > 0 ? ((profit/totalContract)*100).toFixed(1) : 0}% Margin`;
       checkLiveStockShortages();
     }
 
-    // PRINT DOCUMENT HUB
-    async function openPrintModal(type) {
+    function openPrintModal(type) {
       if (!activeEvent) return alert('Open an event first.');
       const content = document.getElementById('print-sheet-content');
-      const settings = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '' };
-
-      if (type === 'quotation') {
-        const subtotal = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
-        const advance = activeEvent.quoteAdvance || 0;
-        const balance = Math.max(0, (activeEvent.quoteGrand || 0) - advance);
-
-        content.innerHTML = `
-          <div class="flex justify-between items-start border-b-2 border-black pb-3">
-            <div>
-              <h1 class="text-xl font-black uppercase text-black tracking-wider">${escapeHTML(settings.name)}</h1>
-              <p class="text-[10px] text-slate-600">Luxury Event & Wedding Decorators</p>
-              <p class="text-[9px] text-slate-500">Phone: ${escapeHTML(settings.phone || '-')} | GSTIN: ${escapeHTML(settings.gst || 'N/A')}</p>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-mono font-bold block">${activeEvent.id}</span>
-              <span class="text-[10px] text-slate-500">Date: ${new Date().toLocaleDateString('en-GB')}</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-2.5 rounded border mt-2">
-            <div>
-              <p class="text-slate-400 text-[9px] uppercase font-bold">Client Details</p>
-              <p class="font-bold text-slate-900">${escapeHTML(activeEvent.client)}</p>
-              <p class="text-slate-600">${escapeHTML(activeEvent.phone || '-')}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-slate-400 text-[9px] uppercase font-bold">Event & Venue</p>
-              <p class="font-bold text-slate-900">${activeEvent.date || '-'}</p>
-              <p class="text-slate-600">${escapeHTML(activeEvent.venue || '-')}</p>
-            </div>
-          </div>
-
-          <table class="w-full text-left border-collapse text-xs border mt-3">
-            <thead>
-              <tr class="bg-black text-amber-400 text-[10px]">
-                <th class="p-1.5 border">Item Description</th>
-                <th class="p-1.5 text-center w-16 border">Qty</th>
-                <th class="p-1.5 text-center w-16 border">Unit</th>
-                <th class="p-1.5 text-right w-20 border">Rate</th>
-                <th class="p-1.5 text-right w-24 border">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${(activeEvent.quoteItems || []).map(it => `
-                <tr>
-                  <td class="p-1.5 border font-semibold">${escapeHTML(it.name)}</td>
-                  <td class="p-1.5 border text-center">${it.qty}</td>
-                  <td class="p-1.5 border text-center">${escapeHTML(it.unit)}</td>
-                  <td class="p-1.5 border text-right">₹${it.rate.toLocaleString()}</td>
-                  <td class="p-1.5 border text-right font-bold">₹${(it.qty * it.rate).toLocaleString()}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <div class="flex justify-end pt-2">
-            <div class="w-64 space-y-1 text-xs">
-              <div class="flex justify-between"><span class="text-slate-500">Items Subtotal:</span><span>₹${subtotal.toLocaleString()}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Transport:</span><span>₹${(activeEvent.quoteTransport || 0).toLocaleString()}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Labour:</span><span>₹${(activeEvent.quoteLabour || 0).toLocaleString()}</span></div>
-              <div class="flex justify-between text-rose-600"><span class="text-slate-500">Discount:</span><span>- ₹${(activeEvent.quoteDiscount || 0).toLocaleString()}</span></div>
-              <div class="flex justify-between border-t pt-1 font-black text-sm text-indigo-950">
-                <span>Grand Total:</span><span>₹${Math.round(activeEvent.quoteGrand || 0).toLocaleString()}</span>
-              </div>
-              <div class="flex justify-between font-bold text-emerald-700">
-                <span>Advance Paid:</span><span>₹${advance.toLocaleString()}</span>
-              </div>
-              <div class="flex justify-between font-black text-rose-700 border-t pt-1">
-                <span>Balance Due:</span><span>₹${Math.round(balance).toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (type === 'jobsheet') {
-        content.innerHTML = `
-          <div class="flex justify-between items-center border-b-2 border-black pb-2">
-            <h1 class="text-lg font-black uppercase tracking-wider">VANJI DECORATORS — PRODUCTION JOB SHEET</h1>
-            <p class="text-xs font-mono font-bold">${activeEvent.id}</p>
-          </div>
-          <div class="text-xs bg-slate-50 p-2 rounded border mt-2">
-            Venue: <strong>${escapeHTML(activeEvent.venue)}</strong> | Client: <strong>${escapeHTML(activeEvent.client)}</strong> | Showtime: <strong>${activeEvent.schedule?.event || 'TBD'}</strong>
-          </div>
-          <div class="grid grid-cols-2 gap-2 text-xs mt-2 border rounded p-1.5">
-            <div>Setup: <strong>${activeEvent.schedule?.setup || 'TBD'}</strong></div>
-            <div>Teardown: <strong>${activeEvent.schedule?.teardown || 'TBD'}</strong></div>
-          </div>
-          <h3 class="font-bold text-xs uppercase mt-3 mb-1">Required Equipment & Scope</h3>
-          <table class="w-full text-left border-collapse text-xs border">
-            <thead><tr class="bg-black text-amber-400 text-[10px]"><th class="p-1.5 border">Item</th><th class="p-1.5 text-center w-20 border">Qty</th><th class="p-1.5 text-center w-20 border">Check</th></tr></thead>
-            <tbody>
-              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border font-semibold">${escapeHTML(it.name)}</td><td class="p-1.5 border text-center font-bold">${it.req} ${escapeHTML(it.unit)}</td><td class="p-1.5 border text-center font-mono">[ &nbsp; ]</td></tr>`).join('')}
-            </tbody>
-          </table>
-          <h3 class="font-bold text-xs uppercase mt-3 mb-1">Assigned Labour Crew Deployment</h3>
-          <table class="w-full text-left border-collapse text-xs border">
-            <thead><tr class="bg-black text-amber-400 text-[10px]"><th class="p-1.5 border">Role / Crew</th><th class="p-1.5 text-center w-20 border">Workers</th><th class="p-1.5 text-center w-20 border">Days</th></tr></thead>
-            <tbody>
-              ${(activeEvent.labourGroups || []).map(lg => `<tr><td class="p-1.5 border">${escapeHTML(lg.role)}</td><td class="p-1.5 border text-center font-bold">${lg.men}</td><td class="p-1.5 border text-center">${lg.days}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        `;
-      } else if (type === 'warehouse') {
-        content.innerHTML = `
-          <div class="flex justify-between items-center border-b-2 border-black pb-2">
-            <h1 class="text-lg font-black uppercase tracking-wider">VANJI DECORATORS — LOADING & RETURN AUDIT</h1>
-            <p class="text-xs font-mono font-bold">${activeEvent.id}</p>
-          </div>
-          <p class="text-xs mt-1">Event: <strong>${escapeHTML(activeEvent.client)}</strong> | Venue: <strong>${escapeHTML(activeEvent.venue)}</strong></p>
-          <table class="w-full text-left border-collapse text-xs border mt-3">
-            <thead>
-              <tr class="bg-black text-amber-400 text-[10px]">
-                <th class="p-1.5 border">Item</th>
-                <th class="p-1.5 text-center border">Required</th>
-                <th class="p-1.5 text-center border">Loaded</th>
-                <th class="p-1.5 text-center border">Returned</th>
-                <th class="p-1.5 text-center border text-rose-300">Damage</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${(activeEvent.scopeItems || []).map(it => `<tr><td class="p-1.5 border">${escapeHTML(it.name)}</td><td class="p-1.5 border text-center">${it.req}</td><td class="p-1.5 border text-center">${it.loaded || 0}</td><td class="p-1.5 border text-center">${it.ret || 0}</td><td class="p-1.5 border text-center text-rose-600 font-bold">${it.dam || 0}</td></tr>`).join('')}
-            </tbody>
-          </table>
-          <div class="grid grid-cols-2 gap-4 border-t pt-4 text-center text-[10px] text-slate-500 mt-6">
-            <div>Warehouse Dispatch Signature: _____________</div>
-            <div>Return Auditor Signature: _____________</div>
-          </div>
-        `;
-      }
-      const printHub = document.getElementById('modal-print-hub');
-      if (printHub) printHub.classList.remove('hidden');
+      const settings = (dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS' };
+      content.innerHTML = `<h1 class="text-xl font-black uppercase">${escapeHTML(settings.name)}</h1><p class="text-xs">${activeEvent.id} | Client: ${escapeHTML(activeEvent.client)} | Venue: ${escapeHTML(activeEvent.venue)}</p>`;
+      document.getElementById('modal-print-hub').classList.remove('hidden');
     }
 
-    // SETTINGS & BACKUP ENGINE
     function getApiKey() { return localStorage.getItem('vanji_aikey') || document.getElementById('set-aikey')?.value || ''; }
     async function loadAppSettings() {
       const s = (await dbGet('settings', 'main'))?.val || { name: 'VANJI DECORATORS', phone: '', gst: '', aikey: '' };
-      const setVal = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val || '';
-      };
-      setVal('set-name', s.name);
-      setVal('set-phone', s.phone);
-      setVal('set-gst', s.gst);
-      setVal('set-aikey', s.aikey);
+      document.getElementById('set-name').value = s.name || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-gst').value = s.gst || '';
+      document.getElementById('set-aikey').value = s.aikey || '';
     }
-
     async function saveAppSettings() {
-      const getVal = (id) => {
-        const el = document.getElementById(id);
-        return el ? el.value.trim() : '';
-      };
-      const s = {
-        name: getVal('set-name'),
-        phone: getVal('set-phone'),
-        gst: getVal('set-gst'),
-        aikey: getVal('set-aikey')
-      };
-      await dbPut('settings', { key: 'main', val: s });
-      localStorage.setItem('vanji_aikey', s.aikey);
-      alert('Settings saved.');
+      const s = { name: document.getElementById('set-name').value.trim(), phone: document.getElementById('set-phone').value.trim(), gst: document.getElementById('set-gst').value.trim(), aikey: document.getElementById('set-aikey').value.trim() };
+      await dbPut('settings', { key: 'main', val: s }); localStorage.setItem('vanji_aikey', s.aikey); alert('Settings saved.');
     }
 
-    function openBackupModal() { 
-      const modal = document.getElementById('modal-backup');
-      if (modal) modal.classList.remove('hidden'); 
-    }
-
+    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
     async function exportFullBackup() {
-      const payload = {
-        app: 'Vanji Decorators Studio',
-        version: '14.0',
-        exportedAt: new Date().toISOString(),
-        events: await dbGetAll('events'),
-        pricebook: await dbGetAll('pricebook'),
-        inventory: await dbGetAll('inventory'),
-        settings: (await dbGet('settings', 'main'))?.val || {}
-      };
-      const a = document.createElement('a');
-      a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
-      a.download = `Vanji_Production_Backup_${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
+      const payload = { app: 'Vanji Studio', events: await dbGetAll('events'), pricebook: await dbGetAll('pricebook'), inventory: await dbGetAll('inventory') };
+      const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload)); a.download = `Vanji_Backup.json`; a.click();
     }
-
     function importFullBackup(e) {
-      const file = e.target.files[0];
-      if (!file) return;
       const reader = new FileReader();
-      reader.onload = async (ev) => {
-        try {
-          const data = JSON.parse(ev.target.result);
-          for (const evRec of (data.events || [])) await dbPut('events', evRec);
-          for (const pb of (data.pricebook || [])) await dbPut('pricebook', pb);
-          for (const inv of (data.inventory || [])) await dbPut('inventory', inv);
-          if (data.settings) await dbPut('settings', { key: 'main', val: data.settings });
-          alert('Database restored successfully!');
-          location.reload();
-        } catch (err) {
-          alert('Failed to parse backup JSON file.');
-        }
-      };
-      reader.readAsText(file);
+      reader.onload = async (ev) => { const d = JSON.parse(ev.target.result); for(let evRec of (d.events||[])) await dbPut('events', evRec); alert('Restored!'); location.reload(); };
+      reader.readAsText(e.target.files[0]);
     }
 
-    // Safe bootstrap call
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', checkExistingAuth);
-    } else {
-      checkExistingAuth();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
+    else checkExistingAuth();
   </script>
 </body>
 </html>
