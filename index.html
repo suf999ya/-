@@ -25,9 +25,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-28">
 
-  <!-- ========================================== -->
-  <!-- 0. LOGIN LOCK OVERLAY                      -->
-  <!-- ========================================== -->
+  <!-- LOGIN LOCK OVERLAY -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
       <img src="logo.png.PNG" alt="Vanji Logo" class="h-16 w-16 mx-auto object-contain rounded-full border border-amber-400/40 p-1" onerror="this.style.display='none'">
@@ -55,11 +53,8 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MAIN SYSTEM INTERFACE                      -->
-  <!-- ========================================== -->
+  <!-- MAIN SYSTEM INTERFACE -->
   <div id="app-container" class="hidden">
-    <!-- APP HEADER -->
     <header class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
       <div class="flex items-center gap-2.5">
         <img src="logo.png.PNG" alt="Vanji" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
@@ -79,7 +74,6 @@
       </div>
     </header>
 
-    <!-- NAVIGATION BAR -->
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
       <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950">🏠 Dashboard</button>
       <button onclick="navTo('events')" id="pnav-events" class="py-2.5 px-3 border-b-2 border-transparent">📁 Events</button>
@@ -151,7 +145,7 @@
               <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji Virtual AI Decoration Designer</h2>
               <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-mono" id="ai-active-event-tag">LINKED TO ACTIVE EVENT</span>
             </div>
-            <p class="text-[10px] text-slate-400 mt-0.5">Analyses venue photos, generates custom 3D concept imagery, and crafts material scopes from your catalog.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Upload your hall photo. The AI visually edits and paints the stage decoration on your actual venue.</p>
           </div>
         </div>
 
@@ -166,7 +160,7 @@
               <label class="block text-slate-500 font-semibold">Upload Area Photos (Stage, Entrance, Walkway)</label>
               <div class="flex gap-2">
                 <select id="ai-photo-category" class="border rounded p-1.5 text-xs font-semibold bg-slate-50">
-                  <option value="stage">Stage Area</option>
+                  <option value="stage">Stage Area (Main)</option>
                   <option value="entrance">Main Entrance</option>
                   <option value="walkway">Walkway / Aisle</option>
                   <option value="hall">Full Hall View</option>
@@ -183,7 +177,7 @@
               <div><label class="block text-slate-400 text-[10px] mb-0.5">Walkway Length (ft)</label><input id="ai-dim-walkway" type="number" value="30" class="w-full border rounded p-1.5 font-bold" oninput="syncEventDimensions()"></div>
               <div class="col-span-2">
                 <button onclick="runVenueSpatialAnalysis()" id="btn-analyse-venue" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 rounded border">
-                  🏛️ Analyse Venue & Structural Constraints
+                  🏛️ Analyse Venue Architecture & Limits
                 </button>
               </div>
             </div>
@@ -199,7 +193,7 @@
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">2. Theme, Palette & Budget Target</h3>
+          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">2. Theme, Palette & Directives</h3>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <div>
               <label class="block text-slate-400 text-[10px] mb-0.5">Event Type</label>
@@ -214,9 +208,10 @@
             <div>
               <label class="block text-slate-400 text-[10px] mb-0.5">Design Style</label>
               <select id="ai-design-style" class="w-full border rounded p-1.5 font-semibold bg-slate-50">
-                <option value="Royal Luxury with Drapes & Gold">Royal Luxury</option>
+                <option value="Royal Luxury with Drapes & Gold">Royal Luxury Drapes</option>
                 <option value="Modern Minimalist Floral Pastel">Modern Minimalist</option>
                 <option value="Grand Traditional Floral & Brass">Traditional Floral</option>
+                <option value="Geometric Truss & Ambient Neon">Contemporary Truss</option>
               </select>
             </div>
             <div>
@@ -229,15 +224,15 @@
             </div>
           </div>
           <div>
-            <label class="block text-slate-400 text-[10px] mb-0.5">Custom Directives</label>
-            <input id="ai-custom-directive" type="text" placeholder="e.g. 40ft central arch, warm stage wash, no red roses..." class="w-full border rounded p-1.5">
+            <label class="block text-slate-400 text-[10px] mb-0.5">Custom Directives for the Stage</label>
+            <input id="ai-custom-directive" type="text" placeholder="e.g. 40ft central floral arch, warm gold spotlights, double Maharaja sofa..." class="w-full border rounded p-1.5">
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
             <button onclick="synthesizeCompleteAiDecorPlan()" id="btn-run-full-ai" class="bg-black text-amber-400 border border-amber-800 font-bold py-2.5 rounded-lg text-xs shadow flex items-center justify-center gap-1.5">
-              <span>✨ Synthesize Decoration & 3D Visual Render</span>
+              <span>✨ Decorate Uploaded Venue Photo</span>
             </button>
             <button onclick="generateAlternativeVariations()" id="btn-run-variations" class="bg-amber-50 text-amber-900 border border-amber-300 font-bold py-2.5 rounded-lg text-xs shadow">
-              🔄 Generate 3 Budget Variations (₹1L / ₹2L / ₹3L)
+              🔄 3 Budget Variations (₹1L / ₹2L / ₹3L)
             </button>
           </div>
         </div>
@@ -247,32 +242,49 @@
           <div id="ai-variations-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
 
+        <!-- AI Plan Card with Visual Render -->
         <div id="ai-plan-output-card" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4 text-xs">
-          <div class="flex justify-between items-center border-b pb-2">
+          <div class="flex flex-wrap justify-between items-center border-b pb-2 gap-2">
             <div>
-              <span class="text-[10px] uppercase font-bold text-slate-400">Tailored Proposal Specification</span>
-              <h3 class="text-sm font-black text-slate-900" id="ai-plan-title">Proposal</h3>
+              <span class="text-[10px] uppercase font-bold text-slate-400">Venue Transformed By AI</span>
+              <h3 class="text-sm font-black text-slate-900" id="ai-plan-title">Decor Proposal</h3>
             </div>
-            <button onclick="saveAiRenderedImageToEvent()" id="btn-save-concept-img" class="hidden bg-black text-amber-400 border border-amber-800 px-2.5 py-1 rounded text-[11px] font-bold">
-              💾 Save Concept Image to Event
-            </button>
+            <div class="flex items-center gap-1.5">
+              <button onclick="refreshDecorDesign()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-zinc-700 px-2.5 py-1 rounded text-[11px] font-bold">
+                🔄 Refresh / Change Pic
+              </button>
+              <button onclick="saveAiRenderedImageToEvent()" id="btn-save-concept-img" class="bg-black text-amber-400 border border-amber-800 px-2.5 py-1 rounded text-[11px] font-bold">
+                💾 Save Image to Event
+              </button>
+            </div>
           </div>
 
+          <!-- Quick Refinement Pills to Change Decor Easily -->
+          <div class="flex flex-wrap gap-1 items-center bg-slate-50 p-2 rounded border">
+            <span class="text-[10px] font-bold text-slate-500 uppercase mr-1">Tweak Design:</span>
+            <button onclick="applyQuickDecorModifier('Increase heavy floral cascades and grand chandeliers')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">+ More Flowers</button>
+            <button onclick="applyQuickDecorModifier('Make backdrop minimalist with warm amber spot lighting and poly-satin drapes')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">Minimal Elegance</button>
+            <button onclick="applyQuickDecorModifier('Switch to pure white and gold theme with crystal pillars')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">White & Gold</button>
+            <button onclick="applyQuickDecorModifier('Add deep royal red carpet, velvet drapes and Maharaja double sofa')" class="bg-white hover:bg-slate-100 border text-[10px] px-2 py-0.5 rounded font-semibold">Royal Red Maharaja</button>
+          </div>
+
+          <!-- AI Concept Render Frame -->
           <div id="ai-concept-image-wrapper" class="space-y-1.5">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">AI Visual Decor Concept Render</span>
-            <div class="relative rounded-xl border border-amber-900/40 bg-zinc-900 overflow-hidden min-h-[200px] flex items-center justify-center shadow-inner">
-              <div id="ai-concept-loader" class="flex flex-col items-center gap-2 p-6 text-center">
+            <div class="relative rounded-xl border border-amber-900/40 bg-zinc-950 overflow-hidden min-h-[250px] flex items-center justify-center shadow-inner">
+              <div id="ai-concept-loader" class="flex flex-col items-center gap-2 p-8 text-center">
                 <div class="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-                <span class="text-xs font-semibold text-amber-200">Rendering high-resolution 3D decoration layout...</span>
+                <span class="text-xs font-semibold text-amber-200">Decorating your uploaded venue photo with chosen theme...</span>
               </div>
-              <img id="ai-concept-img" class="hidden w-full max-h-96 object-cover" alt="AI Generated Concept">
+              <img id="ai-concept-img" class="hidden w-full max-h-[460px] object-contain mx-auto" alt="AI Decorated Venue">
+              <canvas id="ai-fallback-canvas" class="hidden w-full max-h-[460px] object-contain mx-auto"></canvas>
             </div>
           </div>
 
           <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-lg space-y-1">
-            <span class="font-bold text-amber-950 block">Design Narrative & Spatial Harmony:</span>
+            <span class="font-bold text-amber-950 block">Design Narrative & Venue Fit:</span>
             <p class="text-[11px] text-slate-700 leading-relaxed" id="ai-plan-narrative"></p>
           </div>
+
           <table class="w-full text-left border-collapse text-xs border">
             <thead>
               <tr class="bg-black text-amber-400 text-[10px]">
@@ -326,7 +338,7 @@
           <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
         </nav>
 
-        <!-- TAB A: OVERVIEW -->
+        <!-- OVERVIEW -->
         <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label><input id="inp-client-name" type="text" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()"></div>
@@ -350,7 +362,7 @@
           </div>
         </div>
 
-        <!-- TAB B: QUOTATION -->
+        <!-- QUOTATION -->
         <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -426,7 +438,7 @@
           </div>
         </div>
 
-        <!-- TAB C: SCOPE -->
+        <!-- SCOPE -->
         <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
@@ -454,7 +466,7 @@
           </table>
         </div>
 
-        <!-- TAB D: INTERNAL COSTING -->
+        <!-- INTERNAL COSTING -->
         <div id="ws-tab-costing" class="hidden space-y-3 text-xs">
           <div class="bg-black text-white p-4 rounded-xl shadow border border-amber-900/60 flex justify-between items-center">
             <div><span class="text-[10px] text-slate-400 uppercase font-bold">Contract Value</span><p class="text-xl font-black text-amber-400" id="ws-cost-rev">₹0</p></div>
@@ -489,7 +501,7 @@
           </div>
         </div>
 
-        <!-- TAB E: FLOWERS -->
+        <!-- FLOWERS -->
         <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Procurement</h3>
@@ -502,7 +514,7 @@
           </div>
         </div>
 
-        <!-- TAB F: SCHEDULE -->
+        <!-- SCHEDULE -->
         <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><label class="block text-slate-500 font-semibold mb-1">Truck Dispatch</label><input id="s-dispatch" type="datetime-local" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
@@ -512,12 +524,12 @@
           </div>
         </div>
 
-        <!-- TAB G: CHECKLIST -->
+        <!-- CHECKLIST -->
         <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
         </div>
 
-        <!-- TAB H: PRINT DOCS -->
+        <!-- PRINT DOCS -->
         <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Client Quotation</button>
@@ -915,7 +927,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiDecoratorsDB', 12);
+        const req = indexedDB.open('VanjiDecoratorsDB', 13);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           ['events', 'pricebook', 'inventory', 'team', 'settings'].forEach(s => {
@@ -1112,7 +1124,7 @@
       if (box) box.classList.remove('hidden');
     }
 
-    // 3D CONCEPT IMAGE GENERATION & SYNTHESIS
+    // 3D CONCEPT IMAGE GENERATION & VENUE DECORATOR
     async function synthesizeCompleteAiDecorPlan(refinement = '') {
       const apiKey = getApiKey();
       const w = document.getElementById('ai-dim-width')?.value || '40';
@@ -1129,24 +1141,25 @@
 
       const btn = document.getElementById('btn-run-full-ai');
       if (btn) {
-        btn.innerText = '✨ Inspecting Photo & Synthesizing...';
+        btn.innerText = '✨ Decorating Venue Photo...';
         btn.disabled = true;
       }
 
-      const promptText = `You are senior architectural designer for Vanji Decorators. 
-      Inspect the attached venue photograph carefully (if provided) and tailor an executable luxury wedding decoration proposal to the hall's exact architecture.
+      const promptText = `You are lead visual decorator for Vanji Decorators.
+      CRITICAL TASK: Look at the attached venue photograph. Decorate THIS EXACT STAGE AND HALL according to the client directives.
+      Keep the venue architectural elements (floor, walls, existing ceiling structure), and paint a feasible decoration setup in front of it.
       - Event: ${occasion} | Style: ${style} | Palette: ${palette}
       - Stage Area Dimensions: ${w} ft Width x ${h} ft Height x ${d} ft Depth
-      - Target Budget Envelope: ₹${budget}
-      - Custom Directives: ${customNotes} ${refinement ? `| Refinement: ${refinement}` : ''}
+      - Target Budget: ₹${budget}
+      - Directives: ${customNotes} ${refinement ? `| Extra Instruction: ${refinement}` : ''}
       - Master Catalog Inventory: ${JSON.stringify(pbCatalog)}
 
-      CRITICAL RESTRICTION: You MUST select items from the Master Catalog using their EXACT "id".
+      CRITICAL: You MUST select items from the Master Catalog using their EXACT "id".
       Return response STRICTLY as valid JSON without markdown wrapping:
       {
         "title": "Concept Name",
-        "narrative": "3-4 sentences describing architectural concept, how it integrates with the uploaded hall photo, and backdrop layout.",
-        "imagePrompt": "Detailed visual photorealistic prompt for generating a luxury stage render with drapes, sofa, and fresh florals matching this exact design.",
+        "narrative": "3-4 sentences explaining how this decor fits specifically onto the uploaded venue's stage.",
+        "imagePrompt": "A photorealistic front-view render of this exact stage decorated with ${style} in ${palette} colors, showing backdrop drapes, floral arches, stage wash lights, and Maharaja sofa placed right on the stage.",
         "materials": [
           { "id": "Exact id from catalog", "qty": 10 }
         ],
@@ -1161,6 +1174,7 @@
         if (apiKey) {
           const parts = [{ text: promptText }];
           if (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) {
+            // Send the user's uploaded venue photo directly to the AI
             activeEvent.venuePhotos.slice(0, 3).forEach(p => {
               parts.unshift({
                 inlineData: { mimeType: p.mime, data: p.data.split(',')[1] }
@@ -1180,8 +1194,8 @@
         } else {
           resultJson = {
             title: `${style} — ${occasion}`,
-            narrative: `Designed for a ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope. Uses ${palette} drapery anchored by balanced floral arches and warm stage wash illumination suited to your venue.`,
-            imagePrompt: `A luxury Indian wedding stage decoration, ${style}, ${palette} color scheme, opulent backdrop drapes, fresh floral arches, Maharaja sofa center stage, architectural stage wash warm lighting, 8k realistic rendering.`,
+            narrative: `Custom-tailored for your ${w}x${h} ft stage within a ₹${budget.toLocaleString()} budget envelope. Uses ${palette} poly-satin drapery with fresh seasonal floral cascade framing and golden ambient lighting wash.`,
+            imagePrompt: `Indian wedding stage decorated with ${style} in ${palette} color scheme, opulent backdrop drapes, fresh floral arches, Maharaja sofa, 8k realistic photo.`,
             materials: [
               { id: "pb_3", qty: parseInt(w) || 40 },
               { id: "pb_2", qty: 2 },
@@ -1189,8 +1203,8 @@
               { id: "pb_1", qty: 100 }
             ],
             setupPlan: [
-              "Day 1: Erect truss structure and stretch poly-satin backdrop drapes",
-              "Day 2: Fresh floral cascade fixing, stage wash lighting focus, and VIP sofa placement"
+              "Day 1: Truss framing erection and backdrop stretching",
+              "Day 2: Floral cascade installation and stage wash profiling"
             ]
           };
         }
@@ -1216,57 +1230,85 @@
         if (varContainer) varContainer.classList.add('hidden');
         renderGeneratedPlan(resultJson);
 
-        renderAiConceptImage(resultJson.imagePrompt, apiKey);
+        // Decorate and render the visual design onto your venue photo
+        renderDecoratedVenuePhoto(resultJson.imagePrompt, palette, style, apiKey);
 
       } catch (err) {
         alert('Could not synthesize AI plan. Please check your Gemini API key in Settings.');
       } finally {
         if (btn) {
-          btn.innerText = '✨ Synthesize Decoration & 3D Visual Render';
+          btn.innerText = '✨ Decorate Uploaded Venue Photo';
           btn.disabled = false;
         }
       }
     }
 
-    async function renderAiConceptImage(imagePrompt, apiKey) {
+    // IN-PLACE VENUE DECORATOR (NO MORE UNWANTED STOCK PICTURES)
+    async function renderDecoratedVenuePhoto(imagePrompt, palette, style, apiKey) {
       const loader = document.getElementById('ai-concept-loader');
       const imgEl = document.getElementById('ai-concept-img');
+      const canvasEl = document.getElementById('ai-fallback-canvas');
       const saveBtn = document.getElementById('btn-save-concept-img');
 
       if (loader) loader.classList.remove('hidden');
       if (imgEl) imgEl.classList.add('hidden');
+      if (canvasEl) canvasEl.classList.add('hidden');
       if (saveBtn) saveBtn.classList.add('hidden');
 
-      let generatedSrc = null;
+      let renderedDataUrl = null;
 
-      try {
-        if (apiKey) {
-          const imgRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
+      // Check if user uploaded a venue photo to decorate
+      const userPhoto = (activeEvent && activeEvent.venuePhotos && activeEvent.venuePhotos.length > 0) ? activeEvent.venuePhotos[0] : null;
+
+      // Try calling Gemini 2.5 Flash Image editing model first
+      if (apiKey) {
+        try {
+          const editPayload = {
+            contents: [{
+              parts: [
+                { text: `Decorate this venue stage. Add ${style} wedding stage decorations with ${palette} drapery, floral arch, and luxury Maharaja sofa. Keep the room architecture intact.` }
+              ]
+            }],
+            generationConfig: {
+              response_modalities: ["IMAGE"]
+            }
+          };
+
+          if (userPhoto) {
+            editPayload.contents[0].parts.unshift({
+              inlineData: { mimeType: userPhoto.mime, data: userPhoto.data.split(',')[1] }
+            });
+          }
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              instances: [{ prompt: imagePrompt }],
-              parameters: { sampleCount: 1, aspectRatio: "16:9" }
-            })
+            body: JSON.stringify(editPayload)
           });
-          const imgData = await imgRes.json();
-          const base64Bytes = imgData.predictions?.[0]?.bytesBase64Encoded;
-          if (base64Bytes) {
-            generatedSrc = `data:image/jpeg;base64,${base64Bytes}`;
+          const data = await res.json();
+          const imgPart = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+          if (imgPart && imgPart.inlineData && imgPart.inlineData.data) {
+            renderedDataUrl = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
           }
+        } catch (e) {
+          console.warn("Direct image API returned error, activating Canvas decorator:", e);
         }
-      } catch (err) {
-        console.warn("Imagen generation fallback applied:", err);
       }
 
-      if (!generatedSrc) {
-        generatedSrc = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+      // If user provided a photo and external generation didn't return an image, decorate the USER'S ACTUAL PHOTO directly on Canvas
+      if (!renderedDataUrl && userPhoto) {
+        renderedDataUrl = await overlayDecorOnUserPhoto(userPhoto.data, palette, style);
       }
 
-      currentRenderedImageData = generatedSrc;
+      // Final fallback if no user photo was provided at all
+      if (!renderedDataUrl) {
+        renderedDataUrl = createProceduralDecorRender(palette, style);
+      }
+
+      currentRenderedImageData = renderedDataUrl;
 
       if (imgEl) {
-        imgEl.src = generatedSrc;
+        imgEl.src = renderedDataUrl;
         imgEl.onload = () => {
           if (loader) loader.classList.add('hidden');
           imgEl.classList.remove('hidden');
@@ -1275,9 +1317,168 @@
       }
     }
 
+    // CANVAS DECOR OVERLAY: Decorates YOUR uploaded photo with drapery, floral arch, and Maharaja sofa
+    function overlayDecorOnUserPhoto(base64Image, palette, style) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width || 1280;
+          canvas.height = img.height || 720;
+          const ctx = canvas.getContext('2d');
+
+          // Draw the venue image you uploaded
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const w = canvas.width;
+          const h = canvas.height;
+
+          // 1. Warm theatrical stage spotlights
+          const spotGrad = ctx.createRadialGradient(w / 2, h * 0.45, 50, w / 2, h * 0.45, w * 0.5);
+          spotGrad.addColorStop(0, "rgba(255, 230, 160, 0.45)");
+          spotGrad.addColorStop(0.6, "rgba(255, 200, 100, 0.15)");
+          spotGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+          ctx.fillStyle = spotGrad;
+          ctx.fillRect(0, 0, w, h);
+
+          // 2. Poly-satin Backdrop Drapes on center stage
+          const drapeW = w * 0.65;
+          const drapeH = h * 0.55;
+          const startX = (w - drapeW) / 2;
+          const startY = h * 0.22;
+
+          const drapeGrad = ctx.createLinearGradient(startX, startY, startX + drapeW, startY);
+          drapeGrad.addColorStop(0, "rgba(15, 23, 42, 0.85)");
+          drapeGrad.addColorStop(0.25, "rgba(248, 250, 252, 0.88)");
+          drapeGrad.addColorStop(0.5, "rgba(251, 191, 36, 0.9)");
+          drapeGrad.addColorStop(0.75, "rgba(248, 250, 252, 0.88)");
+          drapeGrad.addColorStop(1, "rgba(15, 23, 42, 0.85)");
+
+          ctx.fillStyle = drapeGrad;
+          ctx.beginPath();
+          ctx.roundRect(startX, startY, drapeW, drapeH, [18, 18, 0, 0]);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(255, 215, 0, 0.6)";
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          // 3. Luxurious Fresh Floral Arch Contour
+          ctx.beginPath();
+          ctx.ellipse(w / 2, startY + 20, drapeW / 2 + 15, 60, 0, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 241, 242, 0.95)";
+          ctx.fill();
+
+          // Flower clusters (Roses & Chrysanthemums)
+          for (let i = 0; i < 40; i++) {
+            const fx = startX - 10 + (drapeW + 20) * (i / 40);
+            const fy = startY + Math.sin((i / 40) * Math.PI) * -25 + 20;
+            ctx.beginPath();
+            ctx.arc(fx, fy, 14 + (i % 3) * 3, 0, Math.PI * 2);
+            ctx.fillStyle = (i % 2 === 0) ? "#FDE047" : ((i % 3 === 0) ? "#F43F5E" : "#FFFBEB");
+            ctx.fill();
+          }
+
+          // Lateral Hanging Floral Pillars
+          for (let y = startY + 30; y < startY + drapeH; y += 22) {
+            ctx.beginPath();
+            ctx.arc(startX + 10, y, 12, 0, Math.PI * 2);
+            ctx.fillStyle = "#FB7185";
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(startX + drapeW - 10, y, 12, 0, Math.PI * 2);
+            ctx.fillStyle = "#FBBF24";
+            ctx.fill();
+          }
+
+          // 4. Center Maharaja VIP Sofa
+          const sofaW = w * 0.28;
+          const sofaH = h * 0.16;
+          const sofaX = (w - sofaW) / 2;
+          const sofaY = startY + drapeH - sofaH * 0.85;
+
+          // Sofa backrest
+          ctx.fillStyle = "#D97706";
+          ctx.beginPath();
+          ctx.roundRect(sofaX, sofaY, sofaW, sofaH * 0.7, [24, 24, 6, 6]);
+          ctx.fill();
+          ctx.strokeStyle = "#FDE68A";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          // Sofa cushion seat
+          ctx.fillStyle = "#FEF3C7";
+          ctx.beginPath();
+          ctx.roundRect(sofaX - 8, sofaY + sofaH * 0.35, sofaW + 16, sofaH * 0.45, 12);
+          ctx.fill();
+
+          // Watermark badge
+          ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+          ctx.roundRect(20, h - 45, 340, 30, 8);
+          ctx.fill();
+          ctx.fillStyle = "#FBBF24";
+          ctx.font = "bold 13px sans-serif";
+          ctx.fillText(`VANJI AI DECOR OVERLAY • ${palette.toUpperCase()}`, 30, h - 25);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.92));
+        };
+        img.src = base64Image;
+      });
+    }
+
+    // PROCEDURAL FALLBACK IF NO USER PHOTO AT ALL
+    function createProceduralDecorRender(palette, style) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1280;
+      canvas.height = 720;
+      const ctx = canvas.getContext('2d');
+
+      const bg = ctx.createLinearGradient(0, 0, 0, 720);
+      bg.addColorStop(0, "#0F172A");
+      bg.addColorStop(1, "#1E293B");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1280, 720);
+
+      // Spotlight
+      const sp = ctx.createRadialGradient(640, 360, 40, 640, 360, 500);
+      sp.addColorStop(0, "rgba(251, 191, 36, 0.5)");
+      sp.addColorStop(1, "transparent");
+      ctx.fillStyle = sp;
+      ctx.fillRect(0, 0, 1280, 720);
+
+      // Drape
+      ctx.fillStyle = "#F8FAFC";
+      ctx.roundRect(240, 140, 800, 420, 20);
+      ctx.fill();
+
+      // Sofa
+      ctx.fillStyle = "#D97706";
+      ctx.roundRect(490, 420, 300, 110, 16);
+      ctx.fill();
+
+      ctx.fillStyle = "#FBBF24";
+      ctx.font = "bold 20px sans-serif";
+      ctx.fillText(`VANJI STUDIO CONCEPT: ${style}`, 420, 100);
+
+      return canvas.toDataURL('image/jpeg', 0.9);
+    }
+
+    // REFRESH & CHANGE PICTURE ACTION
+    function refreshDecorDesign() {
+      const occasion = document.getElementById('ai-event-occasion')?.value || 'Wedding';
+      const style = document.getElementById('ai-design-style')?.value || 'Royal Luxury';
+      applyQuickDecorModifier(`Generate an alternative spatial variation for ${occasion} in ${style} with fresh floral balance.`);
+    }
+
+    function applyQuickDecorModifier(directive) {
+      document.getElementById('ai-custom-directive').value = directive;
+      synthesizeCompleteAiDecorPlan(directive);
+    }
+
     function saveAiRenderedImageToEvent() {
       if (!activeEvent) return alert('Select or create an active event first.');
-      if (!currentRenderedImageData) return alert('No image rendered to save.');
+      if (!currentRenderedImageData) return alert('No decor image rendered yet.');
 
       if (!activeEvent.venuePhotos) activeEvent.venuePhotos = [];
       activeEvent.venuePhotos.push({
@@ -1289,7 +1490,7 @@
 
       renderVenuePhotosGrid();
       markUnsaved();
-      alert('AI Design Concept image successfully saved to active event!');
+      alert('Decorated venue picture successfully saved to active event!');
     }
 
     function renderGeneratedPlan(plan) {
@@ -1420,7 +1621,7 @@
       switchWsTab('overview');
     }
 
-    // EVENT DELETION LOGIC
+    // EVENT DELETION
     async function deleteEventById(id) {
       if (!confirm(`Are you sure you want to permanently delete event ${id}? This cannot be undone.`)) return;
 
@@ -2297,7 +2498,7 @@
     async function exportFullBackup() {
       const payload = {
         app: 'Vanji Decorators Studio',
-        version: '12.0',
+        version: '13.0',
         exportedAt: new Date().toISOString(),
         events: await dbGetAll('events'),
         pricebook: await dbGetAll('pricebook'),
@@ -2330,7 +2531,7 @@
       reader.readAsText(file);
     }
 
-    // Safe bootstrap call
+    // Safe bootstrap initialization
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', checkExistingAuth);
     } else {
