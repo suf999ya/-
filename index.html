@@ -111,12 +111,19 @@
           </div>
         </div>
       </div>
-      <!-- LOCK BUTTON -->
-      <button
-        onclick="lockStudio()"
-        class="text-[10px] bg-zinc-900 border border-zinc-700 hover:border-rose-500 hover:text-rose-400 px-2 py-1 rounded font-bold transition">
-        🔒 Lock
-      </button>
+      <!-- LOCK & PDF BUTTONS -->
+      <div class="flex items-center gap-2">
+        <button
+          onclick="generatePDFReport()"
+          class="text-[10px] bg-amber-600 text-black hover:bg-amber-500 px-2.5 py-1 rounded font-black transition">
+          📥 PDF Report
+        </button>
+        <button
+          onclick="lockStudio()"
+          class="text-[10px] bg-zinc-900 border border-zinc-700 hover:border-rose-500 hover:text-rose-400 px-2 py-1 rounded font-bold transition">
+          🔒 Lock
+        </button>
+      </div>
     </header>
     <!-- NAVIGATION -->
     <nav
@@ -145,6 +152,10 @@
         class="py-2.5 px-3 border-b-2 border-transparent">
         📜 Flex & Print
       </button>
+      <button onclick="navTo('labour')" id="pnav-labour"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        👷 Labour & Crew
+      </button>
       <button onclick="navTo('moodboard')" id="pnav-moodboard"
         class="py-2.5 px-3 border-b-2 border-transparent">
         🖼️ Mood Board
@@ -171,7 +182,7 @@
             </h2>
             <span
               class="text-[10px] bg-amber-500 text-black px-2 py-0.5 rounded font-extrabold">
-              PROD: SEPT 3–7
+              PROD: SEPT 3–7 | REF: SEPT 8
             </span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
@@ -314,6 +325,10 @@
               class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
               📜 Flex & Print Scope
             </button>
+            <button onclick="navTo('labour')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              👷 Labour & Crew
+            </button>
             <button onclick="navTo('moodboard')"
               class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
               🖼️ Mood Board Grid
@@ -323,7 +338,7 @@
               📦 Loading & Audit
             </button>
             <button onclick="navTo('worklist')"
-              class="p-3 border rounded-lg bg-amber-50 border-amber-300 font-bold text-left text-amber-950">
+              class="p-3 border rounded-lg bg-amber-50 border-amber-300 font-bold text-left text-amber-950 col-span-2">
               ✅ Production Board
             </button>
           </div>
@@ -530,6 +545,45 @@
         </div>
       </section>
       <!-- ========================================================= -->
+      <!-- 6.5 LABOUR & CREW -->
+      <!-- ========================================================= -->
+      <section id="page-labour" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Labour & Specialized Crew (Section 6)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Manage labor roles, crew headcounts, daily rates, and total payroll cost.
+              </p>
+            </div>
+            <button onclick="addLabourPrompt()"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Crew Role
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[550px]">
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Role / Crew Name</th>
+                  <th class="p-2 border text-center w-16">Headcount</th>
+                  <th class="p-2 border text-right w-24">Rate / Unit (₹)</th>
+                  <th class="p-2 border text-right w-24">Total (₹)</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
+              <tbody id="table-labour" class="divide-y"></tbody>
+            </table>
+          </div>
+          <div class="flex justify-between font-bold border-t pt-2 text-indigo-950 text-sm">
+            <span>Total Labour & Crew Expenditure:</span>
+            <span id="labour-grand-total">₹44,100</span>
+          </div>
+        </div>
+      </section>
+      <!-- ========================================================= -->
       <!-- MOOD BOARD -->
       <!-- ========================================================= -->
       <section id="page-moodboard" class="hidden space-y-4">
@@ -674,11 +728,10 @@
   </div>
 <script>
 /* ================================================================
-   VANJI DECORATORS — VERSION 41
-   Existing structure preserved.
+   VANJI DECORATORS — VERSION 42 (WITH LABOUR & PDF REPORT)
    ================================================================ */
 const DB_NAME = 'VanjiMasterDB';
-const DB_VERSION = 41;
+const DB_VERSION = 42;
 const EVENT_ID = 'VEP-Rahul-0906';
 let db = null;
 let rahulEvent = null;
@@ -687,6 +740,7 @@ let speechRecognition = null;
 let uploadedMoodImages = [];
 let saveTimer = null;
 let isSaving = false;
+
 /* ================================================================
    SAFE HTML
    ================================================================ */
@@ -700,6 +754,7 @@ function escapeHTML(str) {
     '"': '&quot;'
   }[tag] || tag));
 }
+
 /* ================================================================
    NUMBER HELPER
    ================================================================ */
@@ -707,156 +762,100 @@ function numberValue(value) {
   const n = parseFloat(value);
   return Number.isFinite(n) ? n : 0;
 }
+
 /* ================================================================
    LOGIN
    ================================================================ */
 function handleLogin() {
-  const username =
-    (document.getElementById('login-username')?.value || '')
-      .trim()
-      .toLowerCase();
-  const password =
-    (document.getElementById('login-password')?.value || '')
-      .trim()
-      .toUpperCase();
-  const error =
-    document.getElementById('login-error');
+  const username = (document.getElementById('login-username')?.value || '').trim().toLowerCase();
+  const password = (document.getElementById('login-password')?.value || '').trim().toUpperCase();
+  const error = document.getElementById('login-error');
   if (username === 'vanji' && password === 'VANJI') {
-    if (error) {
-      error.classList.add('hidden');
-    }
+    if (error) error.classList.add('hidden');
     executeUnlock();
   } else {
-    if (error) {
-      error.classList.remove('hidden');
-    }
+    if (error) error.classList.remove('hidden');
   }
 }
+
 function executeUnlock() {
-  document.getElementById('login-overlay')
-    ?.classList.add('hidden');
-  document.getElementById('app-container')
-    ?.classList.remove('hidden');
-  sessionStorage.setItem(
-    'vanji_authenticated',
-    'true'
-  );
-  initApp()
-    .catch(err => {
-      console.error(err);
-      alert(
-        'Studio could not initialize. Please reload the page.'
-      );
-    });
-  /*
-   * Speech is attempted after user interaction.
-   * Some browsers may still block it; failure is harmless.
-   */
+  document.getElementById('login-overlay')?.classList.add('hidden');
+  document.getElementById('app-container')?.classList.remove('hidden');
+  sessionStorage.setItem('vanji_authenticated', 'true');
+  initApp().catch(err => {
+    console.error(err);
+    alert('Studio could not initialize. Please reload the page.');
+  });
   setTimeout(() => {
     try {
-      speakFemale(
-        "Hi Vanji. Welcome to your production studio."
-      );
+      speakFemale("Hi Vanji. Welcome to your production studio.");
     } catch (e) {
       console.warn('Speech unavailable:', e);
     }
   }, 250);
 }
+
 function lockStudio() {
-  if (
-    !confirm(
-      'Lock Vanji Production Studio?'
-    )
-  ) return;
-  sessionStorage.removeItem(
-    'vanji_authenticated'
-  );
+  if (!confirm('Lock Vanji Production Studio?')) return;
+  sessionStorage.removeItem('vanji_authenticated');
   if (speechRecognition) {
-    try {
-      speechRecognition.stop();
-    } catch (e) {}
+    try { speechRecognition.stop(); } catch (e) {}
   }
   if ('speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel();
-    } catch (e) {}
+    try { window.speechSynthesis.cancel(); } catch (e) {}
   }
-  document.getElementById('app-container')
-    ?.classList.add('hidden');
-  document.getElementById('login-overlay')
-    ?.classList.remove('hidden');
-  const user =
-    document.getElementById('login-username');
-  const pass =
-    document.getElementById('login-password');
+  document.getElementById('app-container')?.classList.add('hidden');
+  document.getElementById('login-overlay')?.classList.remove('hidden');
+  const user = document.getElementById('login-username');
+  const pass = document.getElementById('login-password');
   if (user) user.value = '';
   if (pass) pass.value = '';
-  document.getElementById('login-error')
-    ?.classList.add('hidden');
+  document.getElementById('login-error')?.classList.add('hidden');
 }
+
 function checkExistingAuth() {
-  if (
-    sessionStorage.getItem(
-      'vanji_authenticated'
-    ) === 'true'
-  ) {
-    document.getElementById('login-overlay')
-      ?.classList.add('hidden');
-    document.getElementById('app-container')
-      ?.classList.remove('hidden');
-    initApp()
-      .catch(err => {
-        console.error(err);
-        sessionStorage.removeItem(
-          'vanji_authenticated'
-        );
-        document.getElementById('app-container')
-          ?.classList.add('hidden');
-        document.getElementById('login-overlay')
-          ?.classList.remove('hidden');
-      });
+  if (sessionStorage.getItem('vanji_authenticated') === 'true') {
+    document.getElementById('login-overlay')?.classList.add('hidden');
+    document.getElementById('app-container')?.classList.remove('hidden');
+    initApp().catch(err => {
+      console.error(err);
+      sessionStorage.removeItem('vanji_authenticated');
+      document.getElementById('app-container')?.classList.add('hidden');
+      document.getElementById('login-overlay')?.classList.remove('hidden');
+    });
   }
 }
+
 /* ================================================================
    DATABASE
    ================================================================ */
 function openDatabase() {
   return new Promise((resolve, reject) => {
-    const request =
-      indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = function(e) {
       db = e.target.result;
       if (!db.objectStoreNames.contains('events')) {
-        db.createObjectStore(
-          'events',
-          { keyPath: 'id' }
-        );
+        db.createObjectStore('events', { keyPath: 'id' });
       }
     };
     request.onsuccess = function(e) {
       db = e.target.result;
       db.onversionchange = function() {
         db.close();
-        console.warn(
-          'Database version changed. Please reload.'
-        );
+        console.warn('Database version changed. Please reload.');
       };
       resolve(db);
     };
     request.onerror = function(e) {
-      console.error(
-        'IndexedDB open error:',
-        e.target.error
-      );
+      console.error('IndexedDB open error:', e.target.error);
       reject(e.target.error);
     };
     request.onblocked = function() {
-      console.warn(
-        'IndexedDB upgrade blocked by another tab.'
-      );
+      console.warn('IndexedDB upgrade blocked by another tab.');
     };
   });
 }
+
 function dbPut(storeName, value) {
   return new Promise((resolve, reject) => {
     if (!db) {
@@ -865,36 +864,19 @@ function dbPut(storeName, value) {
     }
     let transaction;
     try {
-      transaction =
-        db.transaction(
-          storeName,
-          'readwrite'
-        );
+      transaction = db.transaction(storeName, 'readwrite');
     } catch (error) {
       reject(error);
       return;
     }
-    const request =
-      transaction
-        .objectStore(storeName)
-        .put(value);
-    request.onerror = () => {
-      reject(request.error);
-    };
-    transaction.oncomplete = () => {
-      resolve(true);
-    };
-    transaction.onerror = () => {
-      reject(transaction.error);
-    };
-    transaction.onabort = () => {
-      reject(
-        transaction.error ||
-        new Error('Transaction aborted.')
-      );
-    };
+    const request = transaction.objectStore(storeName).put(value);
+    request.onerror = () => reject(request.error);
+    transaction.oncomplete = () => resolve(true);
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error || new Error('Transaction aborted.'));
   });
 }
+
 function dbGet(storeName, key) {
   return new Promise((resolve, reject) => {
     if (!db) {
@@ -903,1027 +885,224 @@ function dbGet(storeName, key) {
     }
     let transaction;
     try {
-      transaction =
-        db.transaction(
-          storeName,
-          'readonly'
-        );
+      transaction = db.transaction(storeName, 'readonly');
     } catch (error) {
       reject(error);
       return;
     }
-    const request =
-      transaction
-        .objectStore(storeName)
-        .get(key);
-    request.onsuccess = () => {
-      resolve(request.result);
-    };
-    request.onerror = () => {
-      reject(request.error);
-    };
+    const request = transaction.objectStore(storeName).get(key);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
   });
 }
+
 /* ================================================================
    SAVE SYSTEM
    ================================================================ */
 function setSaveStatus(text, type = 'saved') {
-  const indicator =
-    document.getElementById(
-      'save-status-indicator'
-    );
+  const indicator = document.getElementById('save-status-indicator');
   if (!indicator) return;
   if (type === 'saving') {
     indicator.innerText = '● Saving...';
-    indicator.className =
-      'text-[9px] text-amber-400 font-semibold';
+    indicator.className = 'text-[9px] text-amber-400 font-semibold';
   } else if (type === 'error') {
     indicator.innerText = '● Save Error';
-    indicator.className =
-      'text-[9px] text-rose-400 font-semibold';
+    indicator.className = 'text-[9px] text-rose-400 font-semibold';
   } else {
     indicator.innerText = '● Saved';
-    indicator.className =
-      'text-[9px] text-emerald-400 font-semibold';
+    indicator.className = 'text-[9px] text-emerald-400 font-semibold';
   }
 }
+
 function scheduleSave() {
   clearTimeout(saveTimer);
-  setSaveStatus(
-    'Saving...',
-    'saving'
-  );
-  saveTimer = setTimeout(
-    () => saveRahul(),
-    350
-  );
+  setSaveStatus('Saving...', 'saving');
+  saveTimer = setTimeout(() => saveRahul(), 350);
 }
+
 async function saveRahul() {
   if (!rahulEvent || !db) return;
   if (isSaving) return;
   isSaving = true;
   try {
-    await dbPut(
-      'events',
-      rahulEvent
-    );
-    setSaveStatus(
-      'Saved',
-      'saved'
-    );
+    await dbPut('events', rahulEvent);
+    setSaveStatus('Saved', 'saved');
     updateDashboardMetrics();
   } catch (error) {
-    console.error(
-      'Save failed:',
-      error
-    );
-    setSaveStatus(
-      'Save Error',
-      'error'
-    );
+    console.error('Save failed:', error);
+    setSaveStatus('Save Error', 'error');
   } finally {
     isSaving = false;
   }
 }
+
 /* ================================================================
-   DEFAULT DATA
+   DEFAULT DATA & LABOUR SECTION
    ================================================================ */
 function getDefaultHardware() {
   return [
-    {
-      name: 'Ladder',
-      spec: 'As required for rigging & draping',
-      timing: 'Morning',
-      purchased: true
-    },
-    {
-      name: 'Binding Wire',
-      spec: '15 kg',
-      timing: 'Morning',
-      purchased: false
-    },
-    {
-      name: 'Silver Wire',
-      spec: '5 kg',
-      timing: 'Morning',
-      purchased: false
-    },
-    {
-      name: 'Pins',
-      spec: '5 boxes',
-      timing: 'Morning',
-      purchased: false
-    },
-    {
-      name: 'Bond (Adhesive)',
-      spec: '3 Nos',
-      timing: 'Morning',
-      purchased: false
-    },
-    {
-      name: 'Tubs',
-      spec: 'For floral soaking & organization',
-      timing: 'Morning',
-      purchased: false
-    }
+    { name: 'Ladder', spec: 'As required for rigging & draping', timing: 'Morning', purchased: true },
+    { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
+    { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
+    { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
+    { name: 'Bond (Adhesive)', spec: '3 Nos', timing: 'Morning', purchased: false },
+    { name: 'Tubs', spec: 'For floral soaking & organization', timing: 'Morning', purchased: false }
   ];
 }
+
 function getDefaultFabrics() {
   return [
-    {
-      name: 'Main Stage Red Velvet Curtains',
-      spec: '6ft length, 10 Nos',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Pathway Red Velvet Curtains',
-      spec: '10ft length, 6 Nos',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Galaxy Off-White Cloth (Tree Drapes)',
-      spec: '100 meters',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Light Pink Galaxy Cloth (Tree Drapes)',
-      spec: '100 meters',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'White Micro Cloth (Phool Chadar & Ceiling)',
-      spec: '5 meters',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Off-White Micro Cloth (Mandap Ceiling)',
-      spec: '5 meters x 6 nos (Total 30m)',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'White Micro Cloth (8ft Entrance Arch)',
-      spec: '15 meters',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Photo Booth Cloth (Red Lycra/Velvet)',
-      spec: '10 meters',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Mandap OffWhite - Screens (10ft)',
-      spec: '4 Nos (Fabric/ Screen)',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Valga White Screens (5ft)',
-      spec: '3 Nos (Fabric/Screen)',
-      timing: 'Morning',
-      loaded: false
-    }
+    { name: 'Main Stage Red Velvet Curtains', spec: '6ft length, 10 Nos', timing: 'Evening', loaded: false },
+    { name: 'Pathway Red Velvet Curtains', spec: '10ft length, 6 Nos', timing: 'Evening', loaded: false },
+    { name: 'Galaxy Off-White Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
+    { name: 'Light Pink Galaxy Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
+    { name: 'White Micro Cloth (Phool Chadar & Ceiling)', spec: '5 meters', timing: 'Morning', loaded: false },
+    { name: 'Off-White Micro Cloth (Mandap Ceiling)', spec: '5 meters x 6 nos (Total 30m)', timing: 'Morning', loaded: false },
+    { name: 'White Micro Cloth (8ft Entrance Arch)', spec: '15 meters', timing: 'Morning', loaded: false },
+    { name: 'Photo Booth Cloth (Red Lycra/Velvet)', spec: '10 meters', timing: 'Evening', loaded: false },
+    { name: 'Mandap OffWhite - Screens (10ft)', spec: '4 Nos (Fabric/ Screen)', timing: 'Morning', loaded: false },
+    { name: 'Valga White Screens (5ft)', spec: '3 Nos (Fabric/Screen)', timing: 'Morning', loaded: false }
   ];
 }
+
 function getDefaultFlowers() {
   return [
-    {
-      name: 'Asparagus',
-      qty: 90,
-      timing: 'Morning',
-      rate: 30,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Kamini',
-      qty: 28,
-      timing: 'Morning',
-      rate: 80,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Sangapindi',
-      qty: 22,
-      timing: 'Evening',
-      rate: 50,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Milky White Flowers',
-      qty: 172,
-      timing: 'Morning',
-      rate: 150,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Light Pink Flowers',
-      qty: 5,
-      timing: 'Evening',
-      rate: 250,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Peach Roses',
-      qty: 78,
-      timing: 'Evening',
-      rate: 200,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Pink Packets',
-      qty: 24,
-      timing: 'Morning',
-      rate: 250,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'White Rose',
-      qty: 19,
-      timing: 'Morning',
-      rate: 200,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Pink Rose',
-      qty: 25,
-      timing: 'Evening',
-      rate: 200,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Golden Rod',
-      qty: 19,
-      timing: 'Morning',
-      rate: 50,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Gypsophila (Gypsi)',
-      qty: 41,
-      timing: 'Evening',
-      rate: 200,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Oasis Foam Boxes (20/box)',
-      qty: 8,
-      timing: 'Morning',
-      rate: 450,
-      purchased: false,
-      haveIt: false
-    },
-    {
-      name: 'Mesh Rolls',
-      qty: 12,
-      timing: 'Morning',
-      rate: 220,
-      purchased: false,
-      haveIt: false
-    }
+    { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
+    { name: 'Kamini', qty: 28, timing: 'Morning', rate: 80, purchased: false, haveIt: false },
+    { name: 'Sangapindi', qty: 22, timing: 'Evening', rate: 50, purchased: false, haveIt: false },
+    { name: 'Milky White Flowers', qty: 172, timing: 'Morning', rate: 150, purchased: false, haveIt: false },
+    { name: 'Light Pink Flowers', qty: 5, timing: 'Evening', rate: 250, purchased: false, haveIt: false },
+    { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+    { name: 'Pink Packets', qty: 24, timing: 'Morning', rate: 250, purchased: false, haveIt: false },
+    { name: 'White Rose', qty: 19, timing: 'Morning', rate: 200, purchased: false, haveIt: false },
+    { name: 'Pink Rose', qty: 25, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+    { name: 'Golden Rod', qty: 19, timing: 'Morning', rate: 50, purchased: false, haveIt: false },
+    { name: 'Gypsophila (Gypsi)', qty: 41, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+    { name: 'Oasis Foam Boxes (20/box)', qty: 8, timing: 'Morning', rate: 450, purchased: false, haveIt: false },
+    { name: 'Mesh Rolls', qty: 12, timing: 'Morning', rate: 220, purchased: false, haveIt: false }
   ];
 }
+
 function getDefaultFrames() {
   return [
-    {
-      name: 'Standing Supports (10ft)',
-      spec: '10 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Locking Rods (15ft)',
-      spec: '10 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Locking Rods (12ft Mandap/Valga)',
-      spec: '6 Nos total',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Locking Rods (10ft)',
-      spec: '4 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Phool Chadar Frame',
-      spec: '1 Complete Frame Structure',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Mandap Screen Stands',
-      spec: '4 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Valga Screen Stands',
-      spec: '2 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Name Board U-Arch Frame',
-      spec: '2.5ft x 7.5ft',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Name Board Box Frames',
-      spec: '3ft Frames',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Entrance Arch U-Arch Frame',
-      spec: '8ft Frame',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Photo Booth 4x8 Frames',
-      spec: '2 Nos',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Photo Booth Smaller Boxes',
-      spec: '3ft (2 nos), 2ft (2 nos)',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Homa Setup Items',
-      spec: 'Traditional fire pit components',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Kalash Props',
-      spec: '4 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Traditional Props',
-      spec: '2 Nos',
-      timing: 'Morning',
-      loaded: false
-    },
-    {
-      name: 'Cages & Lanterns',
-      spec: 'Evening pathway/name board',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Name Board Easel Stand',
-      spec: '1 Stand',
-      timing: 'Evening',
-      loaded: false
-    },
-    {
-      name: 'Pots & Handi',
-      spec: 'Handi pots as per design',
-      timing: 'Morning',
-      loaded: false
-    }
+    { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
+    { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
+    { name: 'Locking Rods (12ft Mandap/Valga)', spec: '6 Nos total', timing: 'Morning', loaded: false },
+    { name: 'Locking Rods (10ft)', spec: '4 Nos', timing: 'Morning', loaded: false },
+    { name: 'Phool Chadar Frame', spec: '1 Complete Frame Structure', timing: 'Morning', loaded: false },
+    { name: 'Mandap Screen Stands', spec: '4 Nos', timing: 'Morning', loaded: false },
+    { name: 'Valga Screen Stands', spec: '2 Nos', timing: 'Morning', loaded: false },
+    { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
+    { name: 'Name Board Box Frames', spec: '3ft Frames', timing: 'Evening', loaded: false },
+    { name: 'Entrance Arch U-Arch Frame', spec: '8ft Frame', timing: 'Morning', loaded: false },
+    { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false },
+    { name: 'Photo Booth Smaller Boxes', spec: '3ft (2 nos), 2ft (2 nos)', timing: 'Evening', loaded: false },
+    { name: 'Homa Setup Items', spec: 'Traditional fire pit components', timing: 'Morning', loaded: false },
+    { name: 'Kalash Props', spec: '4 Nos', timing: 'Morning', loaded: false },
+    { name: 'Traditional Props', spec: '2 Nos', timing: 'Morning', loaded: false },
+    { name: 'Cages & Lanterns', spec: 'Evening pathway/name board', timing: 'Evening', loaded: false },
+    { name: 'Name Board Easel Stand', spec: '1 Stand', timing: 'Evening', loaded: false },
+    { name: 'Pots & Handi', spec: 'Handi pots as per design', timing: 'Morning', loaded: false }
   ];
 }
+
 function getDefaultFlex() {
   return [
-    {
-      name: 'Photo Booth Sunboard Box & Frame',
-      spec: 'Custom fabrication',
-      timing: 'Evening',
-      rate: 2000
-    },
-    {
-      name: 'Entrance Arch Flex Printing',
-      spec: 'Morning entrance arch signage',
-      timing: 'Morning',
-      rate: 250
-    },
-    {
-      name: 'Photo Booth 8x8 Flex Printing',
-      spec: 'Evening backdrop',
-      timing: 'Evening',
-      rate: 640
-    },
-    {
-      name: 'Name Board Sunboard Printing',
-      spec: 'Evening name board signage',
-      timing: 'Evening',
-      rate: 300
-    }
+    { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
+    { name: 'Entrance Arch Flex Printing', spec: 'Morning entrance arch signage', timing: 'Morning', rate: 250 },
+    { name: 'Photo Booth 8x8 Flex Printing', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
+    { name: 'Name Board Sunboard Printing', spec: 'Evening name board signage', timing: 'Evening', rate: 300 }
   ];
 }
+
+function getDefaultLabour() {
+  return [
+    { name: 'General Labor (Circle)', count: 10, rate: 850 },
+    { name: 'Florists Crew', count: 18, rate: 1500 },
+    { name: 'Traveling Labor', count: 1, rate: 3000 },
+    { name: 'Gopal (Staff)', count: 1, rate: 1000 },
+    { name: 'Moin (Operational Support - 4 Days)', count: 4, rate: 900 },
+    { name: 'Fazil (Staff)', count: 1, rate: 1000 }
+  ];
+}
+
 function getDefaultLoading() {
   return [
-    {
-      name: 'Standing Supports (10ft)',
-      req: 10,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: '15ft Locking Rods',
-      req: 10,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: '12ft Locking Rods (Mandap/Valga)',
-      req: 6,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: '10ft Locking Rods',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Phool Chadar Frame',
-      req: 1,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Mandap Screen Stands',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Valga Screen Stands',
-      req: 2,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Name Board U-Arch Frame',
-      req: 1,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Name Board Box Frames',
-      req: 2,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Entrance Arch U-Arch Frame',
-      req: 1,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Photo Booth 4x8 Frames',
-      req: 2,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Photo Booth Smaller Boxes',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Main Stage Red Velvet Curtains',
-      req: 10,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Pathway Red Velvet Curtains',
-      req: 6,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Mandap Screens (10ft)',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Valga Screens (5ft)',
-      req: 3,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Kalash Props',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Traditional Props',
-      req: 2,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Cages & Lanterns',
-      req: 4,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    },
-    {
-      name: 'Name Board Easel Stand',
-      req: 1,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    }
+    { name: 'Standing Supports (10ft)', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: '15ft Locking Rods', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: '12ft Locking Rods (Mandap/Valga)', req: 6, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: '10ft Locking Rods', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Phool Chadar Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Mandap Screen Stands', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Valga Screen Stands', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Name Board U-Arch Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Name Board Box Frames', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Entrance Arch U-Arch Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Photo Booth 4x8 Frames', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Photo Booth Smaller Boxes', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Mandap Screens (10ft)', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Valga Screens (5ft)', req: 3, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Kalash Props', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Traditional Props', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Cages & Lanterns', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
+    { name: 'Name Board Easel Stand', req: 1, loaded: 0, ret: 0, dam: 0, ok: false }
   ];
 }
-/* ================================================================
-   WORKLIST
-   ================================================================ */
+
 function getDefaultWorklist() {
   return [
-    {
-      day: '📅 Sept 3 — Pre-Production',
-      task: 'Design & Mood Board Approved',
-      status: 'DONE',
-      verified: 'VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Approved by client',
-      plannedTime: '10:00 AM',
-      actualTime: '10:00 AM'
-    },
-    {
-      day: '📅 Sept 3 — Pre-Production',
-      task: 'Review Master Flower Mandi Purchase List',
-      status: 'DONE',
-      verified: 'VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Rahul',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Scheduled for Sept 4 night',
-      plannedTime: '11:30 AM',
-      actualTime: '11:30 AM'
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Flower Mandi Purchase Completed (₹78,880)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Rahul',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Sept 4 night purchase deadline',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Flower Purchase Physically Received & Count Verified',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'None',
-      blockedBy: 'Flower Mandi Purchase',
-      notes: 'Check freshness',
-      plannedTime: 'Morning (Sept 5)',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Flower Accessories Checked (Oasis, Mesh, Wire, Pins, Bond, Tubs)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Gopal',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: '155 oasis bricks',
-      plannedTime: 'Morning',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Morning Event Items Pull from Godown',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'General Labour',
-      vehicle: 'Moin Ape',
-      blockedBy: 'None',
-      notes: 'Arch & entrance',
-      plannedTime: 'Morning',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Evening Items Pull — WITHOUT Stage (Pathway, Photo Board, Supports)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'General Labour',
-      vehicle: 'Moin Ape',
-      blockedBy: 'None',
-      notes: 'Per Section 4 PDF',
-      plannedTime: 'Evening',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 4 — Procurement + Loading',
-      task: 'Moin Ape Auto Loading Cross-Check & Departure Confirmed',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Moin',
-      vehicle: 'Moin Ape',
-      blockedBy: 'Items Pulled',
-      notes: 'Engagement dispatch',
-      plannedTime: 'Evening',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Stage Moulding & Velvet Curtains Loaded into Tempo',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Tempo Driver',
-      vehicle: 'Tempo',
-      blockedBy: 'None',
-      notes: '6ft curtains 10 nos',
-      plannedTime: 'Morning',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Stage Moulding Setup & Structure Stability Check',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'Tempo',
-      blockedBy: 'Stage Moulding Loaded',
-      notes: 'Day priority',
-      plannedTime: 'Day',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Main Stage Velvet Draping & Backdrop Preparation',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Decoration Team',
-      vehicle: 'None',
-      blockedBy: 'Stage Setup',
-      notes: 'Clean finish',
-      plannedTime: 'Day',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Tree Drapes, Walkpath Decor & Name Board Pasting (If time permits)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'OPTIONAL',
-      person: 'Decoration Team',
-      vehicle: 'None',
-      blockedBy: 'Time Permits',
-      notes: 'Optional buffer',
-      plannedTime: 'Day',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Mandap Structure Assembled',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Night production start',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Mandap Ceiling Cloth Installed',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'Mandap Structure Assembled',
-      notes: '30m micro cloth',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Phool Chadar Frame Installed',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Complete frame',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Mandap & Valga Screens Installed',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'Mandap Structure',
-      notes: '10ft & 5ft screens',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Homa / Ritual Setup Positioned',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'NORMAL',
-      person: 'Gopal',
-      vehicle: 'None',
-      blockedBy: 'None',
-      notes: 'Fire pit components',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Mandap Floral Work Completed',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'Ceiling & Screens',
-      notes: 'Roses & whites',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 5 — Stage + Mandap Production',
-      task: 'Final Mandap Inspection & MANDAP READY — 06:00 AM',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'None',
-      blockedBy: 'Floral Work',
-      notes: 'Hard deadline 6 AM',
-      plannedTime: '06:00 AM',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 — Event Day & Transition',
-      task: 'Morning Event Execution & Final Mandap Inspection',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'None',
-      blockedBy: 'Mandap Ready 6 AM',
-      notes: 'Freshness check',
-      plannedTime: 'Morning',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 — Event Day & Transition',
-      task: 'Transition: Morning Materials Cleared & Mandap Strike Started',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'General Labour',
-      vehicle: 'None',
-      blockedBy: 'Morning Event End',
-      notes: 'Clear waste',
-      plannedTime: 'Afternoon',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 — Event Day & Transition',
-      task: 'Clear Evening Stage Area & Position Evening Flowers',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'Florist Team',
-      vehicle: 'None',
-      blockedBy: 'Transition Started',
-      notes: 'Peach roses',
-      plannedTime: 'Afternoon',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 — Event Day & Transition',
-      task: 'Reception Main Stage Setup Ready (06:00 PM Hard Gate)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Decoration Team',
-      vehicle: 'None',
-      blockedBy: 'Transition Cleared',
-      notes: 'Hard deadline 6 PM',
-      plannedTime: '06:00 PM',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 Night — Mandap Strike',
-      task: 'Mandap Floral, Fabrics, Screens & Frames Dismantled',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'HIGH',
-      person: 'General Labour',
-      vehicle: 'Moin Ape',
-      blockedBy: 'Reception Started',
-      notes: 'Post-event strike',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 6 Night — Mandap Strike',
-      task: 'All Mandap Items Counted & Moin Vehicle Loaded & Dispatched',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Moin',
-      vehicle: 'Moin Ape',
-      blockedBy: 'Mandap Dismantled',
-      notes: 'Godown return check',
-      plannedTime: 'Night',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 7 — Final Strike + Godown Return',
-      task: 'Reception Stage Dismantling & Velvet / Fabric Removal',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Decoration Team',
-      vehicle: 'Tempo',
-      blockedBy: 'Reception Over',
-      notes: 'Full dismantling',
-      plannedTime: 'Morning',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 7 — Final Strike + Godown Return',
-      task: 'Stage Moulding Structure Dismantled & Hardware Collected',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'Tempo',
-      blockedBy: 'Stage Dismantled',
-      notes: 'Stands & rods',
-      plannedTime: 'Day',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 7 — Final Strike + Godown Return',
-      task: 'Godown Return Completed, Count Verified & Damage Report Updated',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Gopal',
-      vehicle: 'Tempo',
-      blockedBy: 'Final Loading',
-      notes: 'Verification audit',
-      plannedTime: 'Evening',
-      actualTime: ''
-    },
-    {
-      day: '📅 Sept 7 — Final Strike + Godown Return',
-      task: '🔒 EVENT CLOSED (All counts verified, damages noted)',
-      status: 'PENDING',
-      verified: 'NOT VERIFIED',
-      priority: 'CRITICAL',
-      person: 'Yousuf',
-      vehicle: 'None',
-      blockedBy: 'Godown Audit',
-      notes: 'Event successfully closed',
-      plannedTime: 'Evening',
-      actualTime: ''
-    }
+    { day: '📅 Sept 3 — Pre-Production', task: 'Design & Mood Board Approved', status: 'DONE', verified: 'VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'None', notes: 'Approved by client', plannedTime: '10:00 AM', actualTime: '10:00 AM' },
+    { day: '📅 Sept 3 — Pre-Production', task: 'Review Master Flower Mandi Purchase List', status: 'DONE', verified: 'VERIFIED', priority: 'CRITICAL', person: 'Rahul', vehicle: 'None', blockedBy: 'None', notes: 'Scheduled for Sept 4 night', plannedTime: '11:30 AM', actualTime: '11:30 AM' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Mandi Purchase Completed (₹78,880)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Rahul', vehicle: 'None', blockedBy: 'None', notes: 'Sept 4 night purchase deadline', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Purchase Physically Received & Count Verified', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Flower Mandi Purchase', notes: 'Check freshness', plannedTime: 'Morning (Sept 5)', actualTime: '' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Accessories Checked (Oasis, Mesh, Wire, Pins, Bond, Tubs)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Gopal', vehicle: 'None', blockedBy: 'None', notes: '155 oasis bricks', plannedTime: 'Morning', actualTime: '' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Morning Event Items Pull from Godown', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'None', notes: 'Arch & entrance', plannedTime: 'Morning', actualTime: '' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Evening Items Pull — WITHOUT Stage (Pathway, Photo Board, Supports)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'None', notes: 'Per Section 4 PDF', plannedTime: 'Evening', actualTime: '' },
+    { day: '📅 Sept 4 — Procurement + Loading', task: 'Moin Ape Auto Loading Cross-Check & Departure Confirmed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Moin', vehicle: 'Moin Ape', blockedBy: 'Items Pulled', notes: 'Engagement dispatch', plannedTime: 'Evening', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Stage Moulding & Velvet Curtains Loaded into Tempo', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Tempo Driver', vehicle: 'Tempo', blockedBy: 'None', notes: '6ft curtains 10 nos', plannedTime: 'Morning', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Stage Moulding Setup & Structure Stability Check', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'Tempo', blockedBy: 'Stage Moulding Loaded', notes: 'Day priority', plannedTime: 'Day', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Main Stage Velvet Draping & Backdrop Preparation', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Stage Setup', notes: 'Clean finish', plannedTime: 'Day', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Tree Drapes, Walkpath Decor & Name Board Pasting (If time permits)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'OPTIONAL', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Time Permits', notes: 'Optional buffer', plannedTime: 'Day', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Structure Assembled', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Florist Team', vehicle: 'None', blockedBy: 'None', notes: 'Night production start', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Ceiling Cloth Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Mandap Structure Assembled', notes: '30m micro cloth', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Phool Chadar Frame Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'None', notes: 'Complete frame', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap & Valga Screens Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Mandap Structure', notes: '10ft & 5ft screens', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Homa / Ritual Setup Positioned', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'NORMAL', person: 'Gopal', vehicle: 'None', blockedBy: 'None', notes: 'Fire pit components', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Floral Work Completed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Florist Team', vehicle: 'None', blockedBy: 'Ceiling & Screens', notes: 'Roses & whites', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Final Mandap Inspection & MANDAP READY — 06:00 AM', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Floral Work', notes: 'Hard deadline 6 AM', plannedTime: '06:00 AM', actualTime: '' },
+    { day: '📅 Sept 6 — Event Day & Transition', task: 'Morning Event Execution & Final Mandap Inspection', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Mandap Ready 6 AM', notes: 'Freshness check', plannedTime: 'Morning', actualTime: '' },
+    { day: '📅 Sept 6 — Event Day & Transition', task: 'Transition: Morning Materials Cleared & Mandap Strike Started', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'None', blockedBy: 'Morning Event End', notes: 'Clear waste', plannedTime: 'Afternoon', actualTime: '' },
+    { day: '📅 Sept 6 — Event Day & Transition', task: 'Clear Evening Stage Area & Position Evening Flowers', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Transition Started', notes: 'Peach roses', plannedTime: 'Afternoon', actualTime: '' },
+    { day: '📅 Sept 6 — Event Day & Transition', task: 'Reception Main Stage Setup Ready (06:00 PM Hard Gate)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Transition Cleared', notes: 'Hard deadline 6 PM', plannedTime: '06:00 PM', actualTime: '' },
+    { day: '📅 Sept 6 Night — Mandap Strike', task: 'Mandap Floral, Fabrics, Screens & Frames Dismantled', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'Reception Started', notes: 'Post-event strike', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 6 Night — Mandap Strike', task: 'All Mandap Items Counted & Moin Vehicle Loaded & Dispatched', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Moin', vehicle: 'Moin Ape', blockedBy: 'Mandap Dismantled', notes: 'Godown return check', plannedTime: 'Night', actualTime: '' },
+    { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Reception Stage Dismantling & Velvet / Fabric Removal', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Decoration Team', vehicle: 'Tempo', blockedBy: 'Reception Over', notes: 'Full dismantling', plannedTime: 'Morning', actualTime: '' },
+    { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Stage Moulding Structure Dismantled & Hardware Collected', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'Tempo', blockedBy: 'Stage Dismantled', notes: 'Stands & rods', plannedTime: 'Day', actualTime: '' },
+    { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Godown Return Completed, Count Verified & Damage Report Updated', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Gopal', vehicle: 'Tempo', blockedBy: 'Final Loading', notes: 'Verification audit', plannedTime: 'Evening', actualTime: '' },
+    { day: '📅 Sept 7 — Final Strike + Godown Return', task: '🔒 EVENT CLOSED (All counts verified, damages noted)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Godown Audit', notes: 'Event successfully closed', plannedTime: 'Evening', actualTime: '' }
   ];
 }
+
 /* ================================================================
-   ARRAY MIGRATION
-   Preserves existing records and adds missing defaults.
+   MIGRATION HELPERS
    ================================================================ */
 function mergeDefaults(existingArray, defaults) {
   if (!Array.isArray(existingArray)) {
     return defaults.map(item => ({ ...item }));
   }
-  const result =
-    existingArray.map(item => ({
-      ...item
-    }));
-  const existingNames =
-    new Set(
-      result.map(item =>
-        String(item.name || '')
-          .trim()
-          .toLowerCase()
-      )
-    );
+  const result = existingArray.map(item => ({ ...item }));
+  const existingNames = new Set(result.map(item => String(item.name || '').trim().toLowerCase()));
   defaults.forEach(defaultItem => {
-    const key =
-      String(defaultItem.name || '')
-        .trim()
-        .toLowerCase();
+    const key = String(defaultItem.name || '').trim().toLowerCase();
     if (!existingNames.has(key)) {
-      result.push({
-        ...defaultItem
-      });
+      result.push({ ...defaultItem });
     }
   });
   return result;
 }
-/* ================================================================
-   WORKLIST MIGRATION
-   ================================================================ */
+
 function normalizeWorkTask(task) {
   return {
     day: task.day || 'General',
@@ -1939,211 +1118,73 @@ function normalizeWorkTask(task) {
     actualTime: task.actualTime || ''
   };
 }
+
 function mergeWorklist(existing, defaults) {
   if (!Array.isArray(existing)) {
-    return defaults.map(
-      item => ({ ...item })
-    );
+    return defaults.map(item => ({ ...item }));
   }
-  const result =
-    existing.map(
-      task => normalizeWorkTask(task)
-    );
-  const existingTaskKeys =
-    new Set(
-      result.map(task =>
-        `${task.day}|${task.task}`
-          .toLowerCase()
-      )
-    );
+  const result = existing.map(task => normalizeWorkTask(task));
+  const existingTaskKeys = new Set(result.map(task => `${task.day}|${task.task}`.toLowerCase()));
   defaults.forEach(defaultTask => {
-    const key =
-      `${defaultTask.day}|${defaultTask.task}`
-        .toLowerCase();
+    const key = `${defaultTask.day}|${defaultTask.task}`.toLowerCase();
     if (!existingTaskKeys.has(key)) {
-      result.push({
-        ...defaultTask
-      });
+      result.push({ ...defaultTask });
     }
   });
   return result;
 }
+
 /* ================================================================
    SEED / MIGRATE
    ================================================================ */
 async function seedRahulMasterData() {
-  let existing =
-    await dbGet(
-      'events',
-      EVENT_ID
-    );
-  const defaultHardware =
-    getDefaultHardware();
-  const defaultFabrics =
-    getDefaultFabrics();
-  const defaultFlowers =
-    getDefaultFlowers();
-  const defaultFrames =
-    getDefaultFrames();
-  const defaultFlex =
-    getDefaultFlex();
-  const defaultLoading =
-    getDefaultLoading();
-  const defaultWorklist =
-    getDefaultWorklist();
+  let existing = await dbGet('events', EVENT_ID);
+  const defaultHardware = getDefaultHardware();
+  const defaultFabrics = getDefaultFabrics();
+  const defaultFlowers = getDefaultFlowers();
+  const defaultFrames = getDefaultFrames();
+  const defaultFlex = getDefaultFlex();
+  const defaultLabour = getDefaultLabour();
+  const defaultLoading = getDefaultLoading();
+  const defaultWorklist = getDefaultWorklist();
+
   if (!existing) {
     existing = {
       id: EVENT_ID,
-      hardware:
-        defaultHardware,
-      fabrics:
-        defaultFabrics,
-      flowers:
-        defaultFlowers,
-      frames:
-        defaultFrames,
-      flex:
-        defaultFlex,
-      loading:
-        defaultLoading,
-      worklist:
-        defaultWorklist,
-      moodboard:
-        []
+      hardware: defaultHardware,
+      fabrics: defaultFabrics,
+      flowers: defaultFlowers,
+      frames: defaultFrames,
+      flex: defaultFlex,
+      labour: defaultLabour,
+      loading: defaultLoading,
+      worklist: defaultWorklist,
+      moodboard: []
     };
   } else {
-    /*
-     * VERSION 41 MIGRATION
-     *
-     * Existing values are preserved.
-     * Missing default items are added.
-     */
-    existing.hardware =
-      mergeDefaults(
-        existing.hardware,
-        defaultHardware
-      );
-    existing.fabrics =
-      mergeDefaults(
-        existing.fabrics,
-        defaultFabrics
-      );
-    existing.flowers =
-      mergeDefaults(
-        existing.flowers,
-        defaultFlowers
-      );
-    existing.frames =
-      mergeDefaults(
-        existing.frames,
-        defaultFrames
-      );
-    existing.flex =
-      mergeDefaults(
-        existing.flex,
-        defaultFlex
-      );
-    existing.loading =
-      mergeDefaults(
-        existing.loading,
-        defaultLoading
-      );
-    existing.worklist =
-      mergeWorklist(
-        existing.worklist,
-        defaultWorklist
-      );
-    existing.moodboard =
-      Array.isArray(existing.moodboard)
-        ? existing.moodboard
-        : [];
+    existing.hardware = mergeDefaults(existing.hardware, defaultHardware);
+    existing.fabrics = mergeDefaults(existing.fabrics, defaultFabrics);
+    existing.flowers = mergeDefaults(existing.flowers, defaultFlowers);
+    existing.frames = mergeDefaults(existing.frames, defaultFrames);
+    existing.flex = mergeDefaults(existing.flex, defaultFlex);
+    existing.labour = mergeDefaults(existing.labour, defaultLabour);
+    existing.loading = mergeDefaults(existing.loading, defaultLoading);
+    existing.worklist = mergeWorklist(existing.worklist, defaultWorklist);
+    existing.moodboard = Array.isArray(existing.moodboard) ? existing.moodboard : [];
   }
-  /*
-   * Normalize legacy fields without changing
-   * the existing data structure.
-   */
-  existing.hardware =
-    existing.hardware.map(item => ({
-      name: item.name || '',
-      spec: item.spec || 'Standard',
-      timing:
-        item.timing === 'Evening'
-          ? 'Evening'
-          : 'Morning',
-      purchased:
-        Boolean(item.purchased)
-    }));
-  existing.fabrics =
-    existing.fabrics.map(item => ({
-      name: item.name || '',
-      spec: item.spec || 'Standard',
-      timing:
-        item.timing === 'Morning'
-          ? 'Morning'
-          : 'Evening',
-      loaded:
-        Boolean(item.loaded)
-    }));
-  existing.flowers =
-    existing.flowers.map(item => ({
-      name: item.name || '',
-      qty: numberValue(item.qty),
-      timing:
-        item.timing === 'Evening'
-          ? 'Evening'
-          : 'Morning',
-      rate: numberValue(item.rate),
-      purchased:
-        Boolean(item.purchased),
-      haveIt:
-        Boolean(item.haveIt)
-    }));
-  existing.frames =
-    existing.frames.map(item => ({
-      name: item.name || '',
-      spec: item.spec || 'Standard',
-      timing:
-        item.timing === 'Evening'
-          ? 'Evening'
-          : 'Morning',
-      loaded:
-        Boolean(item.loaded)
-    }));
-  existing.flex =
-    existing.flex.map(item => ({
-      name: item.name || '',
-      spec: item.spec || 'Standard',
-      timing:
-        item.timing === 'Morning'
-          ? 'Morning'
-          : 'Evening',
-      rate: numberValue(item.rate)
-    }));
-  existing.loading =
-    existing.loading.map(item => ({
-      name: item.name || '',
-      req: Math.max(0, numberValue(item.req)),
-      loaded: Math.max(0, numberValue(item.loaded)),
-      ret: Math.max(0, numberValue(item.ret)),
-      dam: Math.max(0, numberValue(item.dam)),
-      ok: Boolean(item.ok)
-    }));
-  existing.worklist =
-    existing.worklist.map(
-      task => normalizeWorkTask(task)
-    );
-  await dbPut(
-    'events',
-    existing
-  );
-  rahulEvent =
-    existing;
-  uploadedMoodImages =
-    Array.isArray(rahulEvent.moodboard)
-      ? rahulEvent.moodboard
-      : [];
+
+  existing.labour = existing.labour.map(item => ({
+    name: item.name || '',
+    count: Math.max(0, numberValue(item.count)),
+    rate: Math.max(0, numberValue(item.rate))
+  }));
+
+  await dbPut('events', existing);
+  rahulEvent = existing;
+  uploadedMoodImages = Array.isArray(rahulEvent.moodboard) ? rahulEvent.moodboard : [];
   renderMoodBoardGrid();
 }
+
 /* ================================================================
    APP INITIALIZATION
    ================================================================ */
@@ -2153,1193 +1194,369 @@ async function initApp() {
   renderAllSections();
   updateDashboardMetrics();
 }
+
 /* ================================================================
    NAVIGATION
    ================================================================ */
 function navTo(page) {
-  const pages = [
-    'dashboard',
-    'hardware',
-    'fabrics',
-    'flowers',
-    'frames',
-    'flex',
-    'moodboard',
-    'loading',
-    'worklist'
-  ];
+  const pages = ['dashboard', 'hardware', 'fabrics', 'flowers', 'frames', 'flex', 'labour', 'moodboard', 'loading', 'worklist'];
   pages.forEach(id => {
-    const pageElement =
-      document.getElementById(
-        `page-${id}`
-      );
-    const button =
-      document.getElementById(
-        `pnav-${id}`
-      );
-    if (pageElement) {
-      pageElement.classList.add('hidden');
-    }
-    if (button) {
-      button.className =
-        'py-2.5 px-3 border-b-2 border-transparent';
-    }
+    const pageElement = document.getElementById(`page-${id}`);
+    const button = document.getElementById(`pnav-${id}`);
+    if (pageElement) pageElement.classList.add('hidden');
+    if (button) button.className = 'py-2.5 px-3 border-b-2 border-transparent';
   });
-  const activePage =
-    document.getElementById(
-      `page-${page}`
-    );
-  const activeButton =
-    document.getElementById(
-      `pnav-${page}`
-    );
-  if (activePage) {
-    activePage.classList.remove('hidden');
-  }
-  if (activeButton) {
-    activeButton.className =
-      'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
-  }
-  if (
-    page !== 'dashboard' &&
-    page !== 'moodboard'
-  ) {
+  const activePage = document.getElementById(`page-${page}`);
+  const activeButton = document.getElementById(`pnav-${page}`);
+  if (activePage) activePage.classList.remove('hidden');
+  if (activeButton) activeButton.className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
+  if (page !== 'dashboard' && page !== 'moodboard') {
     renderSection(page);
   }
   if (page === 'dashboard') {
     updateDashboardMetrics();
   }
 }
+
 /* ================================================================
-   DASHBOARD
+   CALCULATIONS & DASHBOARD METRICS
    ================================================================ */
 function calculateFloralTotal() {
-  if (
-    !rahulEvent ||
-    !Array.isArray(rahulEvent.flowers)
-  ) {
-    return 0;
-  }
-  return rahulEvent.flowers.reduce(
-    (sum, flower) => {
-      return sum +
-        (
-          numberValue(flower.qty) *
-          numberValue(flower.rate)
-        );
-    },
-    0
-  );
+  if (!rahulEvent || !Array.isArray(rahulEvent.flowers)) return 0;
+  return rahulEvent.flowers.reduce((sum, f) => sum + (numberValue(f.qty) * numberValue(f.rate)), 0);
 }
-function calculateFlexTotal() {
-  if (
-    !rahulEvent ||
-    !Array.isArray(rahulEvent.flex)
-  ) {
-    return 0;
-  }
-  return rahulEvent.flex.reduce(
-    (sum, item) =>
-      sum + numberValue(item.rate),
-    0
-  );
+
+function calculateLabourTotal() {
+  if (!rahulEvent || !Array.isArray(rahulEvent.labour)) return 0;
+  return rahulEvent.labour.reduce((sum, l) => sum + (numberValue(l.count) * numberValue(l.rate)), 0);
 }
+
 function updateDashboardMetrics() {
   if (!rahulEvent) return;
-  const floralTotal =
-    calculateFloralTotal();
-  const floralElement =
-    document.getElementById(
-      'dash-floral-outflow'
-    );
-  if (floralElement) {
-    floralElement.innerText =
-      `₹${floralTotal.toLocaleString('en-IN')}`;
-  }
-  const criticalFloral =
-    document.getElementById(
-      'dash-critical-floral'
-    );
-  if (criticalFloral) {
-    criticalFloral.innerText =
-      `₹${floralTotal.toLocaleString('en-IN')}`;
-  }
-  const flowerGrandTotal =
-    document.getElementById(
-      'flowers-grand-total'
-    );
-  if (flowerGrandTotal) {
-    flowerGrandTotal.innerText =
-      `₹${floralTotal.toLocaleString('en-IN')}`;
-  }
-  /*
-   * The ₹1,62,070 figure is a MASTER ESTIMATE,
-   * not a sum of the currently editable sections.
-   *
-   * It is therefore intentionally retained rather
-   * than falsely recalculated from incomplete cost data.
-   */
-  const totalExp =
-    document.getElementById(
-      'dash-total-exp'
-    );
+  const floralTotal = calculateFloralTotal();
+  const floralElement = document.getElementById('dash-floral-outflow');
+  if (floralElement) floralElement.innerText = `₹${floralTotal.toLocaleString('en-IN')}`;
+
+  const criticalFloral = document.getElementById('dash-critical-floral');
+  if (criticalFloral) criticalFloral.innerText = `₹${floralTotal.toLocaleString('en-IN')}`;
+
+  const flowerGrandTotal = document.getElementById('flowers-grand-total');
+  if (flowerGrandTotal) flowerGrandTotal.innerText = `₹${floralTotal.toLocaleString('en-IN')}`;
+
+  const labourTotal = calculateLabourTotal();
+  const labourGrandTotal = document.getElementById('labour-grand-total');
+  if (labourGrandTotal) labourGrandTotal.innerText = `₹${labourTotal.toLocaleString('en-IN')}`;
+
+  const totalExp = document.getElementById('dash-total-exp');
   if (totalExp && !totalExp.innerText.trim()) {
-    totalExp.innerText =
-      '₹1,62,070';
+    totalExp.innerText = '₹1,62,070';
   }
-  const worklist =
-    Array.isArray(rahulEvent.worklist)
-      ? rahulEvent.worklist
-      : [];
-  const totalTasks =
-    worklist.length;
-  const doneTasks =
-    worklist.filter(
-      task => task.status === 'DONE'
-    ).length;
-  const issueTasks =
-    worklist.filter(
-      task => task.status === 'ISSUE'
-    ).length;
-  const unverifiedDone =
-    worklist.some(
-      task =>
-        task.status === 'DONE' &&
-        task.verified !== 'VERIFIED'
-    );
-  const progress =
-    totalTasks > 0
-      ? Math.round(
-          (doneTasks / totalTasks) * 100
-        )
-      : 0;
-  const progressElement =
-    document.getElementById(
-      'dash-prod-progress'
-    );
-  if (progressElement) {
-    progressElement.innerText =
-      `${progress}%`;
-  }
-  const taskCounts =
-    document.getElementById(
-      'dash-task-counts'
-    );
-  if (taskCounts) {
-    taskCounts.innerText =
-      `${doneTasks} Done / ${totalTasks} Total`;
-  }
-  const statusElement =
-    document.getElementById(
-      'dash-exec-status'
-    );
+
+  const worklist = Array.isArray(rahulEvent.worklist) ? rahulEvent.worklist : [];
+  const totalTasks = worklist.length;
+  const doneTasks = worklist.filter(t => t.status === 'DONE').length;
+  const issueTasks = worklist.filter(t => t.status === 'ISSUE').length;
+  const unverifiedDone = worklist.some(t => t.status === 'DONE' && t.verified !== 'VERIFIED');
+  const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+
+  const progressElement = document.getElementById('dash-prod-progress');
+  if (progressElement) progressElement.innerText = `${progress}%`;
+
+  const taskCounts = document.getElementById('dash-task-counts');
+  if (taskCounts) taskCounts.innerText = `${doneTasks} Done / ${totalTasks} Total`;
+
+  const statusElement = document.getElementById('dash-exec-status');
   if (statusElement) {
     if (issueTasks > 0) {
-      statusElement.innerText =
-        `⚠️ ${issueTasks} ACTIVE ISSUE${issueTasks > 1 ? 'S' : ''}`;
-      statusElement.className =
-        'text-xl font-black text-rose-600';
+      statusElement.innerText = `⚠️ ${issueTasks} ACTIVE ISSUE${issueTasks > 1 ? 'S' : ''}`;
+      statusElement.className = 'text-xl font-black text-rose-600';
     } else if (unverifiedDone) {
-      statusElement.innerText =
-        '🟡 UNVERIFIED DONE';
-      statusElement.className =
-        'text-xl font-black text-amber-600';
-    } else if (
-      totalTasks > 0 &&
-      doneTasks === totalTasks
-    ) {
-      statusElement.innerText =
-        '🟢 EVENT CLOSED';
-      statusElement.className =
-        'text-xl font-black text-emerald-600';
+      statusElement.innerText = '🟡 UNVERIFIED DONE';
+      statusElement.className = 'text-xl font-black text-amber-600';
+    } else if (totalTasks > 0 && doneTasks === totalTasks) {
+      statusElement.innerText = '🟢 EVENT CLOSED';
+      statusElement.className = 'text-xl font-black text-emerald-600';
     } else {
-      statusElement.innerText =
-        '🟢 ON SCHEDULE';
-      statusElement.className =
-        'text-xl font-black text-emerald-600';
+      statusElement.innerText = '🟢 ON SCHEDULE';
+      statusElement.className = 'text-xl font-black text-emerald-600';
     }
   }
 }
-/* ================================================================
-   RENDER ALL
-   ================================================================ */
+
 function renderAllSections() {
-  [
-    'hardware',
-    'fabrics',
-    'flowers',
-    'frames',
-    'flex',
-    'loading',
-    'worklist'
-  ].forEach(
-    section =>
-      renderSection(section)
-  );
+  ['hardware', 'fabrics', 'flowers', 'frames', 'flex', 'labour', 'loading', 'worklist'].forEach(sec => renderSection(sec));
   renderMoodBoardGrid();
   updateDashboardMetrics();
 }
+
 /* ================================================================
-   SECTION RENDER
+   SECTION RENDERERS
    ================================================================ */
 function renderSection(section) {
   if (!rahulEvent) return;
-  /* -------------------------------------------------------------
-     HARDWARE
-     ------------------------------------------------------------- */
+
   if (section === 'hardware') {
-    const table =
-      document.getElementById(
-        'table-hardware'
-      );
+    const table = document.getElementById('table-hardware');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.hardware
-        .map((item, index) => `
-          <tr>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.name)}"
-                oninput="
-                  rahulEvent.hardware[${index}].name=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white">
-            </td>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.spec)}"
-                oninput="
-                  rahulEvent.hardware[${index}].spec=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white">
-            </td>
-            <td class="p-2 border text-center">
-              <select
-                onchange="
-                  rahulEvent.hardware[${index}].timing=this.value;
-                  scheduleSave();
-                "
-                class="border rounded p-1 text-xs bg-white">
-                <option value="Morning"
-                  ${item.timing === 'Morning' ? 'selected' : ''}>
-                  Morning
-                </option>
-                <option value="Evening"
-                  ${item.timing === 'Evening' ? 'selected' : ''}>
-                  Evening
-                </option>
-              </select>
-            </td>
-            <td class="p-2 border text-center">
-              <input
-                type="checkbox"
-                ${item.purchased ? 'checked' : ''}
-                onchange="
-                  rahulEvent.hardware[${index}].purchased=this.checked;
-                  scheduleSave();
-                "
-                class="h-4 w-4 rounded accent-emerald-600">
-            </td>
-            <td class="p-2 border text-center">
-              <button
-                onclick="deleteArrayItem('hardware', ${index})"
-                class="text-rose-500 font-bold">
-                ✕
-              </button>
-            </td>
-          </tr>
-        `)
-        .join('');
-  }
-  /* -------------------------------------------------------------
-     FABRICS
-     ------------------------------------------------------------- */
-  else if (section === 'fabrics') {
-    const table =
-      document.getElementById(
-        'table-fabrics'
-      );
+    table.innerHTML = rahulEvent.hardware.map((item, index) => `
+      <tr>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.hardware[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white"></td>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.spec)}" oninput="rahulEvent.hardware[${index}].spec=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white"></td>
+        <td class="p-2 border text-center">
+          <select onchange="rahulEvent.hardware[${index}].timing=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white">
+            <option value="Morning" ${item.timing === 'Morning' ? 'selected' : ''}>Morning</option>
+            <option value="Evening" ${item.timing === 'Evening' ? 'selected' : ''}>Evening</option>
+          </select>
+        </td>
+        <td class="p-2 border text-center"><input type="checkbox" ${item.purchased ? 'checked' : ''} onchange="rahulEvent.hardware[${index}].purchased=this.checked; scheduleSave();" class="h-4 w-4 rounded accent-emerald-600"></td>
+        <td class="p-2 border text-center"><button onclick="deleteArrayItem('hardware', ${index})" class="text-rose-500 font-bold">✕</button></td>
+      </tr>
+    `).join('');
+  } else if (section === 'fabrics') {
+    const table = document.getElementById('table-fabrics');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.fabrics
-        .map((item, index) => `
-          <tr>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.name)}"
-                oninput="
-                  rahulEvent.fabrics[${index}].name=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white font-semibold">
-            </td>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.spec)}"
-                oninput="
-                  rahulEvent.fabrics[${index}].spec=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white">
-            </td>
-            <td class="p-2 border text-center">
-              <select
-                onchange="
-                  rahulEvent.fabrics[${index}].timing=this.value;
-                  scheduleSave();
-                "
-                class="border rounded p-1 text-xs bg-white">
-                <option value="Morning"
-                  ${item.timing === 'Morning' ? 'selected' : ''}>
-                  Morning
-                </option>
-                <option value="Evening"
-                  ${item.timing === 'Evening' ? 'selected' : ''}>
-                  Evening
-                </option>
-              </select>
-            </td>
-            <td class="p-2 border text-center">
-              <input
-                type="checkbox"
-                ${item.loaded ? 'checked' : ''}
-                onchange="
-                  rahulEvent.fabrics[${index}].loaded=this.checked;
-                  scheduleSave();
-                "
-                class="h-4 w-4 rounded accent-emerald-600">
-            </td>
-            <td class="p-2 border text-center">
-              <button
-                onclick="deleteArrayItem('fabrics', ${index})"
-                class="text-rose-500 font-bold">
-                ✕
-              </button>
-            </td>
-          </tr>
-        `)
-        .join('');
-  }
-  /* -------------------------------------------------------------
-     FLOWERS
-     ------------------------------------------------------------- */
-  else if (section === 'flowers') {
-    const table =
-      document.getElementById(
-        'table-flowers'
-      );
+    table.innerHTML = rahulEvent.fabrics.map((item, index) => `
+      <tr>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.fabrics[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.spec)}" oninput="rahulEvent.fabrics[${index}].spec=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white"></td>
+        <td class="p-2 border text-center">
+          <select onchange="rahulEvent.fabrics[${index}].timing=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white">
+            <option value="Morning" ${item.timing === 'Morning' ? 'selected' : ''}>Morning</option>
+            <option value="Evening" ${item.timing === 'Evening' ? 'selected' : ''}>Evening</option>
+          </select>
+        </td>
+        <td class="p-2 border text-center"><input type="checkbox" ${item.loaded ? 'checked' : ''} onchange="rahulEvent.fabrics[${index}].loaded=this.checked; scheduleSave();" class="h-4 w-4 rounded accent-emerald-600"></td>
+        <td class="p-2 border text-center"><button onclick="deleteArrayItem('fabrics', ${index})" class="text-rose-500 font-bold">✕</button></td>
+      </tr>
+    `).join('');
+  } else if (section === 'flowers') {
+    const table = document.getElementById('table-flowers');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.flowers
-        .map((item, index) => {
-          const qty =
-            numberValue(item.qty);
-          const rate =
-            numberValue(item.rate);
-          const lineTotal =
-            Math.round(
-              qty * rate
-            );
-          const rowClass =
-            item.purchased
-              ? 'bg-emerald-50'
-              : item.haveIt
-                ? 'bg-indigo-50'
-                : '';
-          return `
-            <tr class="${rowClass}">
-              <td class="p-2 border text-center">
-                <input
-                  type="checkbox"
-                  ${item.purchased ? 'checked' : ''}
-                  onchange="
-                    rahulEvent.flowers[${index}].purchased=this.checked;
-                    if(this.checked){
-                      rahulEvent.flowers[${index}].haveIt=false;
-                    }
-                    scheduleSave();
-                    renderSection('flowers');
-                  "
-                  class="h-4 w-4 accent-emerald-600">
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="checkbox"
-                  ${item.haveIt ? 'checked' : ''}
-                  onchange="
-                    rahulEvent.flowers[${index}].haveIt=this.checked;
-                    if(this.checked){
-                      rahulEvent.flowers[${index}].purchased=false;
-                    }
-                    scheduleSave();
-                    renderSection('flowers');
-                  "
-                  class="h-4 w-4 accent-indigo-600">
-              </td>
-              <td class="p-2 border">
-                <input
-                  type="text"
-                  value="${escapeHTML(item.name)}"
-                  oninput="
-                    rahulEvent.flowers[${index}].name=this.value;
-                    scheduleSave();
-                  "
-                  class="w-full border rounded p-1 text-xs bg-white font-semibold">
-              </td>
-              <td class="p-2 border w-16 text-center">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${qty}"
-                  oninput="
-                    rahulEvent.flowers[${index}].qty=numberValue(this.value);
-                    recalcFlowers(false);
-                  "
-                  onchange="
-                    scheduleSave();
-                    recalcFlowers(false);
-                  "
-                  class="w-full border rounded p-1 text-center text-xs bg-white">
-              </td>
-              <td class="p-2 border text-center">
-                <select
-                  onchange="
-                    rahulEvent.flowers[${index}].timing=this.value;
-                    scheduleSave();
-                  "
-                  class="border rounded p-1 text-xs bg-white">
-                  <option value="Morning"
-                    ${item.timing === 'Morning' ? 'selected' : ''}>
-                    Morning
-                  </option>
-                  <option value="Evening"
-                    ${item.timing === 'Evening' ? 'selected' : ''}>
-                    Evening
-                  </option>
-                </select>
-              </td>
-              <td class="p-2 border text-right w-20">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${rate}"
-                  oninput="
-                    rahulEvent.flowers[${index}].rate=numberValue(this.value);
-                    recalcFlowers(false);
-                  "
-                  onchange="
-                    scheduleSave();
-                    recalcFlowers(false);
-                  "
-                  class="w-full border rounded p-1 text-right text-xs bg-white">
-              </td>
-              <td class="p-2 border text-right font-bold">
-                ₹${lineTotal.toLocaleString('en-IN')}
-              </td>
-              <td class="p-2 border text-center">
-                <button
-                  onclick="deleteArrayItem('flowers', ${index})"
-                  class="text-rose-500 font-bold">
-                  ✕
-                </button>
-              </td>
-            </tr>
-          `;
-        })
-        .join('');
+    table.innerHTML = rahulEvent.flowers.map((item, index) => {
+      const qty = numberValue(item.qty);
+      const rate = numberValue(item.rate);
+      const lineTotal = Math.round(qty * rate);
+      const rowClass = item.purchased ? 'bg-emerald-50' : item.haveIt ? 'bg-indigo-50' : '';
+      return `
+        <tr class="${rowClass}">
+          <td class="p-2 border text-center"><input type="checkbox" ${item.purchased ? 'checked' : ''} onchange="rahulEvent.flowers[${index}].purchased=this.checked; if(this.checked){rahulEvent.flowers[${index}].haveIt=false;} scheduleSave(); renderSection('flowers');" class="h-4 w-4 accent-emerald-600"></td>
+          <td class="p-2 border text-center"><input type="checkbox" ${item.haveIt ? 'checked' : ''} onchange="rahulEvent.flowers[${index}].haveIt=this.checked; if(this.checked){rahulEvent.flowers[${index}].purchased=false;} scheduleSave(); renderSection('flowers');" class="h-4 w-4 accent-indigo-600"></td>
+          <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.flowers[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+          <td class="p-2 border w-16 text-center"><input type="number" min="0" step="any" value="${qty}" oninput="rahulEvent.flowers[${index}].qty=numberValue(this.value); recalcFlowers(false);" onchange="scheduleSave(); recalcFlowers(false);" class="w-full border rounded p-1 text-center text-xs bg-white"></td>
+          <td class="p-2 border text-center">
+            <select onchange="rahulEvent.flowers[${index}].timing=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white">
+              <option value="Morning" ${item.timing === 'Morning' ? 'selected' : ''}>Morning</option>
+              <option value="Evening" ${item.timing === 'Evening' ? 'selected' : ''}>Evening</option>
+            </select>
+          </td>
+          <td class="p-2 border text-right w-20"><input type="number" min="0" step="any" value="${rate}" oninput="rahulEvent.flowers[${index}].rate=numberValue(this.value); recalcFlowers(false);" onchange="scheduleSave(); recalcFlowers(false);" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
+          <td class="p-2 border text-right font-bold">₹${lineTotal.toLocaleString('en-IN')}</td>
+          <td class="p-2 border text-center"><button onclick="deleteArrayItem('flowers', ${index})" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `;
+    }).join('');
     recalcFlowers(false);
-  }
-  /* -------------------------------------------------------------
-     FRAMES
-     ------------------------------------------------------------- */
-  else if (section === 'frames') {
-    const table =
-      document.getElementById(
-        'table-frames'
-      );
+  } else if (section === 'frames') {
+    const table = document.getElementById('table-frames');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.frames
-        .map((item, index) => `
-          <tr>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.name)}"
-                oninput="
-                  rahulEvent.frames[${index}].name=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white font-semibold">
-            </td>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.spec)}"
-                oninput="
-                  rahulEvent.frames[${index}].spec=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white">
-            </td>
-            <td class="p-2 border text-center">
-              <select
-                onchange="
-                  rahulEvent.frames[${index}].timing=this.value;
-                  scheduleSave();
-                "
-                class="border rounded p-1 text-xs bg-white">
-                <option value="Morning"
-                  ${item.timing === 'Morning' ? 'selected' : ''}>
-                  Morning
-                </option>
-                <option value="Evening"
-                  ${item.timing === 'Evening' ? 'selected' : ''}>
-                  Evening
-                </option>
-              </select>
-            </td>
-            <td class="p-2 border text-center">
-              <input
-                type="checkbox"
-                ${item.loaded ? 'checked' : ''}
-                onchange="
-                  rahulEvent.frames[${index}].loaded=this.checked;
-                  scheduleSave();
-                "
-                class="h-4 w-4 rounded accent-emerald-600">
-            </td>
-            <td class="p-2 border text-center">
-              <button
-                onclick="deleteArrayItem('frames', ${index})"
-                class="text-rose-500 font-bold">
-                ✕
-              </button>
-            </td>
-          </tr>
-        `)
-        .join('');
-  }
-  /* -------------------------------------------------------------
-     FLEX
-     ------------------------------------------------------------- */
-  else if (section === 'flex') {
-    const table =
-      document.getElementById(
-        'table-flex'
-      );
+    table.innerHTML = rahulEvent.frames.map((item, index) => `
+      <tr>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.frames[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.spec)}" oninput="rahulEvent.frames[${index}].spec=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white"></td>
+        <td class="p-2 border text-center">
+          <select onchange="rahulEvent.frames[${index}].timing=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white">
+            <option value="Morning" ${item.timing === 'Morning' ? 'selected' : ''}>Morning</option>
+            <option value="Evening" ${item.timing === 'Evening' ? 'selected' : ''}>Evening</option>
+          </select>
+        </td>
+        <td class="p-2 border text-center"><input type="checkbox" ${item.loaded ? 'checked' : ''} onchange="rahulEvent.frames[${index}].loaded=this.checked; scheduleSave();" class="h-4 w-4 rounded accent-emerald-600"></td>
+        <td class="p-2 border text-center"><button onclick="deleteArrayItem('frames', ${index})" class="text-rose-500 font-bold">✕</button></td>
+      </tr>
+    `).join('');
+  } else if (section === 'flex') {
+    const table = document.getElementById('table-flex');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.flex
-        .map((item, index) => `
-          <tr>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.name)}"
-                oninput="
-                  rahulEvent.flex[${index}].name=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white font-semibold">
-            </td>
-            <td class="p-2 border">
-              <input
-                type="text"
-                value="${escapeHTML(item.spec)}"
-                oninput="
-                  rahulEvent.flex[${index}].spec=this.value;
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-xs bg-white">
-            </td>
-            <td class="p-2 border text-center">
-              <select
-                onchange="
-                  rahulEvent.flex[${index}].timing=this.value;
-                  scheduleSave();
-                "
-                class="border rounded p-1 text-xs bg-white">
-                <option value="Morning"
-                  ${item.timing === 'Morning' ? 'selected' : ''}>
-                  Morning
-                </option>
-                <option value="Evening"
-                  ${item.timing === 'Evening' ? 'selected' : ''}>
-                  Evening
-                </option>
-              </select>
-            </td>
-            <td class="p-2 border text-right">
-              <input
-                type="number"
-                min="0"
-                step="any"
-                value="${numberValue(item.rate)}"
-                oninput="
-                  rahulEvent.flex[${index}].rate=numberValue(this.value);
-                  scheduleSave();
-                "
-                class="w-full border rounded p-1 text-right text-xs bg-white">
-            </td>
-            <td class="p-2 border text-center">
-              <button
-                onclick="deleteArrayItem('flex', ${index})"
-                class="text-rose-500 font-bold">
-                ✕
-              </button>
-            </td>
-          </tr>
-        `)
-        .join('');
-  }
-  /* -------------------------------------------------------------
-     LOADING
-     ------------------------------------------------------------- */
-  else if (section === 'loading') {
-    const table =
-      document.getElementById(
-        'table-loading'
-      );
+    table.innerHTML = rahulEvent.flex.map((item, index) => `
+      <tr>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.flex[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+        <td class="p-2 border"><input type="text" value="${escapeHTML(item.spec)}" oninput="rahulEvent.flex[${index}].spec=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white"></td>
+        <td class="p-2 border text-center">
+          <select onchange="rahulEvent.flex[${index}].timing=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white">
+            <option value="Morning" ${item.timing === 'Morning' ? 'selected' : ''}>Morning</option>
+            <option value="Evening" ${item.timing === 'Evening' ? 'selected' : ''}>Evening</option>
+          </select>
+        </td>
+        <td class="p-2 border text-right"><input type="number" min="0" step="any" value="${numberValue(item.rate)}" oninput="rahulEvent.flex[${index}].rate=numberValue(this.value); scheduleSave();" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
+        <td class="p-2 border text-center"><button onclick="deleteArrayItem('flex', ${index})" class="text-rose-500 font-bold">✕</button></td>
+      </tr>
+    `).join('');
+  } else if (section === 'labour') {
+    const table = document.getElementById('table-labour');
     if (!table) return;
-    table.innerHTML =
-      rahulEvent.loading
-        .map((item, index) => {
-          const req =
-            Math.max(
-              0,
-              numberValue(item.req)
-            );
-          const loaded =
-            Math.max(
-              0,
-              numberValue(item.loaded)
-            );
-          const ret =
-            Math.max(
-              0,
-              numberValue(item.ret)
-            );
-          const dam =
-            Math.max(
-              0,
-              numberValue(item.dam)
-            );
-          /*
-           * Final missing quantity:
-           *
-           * Required - Returned - Damaged
-           *
-           * Loaded is NOT subtracted because an item
-           * can be loaded now and returned later.
-           */
-          const missing =
-            Math.max(
-              0,
-              req - ret - dam
-            );
-          const invalidReturn =
-            ret + dam > req;
-          const loadedShort =
-            loaded < req;
-          return `
-            <tr>
-              <td class="p-2 border">
-                <input
-                  type="text"
-                  value="${escapeHTML(item.name)}"
-                  oninput="
-                    rahulEvent.loading[${index}].name=this.value;
-                    scheduleSave();
-                  "
-                  class="w-full border rounded p-1 text-xs bg-white font-semibold">
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${req}"
-                  oninput="
-                    rahulEvent.loading[${index}].req=Math.max(0,numberValue(this.value));
-                    scheduleSave();
-                    renderSection('loading');
-                  "
-                  class="w-14 border rounded p-1 text-center text-xs">
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${loaded}"
-                  oninput="
-                    rahulEvent.loading[${index}].loaded=Math.max(0,numberValue(this.value));
-                    scheduleSave();
-                    renderSection('loading');
-                  "
-                  class="w-14 border rounded p-1 text-center text-xs">
-                ${loadedShort && req > 0
-                  ? `<div class="text-[8px] text-amber-600 mt-0.5">Short Load</div>`
-                  : ''}
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${ret}"
-                  oninput="
-                    rahulEvent.loading[${index}].ret=Math.max(0,numberValue(this.value));
-                    scheduleSave();
-                    renderSection('loading');
-                  "
-                  class="w-14 border rounded p-1 text-center text-xs">
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value="${dam}"
-                  oninput="
-                    rahulEvent.loading[${index}].dam=Math.max(0,numberValue(this.value));
-                    scheduleSave();
-                    renderSection('loading');
-                  "
-                  class="w-14 border rounded p-1 text-center text-xs text-rose-600 font-bold">
-              </td>
-              <td class="p-2 border text-center font-bold
-                ${invalidReturn ? 'text-rose-700 bg-rose-50' : 'text-amber-700'}">
-                ${invalidReturn
-                  ? 'ERROR ⚠️'
-                  : missing > 0
-                    ? `${missing} 🔴`
-                    : '0 🟢'}
-              </td>
-              <td class="p-2 border text-center">
-                <input
-                  type="checkbox"
-                  ${item.ok ? 'checked' : ''}
-                  ${missing > 0 || invalidReturn ? 'disabled' : ''}
-                  onchange="
-                    rahulEvent.loading[${index}].ok=this.checked;
-                    scheduleSave();
-                  "
-                  class="h-4 w-4 rounded accent-emerald-600">
-              </td>
-              <td class="p-2 border text-center">
-                <button
-                  onclick="deleteArrayItem('loading', ${index})"
-                  class="text-rose-500 font-bold">
-                  ✕
-                </button>
-              </td>
-            </tr>
-          `;
-        })
-        .join('');
-  }
-  /* -------------------------------------------------------------
-     WORKLIST
-     ------------------------------------------------------------- */
-  else if (section === 'worklist') {
-    const container =
-      document.getElementById(
-        'worklist-container'
-      );
+    table.innerHTML = rahulEvent.labour.map((item, index) => {
+      const count = numberValue(item.count);
+      const rate = numberValue(item.rate);
+      const subtotal = Math.round(count * rate);
+      return `
+        <tr>
+          <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.labour[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+          <td class="p-2 border text-center"><input type="number" min="0" step="any" value="${count}" oninput="rahulEvent.labour[${index}].count=numberValue(this.value); recalcLabour();" onchange="scheduleSave(); recalcLabour();" class="w-16 border rounded p-1 text-center text-xs bg-white"></td>
+          <td class="p-2 border text-right"><input type="number" min="0" step="any" value="${rate}" oninput="rahulEvent.labour[${index}].rate=numberValue(this.value); recalcLabour();" onchange="scheduleSave(); recalcLabour();" class="w-24 border rounded p-1 text-right text-xs bg-white"></td>
+          <td class="p-2 border text-right font-bold">₹${subtotal.toLocaleString('en-IN')}</td>
+          <td class="p-2 border text-center"><button onclick="deleteArrayItem('labour', ${index})" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `;
+    }).join('');
+    recalcLabour();
+  } else if (section === 'loading') {
+    const table = document.getElementById('table-loading');
+    if (!table) return;
+    table.innerHTML = rahulEvent.loading.map((item, index) => {
+      const req = Math.max(0, numberValue(item.req));
+      const loaded = Math.max(0, numberValue(item.loaded));
+      const ret = Math.max(0, numberValue(item.ret));
+      const dam = Math.max(0, numberValue(item.dam));
+      const missing = Math.max(0, req - ret - dam);
+      const invalidReturn = (ret + dam) > req;
+      const loadedShort = loaded < req;
+      return `
+        <tr>
+          <td class="p-2 border"><input type="text" value="${escapeHTML(item.name)}" oninput="rahulEvent.loading[${index}].name=this.value; scheduleSave();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+          <td class="p-2 border text-center"><input type="number" min="0" step="any" value="${req}" oninput="rahulEvent.loading[${index}].req=Math.max(0,numberValue(this.value)); scheduleSave(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs"></td>
+          <td class="p-2 border text-center">
+            <input type="number" min="0" step="any" value="${loaded}" oninput="rahulEvent.loading[${index}].loaded=Math.max(0,numberValue(this.value)); scheduleSave(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs">
+            ${loadedShort && req > 0 ? `<div class="text-[8px] text-amber-600 mt-0.5">Short Load</div>` : ''}
+          </td>
+          <td class="p-2 border text-center"><input type="number" min="0" step="any" value="${ret}" oninput="rahulEvent.loading[${index}].ret=Math.max(0,numberValue(this.value)); scheduleSave(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs"></td>
+          <td class="p-2 border text-center"><input type="number" min="0" step="any" value="${dam}" oninput="rahulEvent.loading[${index}].dam=Math.max(0,numberValue(this.value)); scheduleSave(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+          <td class="p-2 border text-center font-bold ${invalidReturn ? 'text-rose-700 bg-rose-50' : 'text-amber-700'}">${invalidReturn ? 'ERROR ⚠️' : missing > 0 ? `${missing} 🔴` : '0 🟢'}</td>
+          <td class="p-2 border text-center"><input type="checkbox" ${item.ok ? 'checked' : ''} ${missing > 0 || invalidReturn ? 'disabled' : ''} onchange="rahulEvent.loading[${index}].ok=this.checked; scheduleSave();" class="h-4 w-4 rounded accent-emerald-600"></td>
+          <td class="p-2 border text-center"><button onclick="deleteArrayItem('loading', ${index})" class="text-rose-500 font-bold">✕</button></td>
+        </tr>
+      `;
+    }).join('');
+  } else if (section === 'worklist') {
+    const container = document.getElementById('worklist-container');
     if (!container) return;
     const groups = {};
-    rahulEvent.worklist.forEach(
-      (task, index) => {
-        const dayKey =
-          task.day || 'General';
-        if (!groups[dayKey]) {
-          groups[dayKey] = [];
-        }
-        groups[dayKey].push({
-          ...task,
-          originalIndex: index
-        });
-      }
-    );
-    container.innerHTML =
-      Object.keys(groups)
-        .map(day => `
-          <div class="border rounded-xl p-3 bg-slate-50 space-y-2">
-            <h4
-              class="font-bold text-amber-900 text-xs uppercase tracking-wider border-b pb-1">
-              ${escapeHTML(day)}
-            </h4>
-            <div class="space-y-2">
-              ${groups[day]
-                .map(task => {
-                  const index =
-                    task.originalIndex;
-                  const isDoneUnverified =
-                    task.status === 'DONE' &&
-                    task.verified !== 'VERIFIED';
-                  const isBlocked =
-                    task.blockedBy &&
-                    task.blockedBy !== 'None' &&
-                    task.blockedBy !== '';
-                  return `
-                    <div
-                      class="p-2.5 border rounded-lg bg-white space-y-2 shadow-sm text-xs
-                      ${isDoneUnverified
-                        ? 'border-amber-400 bg-amber-50/40'
-                        : ''}">
-                      <div
-                        class="flex flex-wrap items-center justify-between gap-2">
-                        <div
-                          class="flex items-center gap-2 flex-grow min-w-[260px]">
-                          <select
-                            onchange="
-                              rahulEvent.worklist[${index}].status=this.value;
-                              scheduleSave();
-                              renderSection('worklist');
-                            "
-                            class="border rounded p-1 text-[10px] font-bold
-                            ${task.status === 'DONE'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : task.status === 'IN PROGRESS'
-                                ? 'bg-amber-100 text-amber-800'
-                                : task.status === 'ISSUE'
-                                  ? 'bg-rose-100 text-rose-800'
-                                  : 'bg-slate-100 text-slate-800'}">
-                            <option value="PENDING"
-                              ${task.status === 'PENDING' ? 'selected' : ''}>
-                              🔴 PENDING
-                            </option>
-                            <option value="IN PROGRESS"
-                              ${task.status === 'IN PROGRESS' ? 'selected' : ''}>
-                              🟡 IN PROGRESS
-                            </option>
-                            <option value="DONE"
-                              ${task.status === 'DONE' ? 'selected' : ''}>
-                              🟢 DONE
-                            </option>
-                            <option value="ISSUE"
-                              ${task.status === 'ISSUE' ? 'selected' : ''}>
-                              ⚠️ ISSUE
-                            </option>
-                          </select>
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.task)}"
-                            oninput="
-                              rahulEvent.worklist[${index}].task=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-1 text-xs bg-white flex-grow font-semibold">
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                          <select
-                            onchange="
-                              rahulEvent.worklist[${index}].verified=this.value;
-                              scheduleSave();
-                              renderSection('worklist');
-                            "
-                            class="border rounded p-1 text-[10px] font-bold
-                            ${task.verified === 'VERIFIED'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                              : 'bg-amber-50 text-amber-700 border-amber-300'}">
-                            <option value="NOT VERIFIED"
-                              ${task.verified === 'NOT VERIFIED' ? 'selected' : ''}>
-                              ⚠️ Not Verified
-                            </option>
-                            <option value="VERIFIED"
-                              ${task.verified === 'VERIFIED' ? 'selected' : ''}>
-                              ✓ VERIFIED
-                            </option>
-                          </select>
-                          <button
-                            onclick="deleteWorkTask(${index})"
-                            class="text-rose-500 font-bold px-1">
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                      ${isDoneUnverified
-                        ? `
-                          <div
-                            class="text-[10px] text-amber-700 font-bold bg-amber-100/60 p-1 rounded">
-                            ⚠️ WARNING: Task is marked DONE but requires Verification check!
-                          </div>
-                        `
-                        : ''}
-                      ${task.status === 'ISSUE'
-                        ? `
-                          <div
-                            class="text-[10px] text-rose-700 font-bold bg-rose-100 p-1 rounded">
-                            ⚠️ ACTIVE ISSUE — Resolve before event closure.
-                          </div>
-                        `
-                        : ''}
-                      ${isBlocked
-                        ? `
-                          <div
-                            class="text-[10px] text-slate-600 font-semibold bg-slate-100 p-1 rounded">
-                            🔒 Dependency:
-                            ${escapeHTML(task.blockedBy)}
-                          </div>
-                        `
-                        : ''}
-                      <div
-                        class="flex flex-wrap gap-2 text-[10px] text-slate-500 pt-1 border-t items-center">
-                        <span>
-                          Priority:
-                          <select
-                            onchange="
-                              rahulEvent.worklist[${index}].priority=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 font-bold">
-                            <option value="CRITICAL"
-                              ${task.priority === 'CRITICAL' ? 'selected' : ''}>
-                              Critical
-                            </option>
-                            <option value="HIGH"
-                              ${task.priority === 'HIGH' ? 'selected' : ''}>
-                              High
-                            </option>
-                            <option value="NORMAL"
-                              ${task.priority === 'NORMAL' ? 'selected' : ''}>
-                              Normal
-                            </option>
-                            <option value="OPTIONAL"
-                              ${task.priority === 'OPTIONAL' ? 'selected' : ''}>
-                              Optional
-                            </option>
-                          </select>
-                        </span>
-                        <span>
-                          Owner:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.person)}"
-                            oninput="
-                              rahulEvent.worklist[${index}].person=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-20">
-                        </span>
-                        <span>
-                          Vehicle:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.vehicle)}"
-                            oninput="
-                              rahulEvent.worklist[${index}].vehicle=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-16">
-                        </span>
-                        <span>
-                          Blocked By:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.blockedBy)}"
-                            oninput="
-                              rahulEvent.worklist[${index}].blockedBy=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-24">
-                        </span>
-                        <span>
-                          Planned:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.plannedTime)}"
-                            placeholder="e.g. 06:00 AM"
-                            oninput="
-                              rahulEvent.worklist[${index}].plannedTime=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-20 font-bold text-slate-700">
-                        </span>
-                        <span>
-                          Actual:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.actualTime)}"
-                            placeholder="e.g. 5:48 AM"
-                            oninput="
-                              rahulEvent.worklist[${index}].actualTime=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-20 font-bold text-indigo-700">
-                        </span>
-                        <span>
-                          Notes:
-                          <input
-                            type="text"
-                            value="${escapeHTML(task.notes)}"
-                            oninput="
-                              rahulEvent.worklist[${index}].notes=this.value;
-                              scheduleSave();
-                            "
-                            class="border rounded p-0.5 w-28">
-                        </span>
-                      </div>
-                    </div>
-                  `;
-                })
-                .join('')}
-            </div>
-          </div>
-        `)
-        .join('');
+    rahulEvent.worklist.forEach((task, index) => {
+      const dayKey = task.day || 'General';
+      if (!groups[dayKey]) groups[dayKey] = [];
+      groups[dayKey].push({ ...task, originalIndex: index });
+    });
+    container.innerHTML = Object.keys(groups).map(day => `
+      <div class="border rounded-xl p-3 bg-slate-50 space-y-2">
+        <h4 class="font-bold text-amber-900 text-xs uppercase tracking-wider border-b pb-1">${escapeHTML(day)}</h4>
+        <div class="space-y-2">
+          ${groups[day].map(task => {
+            const index = task.originalIndex;
+            const isDoneUnverified = (task.status === 'DONE' && task.verified !== 'VERIFIED');
+            const isBlocked = (task.blockedBy && task.blockedBy !== 'None' && task.blockedBy !== '');
+            return `
+              <div class="p-2.5 border rounded-lg bg-white space-y-2 shadow-sm text-xs ${isDoneUnverified ? 'border-amber-400 bg-amber-50/40' : ''}">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 flex-grow min-w-[260px]">
+                    <select onchange="rahulEvent.worklist[${index}].status=this.value; scheduleSave(); renderSection('worklist');" class="border rounded p-1 text-[10px] font-bold ${task.status === 'DONE' ? 'bg-emerald-100 text-emerald-800' : task.status === 'IN PROGRESS' ? 'bg-amber-100 text-amber-800' : task.status === 'ISSUE' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-800'}">
+                      <option value="PENDING" ${task.status === 'PENDING' ? 'selected' : ''}>🔴 PENDING</option>
+                      <option value="IN PROGRESS" ${task.status === 'IN PROGRESS' ? 'selected' : ''}>🟡 IN PROGRESS</option>
+                      <option value="DONE" ${task.status === 'DONE' ? 'selected' : ''}>🟢 DONE</option>
+                      <option value="ISSUE" ${task.status === 'ISSUE' ? 'selected' : ''}>⚠️ ISSUE</option>
+                    </select>
+                    <input type="text" value="${escapeHTML(task.task)}" oninput="rahulEvent.worklist[${index}].task=this.value; scheduleSave();" class="border rounded p-1 text-xs bg-white flex-grow font-semibold">
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <select onchange="rahulEvent.worklist[${index}].verified=this.value; scheduleSave(); renderSection('worklist');" class="border rounded p-1 text-[10px] font-bold ${task.verified === 'VERIFIED' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'}">
+                      <option value="NOT VERIFIED" ${task.verified === 'NOT VERIFIED' ? 'selected' : ''}>⚠️ Not Verified</option>
+                      <option value="VERIFIED" ${task.verified === 'VERIFIED' ? 'selected' : ''}>✓ VERIFIED</option>
+                    </select>
+                    <button onclick="deleteWorkTask(${index})" class="text-rose-500 font-bold px-1">✕</button>
+                  </div>
+                </div>
+                ${isDoneUnverified ? `<div class="text-[10px] text-amber-700 font-bold bg-amber-100/60 p-1 rounded">⚠️ WARNING: Task is marked DONE but requires Verification check!</div>` : ''}
+                ${task.status === 'ISSUE' ? `<div class="text-[10px] text-rose-700 font-bold bg-rose-100 p-1 rounded">⚠️ ACTIVE ISSUE — Resolve before event closure.</div>` : ''}
+                ${isBlocked ? `<div class="text-[10px] text-slate-600 font-semibold bg-slate-100 p-1 rounded">🔒 Dependency: ${escapeHTML(task.blockedBy)}</div>` : ''}
+                <div class="flex flex-wrap gap-2 text-[10px] text-slate-500 pt-1 border-t items-center">
+                  <span>Priority: <select onchange="rahulEvent.worklist[${index}].priority=this.value; scheduleSave();" class="border rounded p-0.5 font-bold"><option value="CRITICAL" ${task.priority === 'CRITICAL' ? 'selected' : ''}>Critical</option><option value="HIGH" ${task.priority === 'HIGH' ? 'selected' : ''}>High</option><option value="NORMAL" ${task.priority === 'NORMAL' ? 'selected' : ''}>Normal</option><option value="OPTIONAL" ${task.priority === 'OPTIONAL' ? 'selected' : ''}>Optional</option></select></span>
+                  <span>Owner: <input type="text" value="${escapeHTML(task.person)}" oninput="rahulEvent.worklist[${index}].person=this.value; scheduleSave();" class="border rounded p-0.5 w-20"></span>
+                  <span>Vehicle: <input type="text" value="${escapeHTML(task.vehicle)}" oninput="rahulEvent.worklist[${index}].vehicle=this.value; scheduleSave();" class="border rounded p-0.5 w-16"></span>
+                  <span>Blocked By: <input type="text" value="${escapeHTML(task.blockedBy)}" oninput="rahulEvent.worklist[${index}].blockedBy=this.value; scheduleSave();" class="border rounded p-0.5 w-24"></span>
+                  <span>Planned: <input type="text" value="${escapeHTML(task.plannedTime)}" placeholder="e.g. 06:00 AM" oninput="rahulEvent.worklist[${index}].plannedTime=this.value; scheduleSave();" class="border rounded p-0.5 w-20 font-bold text-slate-700"></span>
+                  <span>Actual: <input type="text" value="${escapeHTML(task.actualTime)}" placeholder="e.g. 5:48 AM" oninput="rahulEvent.worklist[${index}].actualTime=this.value; scheduleSave();" class="border rounded p-0.5 w-20 font-bold text-indigo-700"></span>
+                  <span>Notes: <input type="text" value="${escapeHTML(task.notes)}" oninput="rahulEvent.worklist[${index}].notes=this.value; scheduleSave();" class="border rounded p-0.5 w-28"></span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
   }
 }
+
 /* ================================================================
-   FLOWER CALCULATION
+   RECALCULATION HELPERS
    ================================================================ */
 function recalcFlowers(shouldSave = false) {
   if (!rahulEvent) return;
-  const total =
-    calculateFloralTotal();
-  const totalElement =
-    document.getElementById(
-      'flowers-grand-total'
-    );
-  if (totalElement) {
-    totalElement.innerText =
-      `₹${total.toLocaleString('en-IN')}`;
-  }
-  const dashboardElement =
-    document.getElementById(
-      'dash-floral-outflow'
-    );
-  if (dashboardElement) {
-    dashboardElement.innerText =
-      `₹${total.toLocaleString('en-IN')}`;
-  }
-  const criticalElement =
-    document.getElementById(
-      'dash-critical-floral'
-    );
-  if (criticalElement) {
-    criticalElement.innerText =
-      `₹${total.toLocaleString('en-IN')}`;
-  }
-  if (shouldSave) {
-    scheduleSave();
-  }
+  const total = calculateFloralTotal();
+  const totalElement = document.getElementById('flowers-grand-total');
+  if (totalElement) totalElement.innerText = `₹${total.toLocaleString('en-IN')}`;
+  const dashboardElement = document.getElementById('dash-floral-outflow');
+  if (dashboardElement) dashboardElement.innerText = `₹${total.toLocaleString('en-IN')}`;
+  const criticalElement = document.getElementById('dash-critical-floral');
+  if (criticalElement) criticalElement.innerText = `₹${total.toLocaleString('en-IN')}`;
+  if (shouldSave) scheduleSave();
 }
+
+function recalcLabour() {
+  if (!rahulEvent) return;
+  const total = calculateLabourTotal();
+  const totalElement = document.getElementById('labour-grand-total');
+  if (totalElement) totalElement.innerText = `₹${total.toLocaleString('en-IN')}`;
+  scheduleSave();
+}
+
 /* ================================================================
-   DELETE ARRAY ITEM
+   CRUD ACTIONS
    ================================================================ */
 function deleteArrayItem(section, index) {
   if (!rahulEvent[section]) return;
-  const item =
-    rahulEvent[section][index];
-  const label =
-    item?.name ||
-    'this item';
-  if (
-    !confirm(
-      `Delete "${label}"?`
-    )
-  ) return;
-  rahulEvent[section].splice(
-    index,
-    1
-  );
+  const item = rahulEvent[section][index];
+  const label = item?.name || 'this item';
+  if (!confirm(`Delete "${label}"?`)) return;
+  rahulEvent[section].splice(index, 1);
   scheduleSave();
   renderSection(section);
   updateDashboardMetrics();
 }
-/* ================================================================
-   ADD ITEM
-   ================================================================ */
+
 function addItem(section) {
-  const name =
-    prompt(
-      'Item Name / Description:'
-    );
-  if (!name || !name.trim()) {
-    return;
-  }
-  const cleanName =
-    name.trim();
-  if (section === 'hardware') {
-    rahulEvent.hardware.push({
-      name: cleanName,
-      spec: 'Standard',
-      timing: 'Morning',
-      purchased: false
-    });
-  }
-  else if (section === 'fabrics') {
-    rahulEvent.fabrics.push({
-      name: cleanName,
-      spec: 'Standard',
-      timing: 'Evening',
-      loaded: false
-    });
-  }
-  else if (section === 'flowers') {
-    rahulEvent.flowers.push({
-      name: cleanName,
-      qty: 1,
-      timing: 'Morning',
-      rate: 100,
-      purchased: false,
-      haveIt: false
-    });
-  }
-  else if (section === 'frames') {
-    rahulEvent.frames.push({
-      name: cleanName,
-      spec: '1 Nos',
-      timing: 'Morning',
-      loaded: false
-    });
-  }
-  else if (section === 'flex') {
-    rahulEvent.flex.push({
-      name: cleanName,
-      spec: 'Standard',
-      timing: 'Evening',
-      rate: 500
-    });
-  }
-  else if (section === 'loading') {
-    rahulEvent.loading.push({
-      name: cleanName,
-      req: 1,
-      loaded: 0,
-      ret: 0,
-      dam: 0,
-      ok: false
-    });
-  }
+  const name = prompt('Item Name / Description:');
+  if (!name || !name.trim()) return;
+  const cleanName = name.trim();
+  if (section === 'hardware') rahulEvent.hardware.push({ name: cleanName, spec: 'Standard', timing: 'Morning', purchased: false });
+  else if (section === 'fabrics') rahulEvent.fabrics.push({ name: cleanName, spec: 'Standard', timing: 'Evening', loaded: false });
+  else if (section === 'flowers') rahulEvent.flowers.push({ name: cleanName, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false });
+  else if (section === 'frames') rahulEvent.frames.push({ name: cleanName, spec: '1 Nos', timing: 'Morning', loaded: false });
+  else if (section === 'flex') rahulEvent.flex.push({ name: cleanName, spec: 'Standard', timing: 'Evening', rate: 500 });
+  else if (section === 'loading') rahulEvent.loading.push({ name: cleanName, req: 1, loaded: 0, ret: 0, dam: 0, ok: false });
   scheduleSave();
   renderSection(section);
 }
-/* ================================================================
-   WORK TASK ADD
-   ================================================================ */
+
+function addLabourPrompt() {
+  const name = prompt('Crew Role / Labour Name:');
+  if (!name || !name.trim()) return;
+  rahulEvent.labour.push({ name: name.trim(), count: 1, rate: 1000 });
+  scheduleSave();
+  renderSection('labour');
+  updateDashboardMetrics();
+}
+
 function addWorkTaskPrompt() {
-  const day =
-    prompt(
-      'Day Grouping (e.g., 📅 Sept 4 — Procurement + Loading):',
-      '📅 Sept 4 — Procurement + Loading'
-    );
+  const day = prompt('Day Grouping (e.g., 📅 Sept 4 — Procurement + Loading):', '📅 Sept 4 — Procurement + Loading');
   if (!day || !day.trim()) return;
-  const task =
-    prompt(
-      'Task Milestone Description:'
-    );
+  const task = prompt('Task Milestone Description:');
   if (!task || !task.trim()) return;
   rahulEvent.worklist.push({
     day: day.trim(),
@@ -3355,777 +1572,283 @@ function addWorkTaskPrompt() {
     actualTime: ''
   });
   scheduleSave();
-  renderSection(
-    'worklist'
-  );
+  renderSection('worklist');
   updateDashboardMetrics();
 }
+
 function deleteWorkTask(index) {
-  if (
-    !rahulEvent.worklist[index]
-  ) return;
-  const task =
-    rahulEvent.worklist[index];
-  if (
-    !confirm(
-      `Delete milestone "${task.task}"?`
-    )
-  ) return;
-  rahulEvent.worklist.splice(
-    index,
-    1
-  );
+  if (!rahulEvent.worklist[index]) return;
+  const task = rahulEvent.worklist[index];
+  if (!confirm(`Delete milestone "${task.task}"?`)) return;
+  rahulEvent.worklist.splice(index, 1);
   scheduleSave();
-  renderSection(
-    'worklist'
-  );
+  renderSection('worklist');
   updateDashboardMetrics();
 }
+
 /* ================================================================
-   MOOD BOARD — IMAGE COMPRESSION
+   PDF REFERENCE REPORT GENERATOR
    ================================================================ */
-function resizeImageForStorage(
-  file,
-  maxDimension = 1400,
-  quality = 0.78
-) {
-  return new Promise(
-    (resolve, reject) => {
-      const reader =
-        new FileReader();
-      reader.onload = function(event) {
-        const image =
-          new Image();
-        image.onload =
-          function() {
-            let width =
-              image.naturalWidth;
-            let height =
-              image.naturalHeight;
-            const scale =
-              Math.min(
-                1,
-                maxDimension /
-                Math.max(
-                  width,
-                  height
-                )
-              );
-            width =
-              Math.round(
-                width * scale
-              );
-            height =
-              Math.round(
-                height * scale
-              );
-            const canvas =
-              document.createElement(
-                'canvas'
-              );
-            canvas.width =
-              width;
-            canvas.height =
-              height;
-            const ctx =
-              canvas.getContext(
-                '2d'
-              );
-            ctx.drawImage(
-              image,
-              0,
-              0,
-              width,
-              height
-            );
-            /*
-             * JPEG is dramatically smaller than
-             * storing original phone images.
-             */
-            resolve(
-              canvas.toDataURL(
-                'image/jpeg',
-                quality
-              )
-            );
-          };
-        image.onerror =
-          function() {
-            reject(
-              new Error(
-                'Unable to decode image.'
-              )
-            );
-          };
-        image.src =
-          event.target.result;
-      };
-      reader.onerror =
-        function() {
-          reject(
-            reader.error ||
-            new Error(
-              'Unable to read image.'
-            )
-          );
-        };
-      reader.readAsDataURL(file);
-    }
-  );
+function generatePDFReport() {
+  window.print();
 }
+
+/* ================================================================
+   MOOD BOARD IMAGE HANDLING & COLLAGE
+   ================================================================ */
+function resizeImageForStorage(file, maxDimension = 1400, quality = 0.78) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const image = new Image();
+      image.onload = function() {
+        let width = image.naturalWidth;
+        let height = image.naturalHeight;
+        const scale = Math.min(1, maxDimension / Math.max(width, height));
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      image.onerror = () => reject(new Error('Unable to decode image.'));
+      image.src = event.target.result;
+    };
+    reader.onerror = () => reject(reader.error || new Error('Unable to read image.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 async function handleMoodBoardUpload(event) {
-  const files =
-    Array.from(
-      event.target.files || []
-    );
+  const files = Array.from(event.target.files || []);
   if (!files.length) return;
-  const input =
-    event.target;
+  const input = event.target;
   try {
     for (const file of files) {
-      if (
-        !file.type.startsWith(
-          'image/'
-        )
-      ) {
-        continue;
-      }
-      const compressed =
-        await resizeImageForStorage(
-          file
-        );
-      uploadedMoodImages.push(
-        compressed
-      );
+      if (!file.type.startsWith('image/')) continue;
+      const compressed = await resizeImageForStorage(file);
+      uploadedMoodImages.push(compressed);
     }
-    /*
-     * Same existing data structure:
-     * moodboard remains an array of image strings.
-     */
-    rahulEvent.moodboard =
-      uploadedMoodImages;
+    rahulEvent.moodboard = uploadedMoodImages;
     await saveRahul();
     renderMoodBoardGrid();
   } catch (error) {
-    console.error(
-      'Mood board upload error:',
-      error
-    );
-    alert(
-      'One or more images could not be added.'
-    );
+    console.error('Mood board upload error:', error);
+    alert('One or more images could not be added.');
   } finally {
-    /*
-     * Allows the same image to be selected again.
-     */
-    if (input) {
-      input.value = '';
-    }
+    if (input) input.value = '';
   }
 }
+
 function renderMoodBoardGrid() {
-  const container =
-    document.getElementById(
-      'mood-board-grid'
-    );
+  const container = document.getElementById('mood-board-grid');
   if (!container) return;
-  if (
-    !Array.isArray(
-      uploadedMoodImages
-    ) ||
-    uploadedMoodImages.length === 0
-  ) {
-    container.innerHTML =
-      `
-        <p class="text-slate-400 col-span-3">
-          No mood board images uploaded yet.
-        </p>
-      `;
+  if (!Array.isArray(uploadedMoodImages) || uploadedMoodImages.length === 0) {
+    container.innerHTML = `<p class="text-slate-400 col-span-3">No mood board images uploaded yet.</p>`;
     return;
   }
-  container.innerHTML =
-    uploadedMoodImages
-      .map(
-        (src, index) => `
-          <div
-            class="relative border rounded-lg overflow-hidden bg-black/5">
-            <img
-              src="${src}"
-              alt="Mood board reference ${index + 1}"
-              class="h-32 w-full object-cover">
-            <span
-              class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">
-              Ref ${index + 1}
-            </span>
-            <button
-              onclick="removeMoodImage(${index})"
-              class="absolute top-1 right-1 bg-rose-600 text-white rounded-full h-5 w-5 text-xs font-bold">
-              ✕
-            </button>
-          </div>
-        `
-      )
-      .join('');
+  container.innerHTML = uploadedMoodImages.map((src, index) => `
+    <div class="relative border rounded-lg overflow-hidden bg-black/5">
+      <img src="${src}" alt="Mood board reference ${index + 1}" class="h-32 w-full object-cover">
+      <span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">Ref ${index + 1}</span>
+      <button onclick="removeMoodImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full h-5 w-5 text-xs font-bold">✕</button>
+    </div>
+  `).join('');
 }
+
 async function removeMoodImage(index) {
-  if (
-    index < 0 ||
-    index >= uploadedMoodImages.length
-  ) return;
-  uploadedMoodImages.splice(
-    index,
-    1
-  );
-  rahulEvent.moodboard =
-    uploadedMoodImages;
+  if (index < 0 || index >= uploadedMoodImages.length) return;
+  uploadedMoodImages.splice(index, 1);
+  rahulEvent.moodboard = uploadedMoodImages;
   renderMoodBoardGrid();
   await saveRahul();
 }
-/* ================================================================
-   COLLAGE
-   ================================================================ */
+
 function generateCollageCanvas() {
-  if (
-    uploadedMoodImages.length === 0
-  ) {
-    alert(
-      'Please upload images first.'
-    );
+  if (uploadedMoodImages.length === 0) {
+    alert('Please upload images first.');
     return;
   }
-  const canvas =
-    document.getElementById(
-      'mood-board-canvas'
-    );
-  const outputWrapper =
-    document.getElementById(
-      'mood-board-output-wrapper'
-    );
-  const downloadLink =
-    document.getElementById(
-      'download-mood-board'
-    );
-  if (
-    !canvas ||
-    !outputWrapper ||
-    !downloadLink
-  ) return;
-  const ctx =
-    canvas.getContext(
-      '2d'
-    );
+  const canvas = document.getElementById('mood-board-canvas');
+  const outputWrapper = document.getElementById('mood-board-output-wrapper');
+  const downloadLink = document.getElementById('download-mood-board');
+  if (!canvas || !outputWrapper || !downloadLink) return;
+  const ctx = canvas.getContext('2d');
   const cols = 3;
-  const rows =
-    Math.ceil(
-      uploadedMoodImages.length /
-      cols
-    );
+  const rows = Math.ceil(uploadedMoodImages.length / cols);
   const cellW = 300;
   const cellH = 300;
-  canvas.width =
-    cols * cellW;
-  canvas.height =
-    rows * cellH;
-  ctx.fillStyle =
-    '#FAF9F6';
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-  /*
-   * FIX:
-   * Use the actual array index rather than
-   * "loaded" order. This preserves image order
-   * even when images load at different speeds.
-   */
+  canvas.width = cols * cellW;
+  canvas.height = rows * cellH;
+  ctx.fillStyle = '#FAF9F6';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   let completed = 0;
-  uploadedMoodImages.forEach(
-    (src, index) => {
-      const image =
-        new Image();
-      image.onload =
-        function() {
-          const x =
-            (index % cols) *
-            cellW + 10;
-          const y =
-            Math.floor(
-              index / cols
-            ) *
-            cellH + 10;
-          const maxW =
-            cellW - 20;
-          const maxH =
-            cellH - 20;
-          const scale =
-            Math.min(
-              maxW / image.width,
-              maxH / image.height
-            );
-          const drawW =
-            image.width *
-            scale;
-          const drawH =
-            image.height *
-            scale;
-          const offsetX =
-            x +
-            (maxW - drawW) / 2;
-          const offsetY =
-            y +
-            (maxH - drawH) / 2;
-          ctx.drawImage(
-            image,
-            offsetX,
-            offsetY,
-            drawW,
-            drawH
-          );
-          completed++;
-          if (
-            completed ===
-            uploadedMoodImages.length
-          ) {
-            downloadLink.href =
-              canvas.toDataURL(
-                'image/jpeg',
-                0.9
-              );
-            outputWrapper
-              .classList
-              .remove(
-                'hidden'
-              );
-            alert(
-              'Mood Board compiled successfully.'
-            );
-          }
-        };
-      image.onerror =
-        function() {
-          completed++;
-          if (
-            completed ===
-            uploadedMoodImages.length
-          ) {
-            downloadLink.href =
-              canvas.toDataURL(
-                'image/jpeg',
-                0.9
-              );
-            outputWrapper
-              .classList
-              .remove(
-                'hidden'
-              );
-          }
-        };
-      image.src =
-        src;
-    }
-  );
+  uploadedMoodImages.forEach((src, index) => {
+    const image = new Image();
+    image.onload = function() {
+      const x = (index % cols) * cellW + 10;
+      const y = Math.floor(index / cols) * cellH + 10;
+      const maxW = cellW - 20;
+      const maxH = cellH - 20;
+      const scale = Math.min(maxW / image.width, maxH / image.height);
+      const drawW = image.width * scale;
+      const drawH = image.height * scale;
+      const offsetX = x + (maxW - drawW) / 2;
+      const offsetY = y + (maxH - drawH) / 2;
+      ctx.drawImage(image, offsetX, offsetY, drawW, drawH);
+      completed++;
+      if (completed === uploadedMoodImages.length) {
+        downloadLink.href = canvas.toDataURL('image/jpeg', 0.9);
+        outputWrapper.classList.remove('hidden');
+        alert('Mood Board compiled successfully.');
+      }
+    };
+    image.onerror = function() {
+      completed++;
+      if (completed === uploadedMoodImages.length) {
+        downloadLink.href = canvas.toDataURL('image/jpeg', 0.9);
+        outputWrapper.classList.remove('hidden');
+      }
+    };
+    image.src = src;
+  });
 }
+
 /* ================================================================
    VOICE ASSISTANT
    ================================================================ */
 function toggleVoiceBot() {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    alert(
-      'Speech recognition is unsupported in this browser.'
-    );
+    alert('Speech recognition is unsupported in this browser.');
     return;
   }
   if (isVoiceListening) {
-    try {
-      speechRecognition.stop();
-    } catch (e) {}
+    try { speechRecognition.stop(); } catch (e) {}
     return;
   }
-  speechRecognition =
-    new SpeechRecognition();
-  speechRecognition.lang =
-    'en-IN';
-  speechRecognition.interimResults =
-    false;
-  speechRecognition.continuous =
-    false;
-  speechRecognition.maxAlternatives =
-    1;
-  const bubble =
-    document.getElementById(
-      'voice-bot-bubble'
-    );
-  const button =
-    document.getElementById(
-      'voice-bot-btn'
-    );
+  speechRecognition = new SpeechRecognition();
+  speechRecognition.lang = 'en-IN';
+  speechRecognition.interimResults = false;
+  speechRecognition.continuous = false;
+  speechRecognition.maxAlternatives = 1;
+
+  const bubble = document.getElementById('voice-bot-bubble');
+  const button = document.getElementById('voice-bot-btn');
   if (bubble) {
-    bubble.innerText =
-      'Listening for command...';
-    bubble.classList.remove(
-      'hidden'
-    );
+    bubble.innerText = 'Listening for command...';
+    bubble.classList.remove('hidden');
   }
-  if (button) {
-    button.innerText =
-      '🔴';
-  }
-  isVoiceListening =
-    true;
-  speechRecognition.onresult =
-    function(event) {
-      const transcript =
-        event.results?.[0]?.[0]?.transcript ||
-        '';
-      const command =
-        transcript
-          .toLowerCase()
-          .trim();
-      if (bubble) {
-        bubble.innerText =
-          `"${command}"`;
-      }
-      processVoiceCommand(
-        command
-      );
-    };
-  speechRecognition.onerror =
-    function(event) {
-      console.warn(
-        'Speech recognition error:',
-        event.error
-      );
-      if (bubble) {
-        bubble.innerText =
-          event.error === 'not-allowed'
-            ? 'Microphone permission denied.'
-            : 'Could not understand the command.';
-      }
-    };
-  speechRecognition.onend =
-    function() {
-      isVoiceListening =
-        false;
-      if (button) {
-        button.innerText =
-          '🎙️';
-      }
-      setTimeout(
-        () => {
-          if (bubble) {
-            bubble.classList.add(
-              'hidden'
-            );
-          }
-        },
-        1500
-      );
-    };
+  if (button) button.innerText = '🔴';
+  isVoiceListening = true;
+
+  speechRecognition.onresult = function(event) {
+    const transcript = event.results?.[0]?.[0]?.transcript || '';
+    const command = transcript.toLowerCase().trim();
+    if (bubble) bubble.innerText = `"${command}"`;
+    processVoiceCommand(command);
+  };
+  speechRecognition.onerror = function(event) {
+    console.warn('Speech recognition error:', event.error);
+    if (bubble) {
+      bubble.innerText = event.error === 'not-allowed' ? 'Microphone permission denied.' : 'Could not understand command.';
+    }
+  };
+  speechRecognition.onend = function() {
+    isVoiceListening = false;
+    if (button) button.innerText = '🎙️';
+    setTimeout(() => {
+      if (bubble) bubble.classList.add('hidden');
+    }, 1500);
+  };
   try {
     speechRecognition.start();
   } catch (error) {
-    console.error(
-      'Speech start error:',
-      error
-    );
-    isVoiceListening =
-      false;
+    console.error('Speech start error:', error);
+    isVoiceListening = false;
   }
 }
+
 function processVoiceCommand(command) {
   if (!rahulEvent) return;
-  /* STATUS */
-  if (
-    command.includes('status') ||
-    command.includes('progress')
-  ) {
-    const totalTasks =
-      rahulEvent.worklist.length;
-    const doneTasks =
-      rahulEvent.worklist.filter(
-        task =>
-          task.status === 'DONE'
-      ).length;
-    const issues =
-      rahulEvent.worklist.filter(
-        task =>
-          task.status === 'ISSUE'
-      ).length;
-    const percentage =
-      totalTasks > 0
-        ? Math.round(
-            doneTasks /
-            totalTasks *
-            100
-          )
-        : 0;
-    speakFemale(
-      `Production is ${percentage} percent complete. There are ${totalTasks - doneTasks} pending or incomplete tasks and ${issues} active issues.`
-    );
-    return;
+  if (command.includes('status') || command.includes('progress')) {
+    const totalTasks = rahulEvent.worklist.length;
+    const doneTasks = rahulEvent.worklist.filter(t => t.status === 'DONE').length;
+    const issues = rahulEvent.worklist.filter(t => t.status === 'ISSUE').length;
+    const percentage = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+    speakFemale(`Production is ${percentage} percent complete. There are ${totalTasks - doneTasks} pending tasks and ${issues} active issues.`);
+  } else if (command.includes('critical') || command.includes('today')) {
+    const floralTotal = calculateFloralTotal();
+    speakFemale(`Today is September 3rd. Design approval is completed. Flower mandi purchase is scheduled for September 4th night. Floral estimate is ${floralTotal.toLocaleString('en-IN')} rupees.`);
+  } else if (command.includes('mandap ready') || command === 'mandap') {
+    const mandapTask = rahulEvent.worklist.find(t => t.task.toLowerCase().includes('mandap ready'));
+    speakFemale(mandapTask ? `Mandap readiness status is ${mandapTask.status}.` : 'Mandap task not found.');
+  } else if (command.includes('floral total') || command.includes('flower total')) {
+    const total = calculateFloralTotal();
+    speakFemale(`Total floral purchase outflow is ${total.toLocaleString('en-IN')} rupees.`);
+  } else if (command.includes('labour') || command.includes('crew')) {
+    const total = calculateLabourTotal();
+    speakFemale(`Total labour and crew expenditure is ${total.toLocaleString('en-IN')} rupees.`);
+  } else if (command.includes('dashboard') || command.includes('command')) {
+    navTo('dashboard'); speakFemale('Opening Command Center.');
+  } else if (command.includes('hardware')) {
+    navTo('hardware'); speakFemale('Opening Hardware.');
+  } else if (command.includes('fabric')) {
+    navTo('fabrics'); speakFemale('Opening Fabrics list.');
+  } else if (command.includes('flower')) {
+    navTo('flowers'); speakFemale('Opening Flower list.');
+  } else if (command.includes('frame')) {
+    navTo('frames'); speakFemale('Opening Frames.');
+  } else if (command.includes('flex')) {
+    navTo('flex'); speakFemale('Opening Flex list.');
+  } else if (command.includes('labour') || command.includes('crew')) {
+    navTo('labour'); speakFemale('Opening Labour list.');
+  } else if (command.includes('mood')) {
+    navTo('moodboard'); speakFemale('Opening Mood board.');
+  } else if (command.includes('loading') || command.includes('audit')) {
+    navTo('loading'); speakFemale('Opening Loading and Audit list.');
+  } else if (command.includes('checklist') || command.includes('work') || command.includes('board')) {
+    navTo('worklist'); speakFemale('Opening Production board.');
+  } else {
+    speakFemale("I am your production assistant. Ask me about status, critical tasks, floral total, labour cost, or mandap readiness.");
   }
-  /* CRITICAL */
-  if (
-    command.includes('critical') ||
-    command.includes('today')
-  ) {
-    const floralTotal =
-      calculateFloralTotal();
-    speakFemale(
-      `Today is September 3rd. Design approval is completed. The flower mandi purchase is scheduled for September 4th night. The current floral estimate is ${floralTotal.toLocaleString('en-IN')} rupees.`
-    );
-    return;
-  }
-  /* MANDAP */
-  if (
-    command.includes('mandap ready') ||
-    command === 'mandap' ||
-    command.includes('mandap status')
-  ) {
-    const mandapTask =
-      rahulEvent.worklist.find(
-        task =>
-          task.task
-            .toLowerCase()
-            .includes(
-              'mandap ready'
-            )
-      );
-    if (mandapTask) {
-      speakFemale(
-        `Mandap readiness status is ${mandapTask.status}. Verification is ${mandapTask.verified}.`
-      );
-    } else {
-      speakFemale(
-        'Mandap readiness task was not found.'
-      );
-    }
-    return;
-  }
-  /* FLOWER TOTAL */
-  if (
-    command.includes('floral total') ||
-    command.includes('flower total') ||
-    command.includes('flower cost')
-  ) {
-    const total =
-      calculateFloralTotal();
-    speakFemale(
-      `The total floral purchase outflow is ${total.toLocaleString('en-IN')} rupees.`
-    );
-    return;
-  }
-  /* DASHBOARD */
-  if (
-    command.includes('dashboard') ||
-    command.includes('command center') ||
-    command === 'command'
-  ) {
-    navTo('dashboard');
-    speakFemale(
-      'Opening Command Center.'
-    );
-    return;
-  }
-  /* HARDWARE */
-  if (
-    command.includes('hardware') ||
-    command.includes('tools')
-  ) {
-    navTo('hardware');
-    speakFemale(
-      'Opening Hardware and Tools.'
-    );
-    return;
-  }
-  /* FABRICS */
-  if (
-    command.includes('fabric') ||
-    command.includes('drape')
-  ) {
-    navTo('fabrics');
-    speakFemale(
-      'Opening Fabrics and Drapes.'
-    );
-    return;
-  }
-  /* FLOWERS */
-  if (
-    command.includes('flower') ||
-    command.includes('mandi')
-  ) {
-    navTo('flowers');
-    speakFemale(
-      'Opening Flower Mandi list.'
-    );
-    return;
-  }
-  /* FRAMES */
-  if (
-    command.includes('frame') ||
-    command.includes('prop')
-  ) {
-    navTo('frames');
-    speakFemale(
-      'Opening Frames and Props.'
-    );
-    return;
-  }
-  /* FLEX */
-  if (
-    command.includes('flex') ||
-    command.includes('printing') ||
-    command.includes('print')
-  ) {
-    navTo('flex');
-    speakFemale(
-      'Opening Flex and Print list.'
-    );
-    return;
-  }
-  /* MOOD BOARD */
-  if (
-    command.includes('mood') ||
-    command.includes('visual')
-  ) {
-    navTo('moodboard');
-    speakFemale(
-      'Opening Mood Board.'
-    );
-    return;
-  }
-  /* LOADING */
-  if (
-    command.includes('loading') ||
-    command.includes('audit') ||
-    command.includes('godown')
-  ) {
-    navTo('loading');
-    speakFemale(
-      'Opening Loading and Godown Audit.'
-    );
-    return;
-  }
-  /* PRODUCTION BOARD */
-  if (
-    command.includes('checklist') ||
-    command.includes('production') ||
-    command.includes('work') ||
-    command.includes('board')
-  ) {
-    navTo('worklist');
-    speakFemale(
-      'Opening Production Board.'
-    );
-    return;
-  }
-  speakFemale(
-    'I am your production assistant. Ask me about production status, critical tasks, floral total, mandap readiness, or open a studio module.'
-  );
 }
-/* ================================================================
-   TEXT TO SPEECH
-   ================================================================ */
+
 function speakFemale(text) {
-  if (
-    !('speechSynthesis' in window)
-  ) {
-    return;
-  }
+  if (!('speechSynthesis' in window)) return;
   try {
     window.speechSynthesis.cancel();
-    const utterance =
-      new SpeechSynthesisUtterance(
-        text
-      );
-    utterance.pitch =
-      1.15;
-    utterance.rate =
-      0.95;
-    /*
-     * Try to select a female/English India voice
-     * when the browser exposes one.
-     */
-    const voices =
-      window.speechSynthesis
-        .getVoices();
-    const preferred =
-      voices.find(
-        voice =>
-          /female/i.test(
-            voice.name
-          ) &&
-          /en-IN|en-US|en-GB/i.test(
-            voice.lang
-          )
-      ) ||
-      voices.find(
-        voice =>
-          /en-IN/i.test(
-            voice.lang
-          )
-      );
-    if (preferred) {
-      utterance.voice =
-        preferred;
-    }
-    window.speechSynthesis.speak(
-      utterance
-    );
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.pitch = 1.15;
+    utterance.rate = 0.95;
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => /female/i.test(v.name) && /en-IN|en-US|en-GB/i.test(v.lang)) || voices.find(v => /en-IN/i.test(v.lang));
+    if (preferred) utterance.voice = preferred;
+    window.speechSynthesis.speak(utterance);
   } catch (error) {
-    console.warn(
-      'Speech synthesis unavailable:',
-      error
-    );
+    console.warn('Speech synthesis unavailable:', error);
   }
 }
+
 /* ================================================================
    PAGE START
    ================================================================ */
-if (
-  document.readyState ===
-  'loading'
-) {
-  document.addEventListener(
-    'DOMContentLoaded',
-    checkExistingAuth
-  );
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkExistingAuth);
 } else {
   checkExistingAuth();
 }
-/* ================================================================
-   SAFETY: SAVE BEFORE PAGE CLOSE
-   ================================================================ */
-window.addEventListener(
-  'beforeunload',
-  function() {
-    if (
-      rahulEvent &&
-      db &&
-      saveTimer
-    ) {
-      clearTimeout(
-        saveTimer
-      );
-      /*
-       * IndexedDB transactions are asynchronous.
-       * This starts the save, but browser shutdown timing
-       * is outside page control.
-       */
-      dbPut(
-        'events',
-        rahulEvent
-      ).catch(
-        console.error
-      );
-    }
+
+window.addEventListener('beforeunload', function() {
+  if (rahulEvent && db && saveTimer) {
+    clearTimeout(saveTimer);
+    dbPut('events', rahulEvent).catch(console.error);
   }
-);
+});
 </script>
 </body>
 </html>
