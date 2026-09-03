@@ -63,9 +63,9 @@
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
       <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">📊 Dashboard</button>
       <button onclick="navTo('hardware')" id="pnav-hardware" class="py-2.5 px-3 border-b-2 border-transparent">🔩 Hardware</button>
-      <button onclick="navTo('fabrics')" id="pnav-fabrics" class="py-2.5 px-3 border-b-2 border-transparent">🧵 Fabrics List</button>
-      <button onclick="navTo('flowers')" id="pnav-flowers" class="py-2.5 px-3 border-b-2 border-transparent">🌸 Flower List</button>
-      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frames & Structures</button>
+      <button onclick="navTo('fabrics')" id="pnav-fabrics" class="py-2.5 px-3 border-b-2 border-transparent">🧵 Fabrics</button>
+      <button onclick="navTo('flowers')" id="pnav-flowers" class="py-2.5 px-3 border-b-2 border-transparent">🌸 Flowers</button>
+      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frames & Props</button>
       <button onclick="navTo('flex')" id="pnav-flex" class="py-2.5 px-3 border-b-2 border-transparent">📜 Flex & Print</button>
       <button onclick="navTo('moodboard')" id="pnav-moodboard" class="py-2.5 px-3 border-b-2 border-transparent">🖼️ Mood Board</button>
       <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Returns</button>
@@ -77,10 +77,10 @@
       <!-- DEADLINE BANNER -->
       <div class="bg-gradient-to-r from-amber-900 to-black text-amber-200 p-3 rounded-xl shadow border border-amber-700/50 flex justify-between items-center text-xs">
         <div>
-          <span class="font-bold uppercase tracking-wider text-amber-400 block text-[11px]">⚠️ Production Deadline Alert</span>
-          <span>Today is <strong>Sept 3rd</strong>: Last day for purchases (₹78,880 total). Engagement event is tomorrow <strong>Sept 4th</strong>!</span>
+          <span class="font-bold uppercase tracking-wider text-amber-400 block text-[11px]">⚠️ Production Timeline Alert</span>
+          <span>Sept 6th: Evening Reception (Main Stage Setup). Sept 7th: Full Dismantling & Strike[span_0](start_span)[span_0](end_span).</span>
         </div>
-        <button onclick="navTo('flowers')" class="bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px]">Review Mandi</button>
+        <button onclick="navTo('worklist')" class="bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px]">View Schedule</button>
       </div>
 
       <!-- DASHBOARD -->
@@ -89,22 +89,22 @@
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400">Active Event</span>
             <p class="text-sm font-black text-slate-900">Rahul's Event</p>
-            <span class="text-[9px] text-amber-700 font-bold">Sept 6th-7th, 2026</span>
+            <span class="text-[9px] text-amber-700 font-bold">Sept 6th-7th, 2026[span_1](start_span)[span_1](end_span)</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400">Total Expenditure</span>
             <p class="text-xl font-black text-amber-700">₹1,62,070</p>
-            <span class="text-[9px] text-slate-400">Master Estimate</span>
+            <span class="text-[9px] text-slate-400">Master Estimate[span_2](start_span)[span_2](end_span)</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400">Floral Outflow</span>
             <p class="text-xl font-black text-slate-700">₹78,880</p>
-            <span class="text-[9px] text-slate-400">Sept 4th Purchase</span>
+            <span class="text-[9px] text-slate-400">Sept 4th Purchase[span_3](start_span)[span_3](end_span)</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400">Execution Status</span>
             <p class="text-xl font-black text-emerald-600">On Schedule</p>
-            <span class="text-[9px] text-emerald-700 font-bold">Godown Return Active</span>
+            <span class="text-[9px] text-emerald-700 font-bold">Sept 7 Strike Ready</span>
           </div>
         </div>
 
@@ -112,10 +112,10 @@
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Sections Overview</h2>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <button onclick="navTo('hardware')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🔩 Hardware & Tools</button>
-            <button onclick="navTo('fabrics')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🧵 Fabrics List</button>
-            <button onclick="navTo('flowers')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🌸 Flower List</button>
-            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frames & Structures</button>
-            <button onclick="navTo('flex')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📜 Flex & Print</button>
+            <button onclick="navTo('fabrics')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🧵 Fabrics & Drapes</button>
+            <button onclick="navTo('flowers')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🌸 Flower Mandi List</button>
+            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frames & Props</button>
+            <button onclick="navTo('flex')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📜 Flex & Print Scope</button>
             <button onclick="navTo('moodboard')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🖼️ Mood Board Grid</button>
             <button onclick="navTo('loading')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📦 Loading & Returns</button>
             <button onclick="navTo('worklist')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">✅ Work Checklist</button>
@@ -127,13 +127,18 @@
       <section id="page-hardware" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools & Adhesives (Section 1.1)</h3>
-            <button onclick="addItem('hardware')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Item</button>
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools & Adhesives (Section 1.1)[span_4](start_span)[span_4](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Manage ladder, binding wire, pins, tubs, and adhesives[span_5](start_span)[span_5](end_span).</p>
+            </div>
+            <button onclick="addItem('hardware')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Tool</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
-            <tbody id="table-hardware" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[500px]">
+              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Acquired</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <tbody id="table-hardware" class="divide-y"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -141,13 +146,18 @@
       <section id="page-fabrics" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Fabrics, Draping & Screens (Section 1.2)</h3>
-            <button onclick="addItem('fabrics')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Fabric</button>
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Fabrics, Draping & Screens (Section 1.2)[span_6](start_span)[span_6](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Red velvet curtains (main stage reception), galaxy drapes, micro cloths, and screens[span_7](start_span)[span_7](end_span).</p>
+            </div>
+            <button onclick="addItem('fabrics')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Fabric</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Fabric Item</th><th class="p-2 border">Quantity / Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
-            <tbody id="table-fabrics" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[500px]">
+              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Fabric Item</th><th class="p-2 border">Quantity / Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <tbody id="table-fabrics" class="divide-y"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -156,26 +166,28 @@
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Purchase List (Sept 4th Night)</h3>
-              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock. Edit rates & quantities live.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Purchase List (Section 3 - Sept 4th Night)[span_8](start_span)[span_8](end_span)</h3>
+              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock. Edit rates & quantities live[span_9](start_span)[span_9](end_span).</p>
             </div>
             <button onclick="addItem('flowers')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Flower</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-100 text-[10px]">
-                <th class="p-2 border text-center w-12">Bought</th>
-                <th class="p-2 border text-center w-12">Have It</th>
-                <th class="p-2 border">Flower Item</th>
-                <th class="p-2 border text-center w-16">Qty</th>
-                <th class="p-2 border text-center w-24">Timing</th>
-                <th class="p-2 border text-right w-20">Rate (₹)</th>
-                <th class="p-2 border text-right w-20">Total (₹)</th>
-                <th class="p-2 border text-center w-10"></th>
-              </tr>
-            </thead>
-            <tbody id="table-flowers" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border text-center w-12">Bought</th>
+                  <th class="p-2 border text-center w-12">Have It</th>
+                  <th class="p-2 border">Flower Item</th>
+                  <th class="p-2 border text-center w-16">Qty</th>
+                  <th class="p-2 border text-center w-24">Timing</th>
+                  <th class="p-2 border text-right w-20">Rate (₹)</th>
+                  <th class="p-2 border text-right w-20">Total (₹)</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
+              <tbody id="table-flowers" class="divide-y"></tbody>
+            </table>
+          </div>
           <div class="flex justify-between font-bold border-t pt-2 text-indigo-950 text-sm">
             <span>Total Flower Expenditure:</span>
             <span id="flowers-grand-total">₹78,880</span>
@@ -187,13 +199,18 @@
       <section id="page-frames" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Locking Hardware (Section 1.3 & 1.4)</h3>
-            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame/Prop</button>
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Props (Sections 1.3 & 1.4)[span_10](start_span)[span_10](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Stands, locking rods, chadar frame, homa items, kalash, lanterns, and vases[span_11](start_span)[span_11](end_span).</p>
+            </div>
+            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Frame/Prop</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
-            <tbody id="table-frames" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[500px]">
+              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <tbody id="table-frames" class="divide-y"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -201,13 +218,18 @@
       <section id="page-flex" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope (Section 2)</h3>
-            <button onclick="addItem('flex')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Print Item</button>
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope (Section 2)[span_12](start_span)[span_12](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Sunboard boxes, entrance arch signage, and photo booth backdrop flex[span_13](start_span)[span_13](end_span).</p>
+            </div>
+            <button onclick="addItem('flex')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Print Item</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
-            <tbody id="table-flex" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[500px]">
+              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <tbody id="table-flex" class="divide-y"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -237,25 +259,27 @@
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading & Godown Return Audit</h3>
-              <p class="text-[10px] text-slate-400">Track items loaded for event and returned/damaged back to godown.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading & Godown Return Audit (Section 1)[span_14](start_span)[span_14](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Track items loaded, returned, and verified at the godown post-event.</p>
             </div>
-            <button onclick="addItem('loading')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Gear</button>
+            <button onclick="addItem('loading')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Gear</button>
           </div>
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-100 text-[10px]">
-                <th class="p-2 border">Gear Description</th>
-                <th class="p-2 border text-center w-16">Req</th>
-                <th class="p-2 border text-center w-16">Loaded</th>
-                <th class="p-2 border text-center w-16">Returned</th>
-                <th class="p-2 border text-center w-16 text-rose-600">Damaged</th>
-                <th class="p-2 border text-center w-16">Godown OK</th>
-                <th class="p-2 border text-center w-10"></th>
-              </tr>
-            </thead>
-            <tbody id="table-loading" class="divide-y"></tbody>
-          </table>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[550px]">
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Gear Description</th>
+                  <th class="p-2 border text-center w-16">Req</th>
+                  <th class="p-2 border text-center w-16">Loaded</th>
+                  <th class="p-2 border text-center w-16">Returned</th>
+                  <th class="p-2 border text-center w-16 text-rose-600">Damaged</th>
+                  <th class="p-2 border text-center w-16">Godown OK</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
+              <tbody id="table-loading" class="divide-y"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -263,8 +287,11 @@
       <section id="page-worklist" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist & Strike Plan</h3>
-            <button onclick="addItem('worklist')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Task</button>
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist & Strike Plan (Section 4)[span_15](start_span)[span_15](end_span)</h3>
+              <p class="text-[10px] text-slate-400">Tracks reception setup on Sept 6th evening and final dismantling on Sept 7th[span_16](start_span)[span_16](end_span).</p>
+            </div>
+            <button onclick="addItem('worklist')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Task</button>
           </div>
           <div id="worklist-container" class="space-y-2"></div>
         </div>
@@ -318,7 +345,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiMasterDB', 28);
+        const req = indexedDB.open('VanjiMasterDB', 30);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           if (!db.objectStoreNames.contains('events')) db.createObjectStore('events', { keyPath: 'id' });
@@ -337,12 +364,12 @@
         existing = {
           id: 'VEP-Rahul-0906',
           hardware: [
-            { name: 'Ladder', spec: 'Rigging & draping', timing: 'Morning', purchased: true },
+            { name: 'Ladder', spec: 'As required for rigging & draping', timing: 'Morning', purchased: true },
             { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
             { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
             { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
             { name: 'Bond (Adhesive)', spec: '3 Nos', timing: 'Morning', purchased: false },
-            { name: 'Tubs', spec: 'Floral soaking', timing: 'Morning', purchased: false }
+            { name: 'Tubs', spec: 'For floral soaking & organization', timing: 'Morning', purchased: false }
           ],
           fabrics: [
             { name: 'Main Stage Red Velvet Curtains', spec: '6ft length, 10 Nos', timing: 'Evening', loaded: false },
@@ -350,9 +377,11 @@
             { name: 'Galaxy Off-White Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
             { name: 'Light Pink Galaxy Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
             { name: 'White Micro Cloth (Phool Chadar & Ceiling)', spec: '5 meters', timing: 'Morning', loaded: false },
-            { name: 'Off-White Micro Cloth (Mandap Ceiling)', spec: '5m x 6 nos (30m)', timing: 'Morning', loaded: false },
+            { name: 'Off-White Micro Cloth (Mandap Ceiling)', spec: '5 meters x 6 nos (Total 30m)', timing: 'Morning', loaded: false },
             { name: 'White Micro Cloth (8ft Entrance Arch)', spec: '15 meters', timing: 'Morning', loaded: false },
-            { name: 'Photo Booth Cloth (Red Lycra/Velvet)', spec: '10 meters', timing: 'Evening', loaded: false }
+            { name: 'Photo Booth Cloth (Red Lycra/Velvet)', spec: '10 meters', timing: 'Evening', loaded: false },
+            { name: 'Mandap OffWhite - Screens (10ft)', spec: '4 Nos (Fabric/ Screen)', timing: 'Morning', loaded: false },
+            { name: 'Valga White Screens (5ft)', spec: '3 Nos (Fabric/Screen)', timing: 'Morning', loaded: false }
           ],
           flowers: [
             { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
@@ -373,33 +402,45 @@
             { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
             { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
             { name: 'Locking Rods (12ft Mandap/Valga)', spec: '6 Nos total', timing: 'Morning', loaded: false },
-            { name: 'Phool Chadar Frame', spec: '1 Complete Frame', timing: 'Morning', loaded: false },
+            { name: 'Locking Rods (10ft)', spec: '4 Nos', timing: 'Morning', loaded: false },
+            { name: 'Phool Chadar Frame', spec: '1 Complete Frame Structure', timing: 'Morning', loaded: false },
+            { name: 'Mandap Screen Stands', spec: '4 Nos', timing: 'Morning', loaded: false },
+            { name: 'Valga Screen Stands', spec: '2 Nos', timing: 'Morning', loaded: false },
             { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
+            { name: 'Name Board Box Frames', spec: '3ft Frames', timing: 'Evening', loaded: false },
+            { name: 'Entrance Arch U-Arch Frame', spec: '8ft Frame', timing: 'Morning', loaded: false },
             { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false },
-            { name: 'Homa Setup Items', spec: 'Fire pit components', timing: 'Morning', loaded: false },
-            { name: 'Kalash Props', spec: '4 Nos', timing: 'Morning', loaded: false }
+            { name: 'Photo Booth Smaller Boxes', spec: '3ft (2 nos), 2ft (2 nos)', timing: 'Evening', loaded: false },
+            { name: 'Homa Setup Items', spec: 'Traditional fire pit components', timing: 'Morning', loaded: false },
+            { name: 'Kalash Props', spec: '4 Nos', timing: 'Morning', loaded: false },
+            { name: 'Traditional Props', spec: '2 Nos', timing: 'Morning', loaded: false },
+            { name: 'Cages & Lanterns', spec: 'Evening pathway/name board', timing: 'Evening', loaded: false },
+            { name: 'Name Board Easel Stand', spec: '1 Stand', timing: 'Evening', loaded: false },
+            { name: 'Pots & Handi', spec: 'Handi pots as per design', timing: 'Morning', loaded: false }
           ],
           flex: [
             { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
-            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 },
-            { name: 'Photo Booth 8x8 Flex', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
-            { name: 'Name Board Sunboard Printing', spec: 'Evening signage', timing: 'Evening', rate: 300 }
+            { name: 'Entrance Arch Flex Printing', spec: 'Morning entrance arch signage', timing: 'Morning', rate: 250 },
+            { name: 'Photo Booth 8x8 Flex Printing', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
+            { name: 'Name Board Sunboard Printing', spec: 'Evening name board signage', timing: 'Evening', rate: 300 }
           ],
           loading: [
             { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
             { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true },
+            { name: 'Galaxy Off-White Cloth', req: 100, loaded: 100, ret: 0, dam: 0, ok: true },
             { name: 'Standing Supports (10ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
             { name: 'Locking Rods (15ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true }
           ],
           worklist: [
             { task: 'Design & Mood Board Approved', date: '2026-09-03', timing: 'Morning', done: true },
-            { task: 'Flower Mandi Purchases Completed (₹78,880)', date: '2026-09-03', timing: 'Evening', done: false },
-            { task: 'Engagement Event Setup & Ape Auto Dispatch', date: '2026-09-04', timing: 'Evening', done: false },
-            { task: 'Stage Moulding Setup & Red Velvet Draping', date: '2026-09-05', timing: 'Morning', done: false },
-            { task: 'Mandap Ready State for Morning Event', date: '2026-09-06', timing: 'Morning', done: false },
-            { task: 'Transition to Evening Event Items', date: '2026-09-06', timing: 'Evening', done: false },
-            { task: 'Mandap Strike & Godown Return', date: '2026-09-06', timing: 'Evening', done: false },
-            { task: 'Final Strike of Stage Moulding Structure', date: '2026-09-07', timing: 'Morning', done: false }
+            { task: 'Master Flower Mandi Purchase Completion', date: '2026-09-03', timing: 'Evening', done: false },
+            { task: 'Engagement Event Setup & Moin Ape Auto Dispatch', date: '2026-09-04', timing: 'Evening', done: false },
+            { task: 'Load Stage Moulding & Velvet Curtains (Tempo)', date: '2026-09-05', timing: 'Morning', done: false },
+            { task: 'Complete Stage Moulding Setup & Draping', date: '2026-09-05', timing: 'Evening', done: false },
+            { task: 'Mandap Ready State (06:00 AM)', date: '2026-09-06', timing: 'Morning', done: false },
+            { task: 'Reception Main Stage Setup (06:00 PM)', date: '2026-09-06', timing: 'Evening', done: false },
+            { task: 'Mandap Strike & Load into Moin Vehicle', date: '2026-09-06', timing: 'Evening', done: false },
+            { task: 'Final Dismantling of Stage Structure', date: '2026-09-07', timing: 'Morning', done: false }
           ]
         };
         await dbPut('events', existing);
@@ -586,7 +627,7 @@
     }
 
     function generateCollageCanvas() {
-      if (uploadedMoodImages.length === 0) return alert('Please upload images first[span_7](start_span)[span_7](end_span).');
+      if (uploadedMoodImages.length === 0) return alert('Please upload images first[span_17](start_span)[span_17](end_span).');
       const canvas = document.getElementById('mood-board-canvas');
       const ctx = canvas.getContext('2d');
       const cols = 3, rows = Math.ceil(uploadedMoodImages.length / cols);
@@ -602,7 +643,7 @@
           if (loaded === uploadedMoodImages.length) {
             document.getElementById('download-mood-board').href = canvas.toDataURL('image/jpeg', 0.9);
             document.getElementById('mood-board-output-wrapper').classList.remove('hidden');
-            alert('Mood Board compiled successfully[span_8](start_span)[span_8](end_span)!');
+            alert('Mood Board compiled successfully[span_18](start_span)[span_18](end_span)!');
           }
         };
         img.src = src;
