@@ -9,207 +9,440 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @media print {
-      body { background: white !important; font-size: 8.5pt; color: black !important; margin: 0; padding: 0; }
-      .no-print { display: none !important; }
+      body {
+        background: white !important;
+        font-size: 8.5pt;
+        color: black !important;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+    input,
+    select,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+    input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-28">
-
   <!-- AUTH LOGIN MODAL -->
-  <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
+  <div id="login-overlay"
+       class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
       <div>
-        <h2 class="text-base font-black text-amber-400 uppercase tracking-wider">Vanji Decorators</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Rahul Event Production Studio</p>
+        <h2 class="text-base font-black text-amber-400 uppercase tracking-wider">
+          Vanji Decorators
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Rahul Event Production Studio
+        </p>
       </div>
-      <form id="login-form" onsubmit="event.preventDefault(); handleLogin();" class="space-y-2.5 text-left text-xs">
+      <form id="login-form"
+            onsubmit="event.preventDefault(); handleLogin();"
+            class="space-y-2.5 text-left text-xs">
         <div>
-          <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">Username</label>
-          <input id="login-username" type="text" autocomplete="off" placeholder="Vanji" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
+          <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">
+            Username
+          </label>
+          <input
+            id="login-username"
+            type="text"
+            autocomplete="off"
+            autocapitalize="none"
+            placeholder="Vanji"
+            class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
         </div>
         <div>
-          <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">Password</label>
-          <input id="login-password" type="password" autocomplete="off" placeholder="VANJI" class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
+          <label class="block text-slate-400 text-[10px] uppercase font-bold mb-1">
+            Password
+          </label>
+          <input
+            id="login-password"
+            type="password"
+            autocomplete="off"
+            placeholder="VANJI"
+            class="w-full bg-black border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-amber-500">
         </div>
-        <p id="login-error" class="text-rose-500 text-[11px] font-semibold hidden text-center">Invalid credentials.</p>
-        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-black font-black py-2.5 rounded-lg text-xs tracking-wider uppercase transition shadow-lg mt-2">
+        <p id="login-error"
+           class="text-rose-500 text-[11px] font-semibold hidden text-center">
+          Invalid credentials.
+        </p>
+        <button
+          type="submit"
+          class="w-full bg-amber-600 hover:bg-amber-500 text-black font-black py-2.5 rounded-lg text-xs tracking-wider uppercase transition shadow-lg mt-2">
           Unlock Studio
         </button>
       </form>
     </div>
   </div>
-
   <!-- APPLICATION SHELL -->
   <div id="app-container" class="hidden">
-    <header class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
+    <header
+      class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
       <div class="flex items-center gap-2.5">
         <div>
           <div class="flex items-center gap-1.5">
-            <h1 class="text-sm font-black tracking-wider uppercase text-amber-400">VANJI</h1>
-            <span class="text-[9px] bg-amber-950 text-amber-200 border border-amber-800 px-1.5 py-0.5 rounded font-mono font-bold">RAHUL-0906</span>
+            <h1 class="text-sm font-black tracking-wider uppercase text-amber-400">
+              VANJI
+            </h1>
+            <span
+              class="text-[9px] bg-amber-950 text-amber-200 border border-amber-800 px-1.5 py-0.5 rounded font-mono font-bold">
+              RAHUL-0906
+            </span>
           </div>
-          <div><span id="save-status-indicator" class="text-[9px] text-emerald-400 font-semibold">● Ready</span></div>
+          <div>
+            <span
+              id="save-status-indicator"
+              class="text-[9px] text-emerald-400 font-semibold">
+              ● Ready
+            </span>
+          </div>
         </div>
       </div>
+      <!-- LOCK BUTTON -->
+      <button
+        onclick="lockStudio()"
+        class="text-[10px] bg-zinc-900 border border-zinc-700 hover:border-rose-500 hover:text-rose-400 px-2 py-1 rounded font-bold transition">
+        🔒 Lock
+      </button>
     </header>
-
-    <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
-      <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">📊 Command Center</button>
-      <button onclick="navTo('hardware')" id="pnav-hardware" class="py-2.5 px-3 border-b-2 border-transparent">🔩 Hardware</button>
-      <button onclick="navTo('fabrics')" id="pnav-fabrics" class="py-2.5 px-3 border-b-2 border-transparent">🧵 Fabrics</button>
-      <button onclick="navTo('flowers')" id="pnav-flowers" class="py-2.5 px-3 border-b-2 border-transparent">🌸 Flowers</button>
-      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frames & Props</button>
-      <button onclick="navTo('flex')" id="pnav-flex" class="py-2.5 px-3 border-b-2 border-transparent">📜 Flex & Print</button>
-      <button onclick="navTo('moodboard')" id="pnav-moodboard" class="py-2.5 px-3 border-b-2 border-transparent">🖼️ Mood Board</button>
-      <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Audit</button>
-      <button onclick="navTo('worklist')" id="pnav-worklist" class="py-2.5 px-3 border-b-2 border-transparent">✅ Production Board</button>
+    <!-- NAVIGATION -->
+    <nav
+      class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
+      <button onclick="navTo('dashboard')" id="pnav-dashboard"
+        class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">
+        📊 Command Center
+      </button>
+      <button onclick="navTo('hardware')" id="pnav-hardware"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        🔩 Hardware
+      </button>
+      <button onclick="navTo('fabrics')" id="pnav-fabrics"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        🧵 Fabrics
+      </button>
+      <button onclick="navTo('flowers')" id="pnav-flowers"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        🌸 Flowers
+      </button>
+      <button onclick="navTo('frames')" id="pnav-frames"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        🏛️ Frames & Props
+      </button>
+      <button onclick="navTo('flex')" id="pnav-flex"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        📜 Flex & Print
+      </button>
+      <button onclick="navTo('moodboard')" id="pnav-moodboard"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        🖼️ Mood Board
+      </button>
+      <button onclick="navTo('loading')" id="pnav-loading"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        📦 Loading & Audit
+      </button>
+      <button onclick="navTo('worklist')" id="pnav-worklist"
+        class="py-2.5 px-3 border-b-2 border-transparent">
+        ✅ Production Board
+      </button>
     </nav>
-
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
-
-      <!-- 1. COMMAND CENTER (DASHBOARD) -->
+      <!-- ========================================================= -->
+      <!-- 1. COMMAND CENTER -->
+      <!-- ========================================================= -->
       <section id="page-dashboard" class="space-y-4">
-        <div class="bg-gradient-to-r from-amber-950 to-black text-amber-200 p-4 rounded-xl shadow border border-amber-600/50 space-y-3">
+        <div
+          class="bg-gradient-to-r from-amber-950 to-black text-amber-200 p-4 rounded-xl shadow border border-amber-600/50 space-y-3">
           <div class="flex justify-between items-center border-b border-amber-800/60 pb-2">
-            <h2 class="font-black text-amber-400 uppercase tracking-wide text-xs">🔥 COMMAND CENTER — CRITICAL NOW</h2>
-            <span class="text-[10px] bg-amber-500 text-black px-2 py-0.5 rounded font-extrabold">PROD: SEPT 3–7</span>
+            <h2 class="font-black text-amber-400 uppercase tracking-wide text-xs">
+              🔥 COMMAND CENTER — CRITICAL NOW
+            </h2>
+            <span
+              class="text-[10px] bg-amber-500 text-black px-2 py-0.5 rounded font-extrabold">
+              PROD: SEPT 3–7
+            </span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
               <span>Today: Design & Pre-Production Review</span>
-              <span class="text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded">🟢 DONE</span>
+              <span class="text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded">
+                🟢 DONE
+              </span>
             </div>
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
-              <span>Next (Sept 4 Night): Flower Mandi Purchase (₹78,880)</span>
-              <span class="text-[10px] bg-amber-400 text-black font-bold px-1.5 py-0.5 rounded">🔴 CRITICAL</span>
+              <span>
+                Next (Sept 4 Night): Flower Mandi Purchase
+                (<span id="dash-critical-floral">₹78,880</span>)
+              </span>
+              <span class="text-[10px] bg-amber-400 text-black font-bold px-1.5 py-0.5 rounded">
+                🔴 CRITICAL
+              </span>
             </div>
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
               <span>Sept 4: Moin Ape Loading Prep & Dispatch</span>
-              <span class="text-[10px] bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded">🟠 HIGH</span>
+              <span class="text-[10px] bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded">
+                🟠 HIGH
+              </span>
             </div>
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
               <span>Sept 5: Stage Moulding & Mandap Production</span>
-              <span class="text-[10px] bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded">🟠 HIGH</span>
+              <span class="text-[10px] bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded">
+                🟠 HIGH
+              </span>
             </div>
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
               <span>Sept 6 — 06:00 AM: Mandap Ready (Hard Gate)</span>
-              <span class="text-[10px] bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded">⚡ HARD DEADLINE</span>
+              <span class="text-[10px] bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded">
+                ⚡ HARD DEADLINE
+              </span>
             </div>
             <div class="p-2.5 bg-black/40 border border-amber-900/60 rounded flex justify-between items-center">
               <span>Sept 6 — 06:00 PM: Reception Ready (Hard Gate)</span>
-              <span class="text-[10px] bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded">⚡ HARD DEADLINE</span>
+              <span class="text-[10px] bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded">
+                ⚡ HARD DEADLINE
+              </span>
             </div>
           </div>
         </div>
-
+        <!-- DASHBOARD METRICS -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Total Expenditure</span>
-            <p class="text-xl font-black text-amber-700" id="dash-total-exp">₹1,62,070</p>
-            <span class="text-[9px] text-slate-400">Master Estimate</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">
+              Total Expenditure
+            </span>
+            <p class="text-xl font-black text-amber-700"
+               id="dash-total-exp">
+              ₹1,62,070
+            </p>
+            <span class="text-[9px] text-slate-400">
+              Master Estimate
+            </span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Floral Outflow</span>
-            <p class="text-xl font-black text-slate-700" id="dash-floral-outflow">₹78,880</p>
-            <span class="text-[9px] text-slate-400">Sept 4 Purchase</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">
+              Floral Outflow
+            </span>
+            <p class="text-xl font-black text-slate-700"
+               id="dash-floral-outflow">
+              ₹78,880
+            </p>
+            <span class="text-[9px] text-slate-400">
+              Sept 4 Purchase
+            </span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Production Progress</span>
-            <p class="text-xl font-black text-indigo-700" id="dash-prod-progress">0%</p>
-            <span class="text-[9px] text-slate-400" id="dash-task-counts">0 Done / 0 Total</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">
+              Production Progress
+            </span>
+            <p class="text-xl font-black text-indigo-700"
+               id="dash-prod-progress">
+              0%
+            </p>
+            <span class="text-[9px] text-slate-400"
+                  id="dash-task-counts">
+              0 Done / 0 Total
+            </span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Execution Status</span>
-            <p class="text-xl font-black text-emerald-600" id="dash-exec-status">ON SCHEDULE</p>
-            <span class="text-[9px] text-emerald-700 font-bold">Event Dates: Sept 6–7</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">
+              Execution Status
+            </span>
+            <p class="text-xl font-black text-emerald-600"
+               id="dash-exec-status">
+              ON SCHEDULE
+            </p>
+            <span class="text-[9px] text-emerald-700 font-bold">
+              Event Dates: Sept 6–7
+            </span>
           </div>
         </div>
-
-        <!-- VEHICLE CONTROL MINI-SECTION -->
+        <!-- VEHICLE CONTROL -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-2 text-xs">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">🚐 Logistics & Vehicle Plan</h2>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">
+            🚐 Logistics & Vehicle Plan
+          </h2>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div class="p-2.5 border rounded bg-slate-50"><strong>Sept 4 (Moin Ape):</strong> Morning items + evening items excluding stage.</div>
-            <div class="p-2.5 border rounded bg-slate-50"><strong>Sept 5 (Tempo / Ape):</strong> Stage moulding, red velvet curtains, cloth, and props.</div>
-            <div class="p-2.5 border rounded bg-slate-50"><strong>Sept 6 Night (Moin):</strong> Mandap strike & load into vehicle.</div>
+            <div class="p-2.5 border rounded bg-slate-50">
+              <strong>Sept 4 (Moin Ape):</strong>
+              Morning items + evening items excluding stage.
+            </div>
+            <div class="p-2.5 border rounded bg-slate-50">
+              <strong>Sept 5 (Tempo / Ape):</strong>
+              Stage moulding, red velvet curtains, cloth, and props.
+            </div>
+            <div class="p-2.5 border rounded bg-slate-50">
+              <strong>Sept 6 Night (Moin):</strong>
+              Mandap strike & load into vehicle.
+            </div>
           </div>
         </div>
-
+        <!-- MASTER MODULES -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Studio Modules</h2>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Master Studio Modules
+          </h2>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-            <button onclick="navTo('hardware')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🔩 Hardware & Tools</button>
-            <button onclick="navTo('fabrics')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🧵 Fabrics & Drapes</button>
-            <button onclick="navTo('flowers')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🌸 Flower Mandi List</button>
-            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frames & Props</button>
-            <button onclick="navTo('flex')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📜 Flex & Print Scope</button>
-            <button onclick="navTo('moodboard')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🖼️ Mood Board Grid</button>
-            <button onclick="navTo('loading')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📦 Loading & Audit</button>
-            <button onclick="navTo('worklist')" class="p-3 border rounded-lg bg-amber-50 border-amber-300 font-bold text-left text-amber-950">✅ Production Board</button>
+            <button onclick="navTo('hardware')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              🔩 Hardware & Tools
+            </button>
+            <button onclick="navTo('fabrics')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              🧵 Fabrics & Drapes
+            </button>
+            <button onclick="navTo('flowers')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              🌸 Flower Mandi List
+            </button>
+            <button onclick="navTo('frames')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              🏛️ Frames & Props
+            </button>
+            <button onclick="navTo('flex')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              📜 Flex & Print Scope
+            </button>
+            <button onclick="navTo('moodboard')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              🖼️ Mood Board Grid
+            </button>
+            <button onclick="navTo('loading')"
+              class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">
+              📦 Loading & Audit
+            </button>
+            <button onclick="navTo('worklist')"
+              class="p-3 border rounded-lg bg-amber-50 border-amber-300 font-bold text-left text-amber-950">
+              ✅ Production Board
+            </button>
           </div>
         </div>
       </section>
-
-      <!-- 2. HARDWARE & TOOLS -->
+      <!-- ========================================================= -->
+      <!-- 2. HARDWARE -->
+      <!-- ========================================================= -->
       <section id="page-hardware" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools & Adhesives (Section 1.1)</h3>
-              <p class="text-[10px] text-slate-400">Ladder, binding wire, pins, tubs, and adhesives.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                General Tools & Adhesives (Section 1.1)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Ladder, binding wire, pins, tubs, and adhesives.
+              </p>
             </div>
-            <button onclick="addItem('hardware')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Tool</button>
+            <button onclick="addItem('hardware')"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Tool
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[500px]">
-              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Acquired</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Item Description</th>
+                  <th class="p-2 border">Specification / Notes</th>
+                  <th class="p-2 border text-center w-24">Timing</th>
+                  <th class="p-2 border text-center w-16">Acquired</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
               <tbody id="table-hardware" class="divide-y"></tbody>
             </table>
           </div>
         </div>
       </section>
-
+      <!-- ========================================================= -->
       <!-- 3. FABRICS -->
+      <!-- ========================================================= -->
       <section id="page-fabrics" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Fabrics, Draping & Screens (Section 1.2)</h3>
-              <p class="text-[10px] text-slate-400">Red velvet curtains, galaxy drapes, micro cloths, and screens.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Fabrics, Draping & Screens (Section 1.2)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Red velvet curtains, galaxy drapes, micro cloths, and screens.
+              </p>
             </div>
-            <button onclick="addItem('fabrics')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Fabric</button>
+            <button onclick="addItem('fabrics')"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Fabric
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[500px]">
-              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Fabric Item</th><th class="p-2 border">Quantity / Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Fabric Item</th>
+                  <th class="p-2 border">Quantity / Specification</th>
+                  <th class="p-2 border text-center w-24">Timing</th>
+                  <th class="p-2 border text-center w-16">Loaded</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
               <tbody id="table-fabrics" class="divide-y"></tbody>
             </table>
           </div>
         </div>
       </section>
-
+      <!-- ========================================================= -->
       <!-- 4. FLOWERS -->
+      <!-- ========================================================= -->
       <section id="page-flowers" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Purchase List (Section 3 — Sept 4 Night)</h3>
-              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock. Edit rates & quantities live.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Flower Mandi Purchase List (Section 3 — Sept 4 Night)
+              </h3>
+              <p class="text-[10px] text-rose-700 font-bold">
+                Tick purchased or in-stock. Edit rates & quantities live.
+              </p>
             </div>
-            <button onclick="addItem('flowers')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Flower</button>
+            <button onclick="addItem('flowers')"
+              class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">
+              + Add Flower
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr class="bg-slate-100 text-[10px]">
-                  <th class="p-2 border text-center w-12">Bought</th>
-                  <th class="p-2 border text-center w-12">Have It</th>
-                  <th class="p-2 border">Flower Item</th>
-                  <th class="p-2 border text-center w-16">Qty</th>
-                  <th class="p-2 border text-center w-24">Timing</th>
-                  <th class="p-2 border text-right w-20">Rate (₹)</th>
-                  <th class="p-2 border text-right w-20">Total (₹)</th>
+                  <th class="p-2 border text-center w-12">
+                    Bought
+                  </th>
+                  <th class="p-2 border text-center w-12">
+                    Have It
+                  </th>
+                  <th class="p-2 border">
+                    Flower Item
+                  </th>
+                  <th class="p-2 border text-center w-16">
+                    Qty
+                  </th>
+                  <th class="p-2 border text-center w-24">
+                    Timing
+                  </th>
+                  <th class="p-2 border text-right w-20">
+                    Rate (₹)
+                  </th>
+                  <th class="p-2 border text-right w-20">
+                    Total (₹)
+                  </th>
                   <th class="p-2 border text-center w-10"></th>
                 </tr>
               </thead>
@@ -217,92 +450,179 @@
             </table>
           </div>
           <div class="flex justify-between font-bold border-t pt-2 text-indigo-950 text-sm">
-            <span>Total Floral Expenditure:</span>
-            <span id="flowers-grand-total">₹78,880</span>
+            <span>
+              Total Floral Expenditure:
+            </span>
+            <span id="flowers-grand-total">
+              ₹78,880
+            </span>
           </div>
         </div>
       </section>
-
-      <!-- 5. FRAMES & PROPS -->
+      <!-- ========================================================= -->
+      <!-- 5. FRAMES -->
+      <!-- ========================================================= -->
       <section id="page-frames" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Props (Sections 1.3 & 1.4)</h3>
-              <p class="text-[10px] text-slate-400">Stands, locking rods, chadar frame, homa items, kalash, lanterns, and vases.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Frames, Structures & Props (Sections 1.3 & 1.4)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Stands, locking rods, chadar frame, homa items, kalash, lanterns, and vases.
+              </p>
             </div>
-            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Frame/Prop</button>
+            <button onclick="addItem('frames')"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Frame/Prop
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[500px]">
-              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Item Description</th>
+                  <th class="p-2 border">Specification</th>
+                  <th class="p-2 border text-center w-24">Timing</th>
+                  <th class="p-2 border text-center w-16">Loaded</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
               <tbody id="table-frames" class="divide-y"></tbody>
             </table>
           </div>
         </div>
       </section>
-
-      <!-- 6. FLEX & PRINT -->
+      <!-- ========================================================= -->
+      <!-- 6. FLEX -->
+      <!-- ========================================================= -->
       <section id="page-flex" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope (Section 2)</h3>
-              <p class="text-[10px] text-slate-400">Sunboard boxes, entrance arch signage, and photo booth backdrop flex.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Flex, Sunboard & Print Person Scope (Section 2)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Sunboard boxes, entrance arch signage, and photo booth backdrop flex.
+              </p>
             </div>
-            <button onclick="addItem('flex')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Print Item</button>
+            <button onclick="addItem('flex')"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Print Item
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[500px]">
-              <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
+              <thead>
+                <tr class="bg-slate-100 text-[10px]">
+                  <th class="p-2 border">Print Item</th>
+                  <th class="p-2 border">Specification</th>
+                  <th class="p-2 border text-center w-24">Timing</th>
+                  <th class="p-2 border text-right w-20">Rate (₹)</th>
+                  <th class="p-2 border text-center w-10"></th>
+                </tr>
+              </thead>
               <tbody id="table-flex" class="divide-y"></tbody>
             </table>
           </div>
         </div>
       </section>
-
+      <!-- ========================================================= -->
       <!-- MOOD BOARD -->
+      <!-- ========================================================= -->
       <section id="page-moodboard" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl shadow flex justify-between items-center text-xs">
           <div>
-            <h2 class="font-black text-amber-400 text-sm">Visual Design Mood Board Grid</h2>
-            <p class="text-[10px] text-slate-300">Upload multiple reference photos to organize theme layout.</p>
+            <h2 class="font-black text-amber-400 text-sm">
+              Visual Design Mood Board Grid
+            </h2>
+            <p class="text-[10px] text-slate-300">
+              Upload multiple reference photos to organize theme layout.
+            </p>
           </div>
-          <input type="file" accept="image/*" multiple class="text-xs text-slate-300" onchange="handleMoodBoardUpload(event)">
+          <input
+            id="mood-upload-input"
+            type="file"
+            accept="image/*"
+            multiple
+            class="text-xs text-slate-300"
+            onchange="handleMoodBoardUpload(event)">
         </div>
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs text-center">
-          <div id="mood-board-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <p class="text-slate-400 col-span-3">No mood board images uploaded yet.</p>
+          <div id="mood-board-grid"
+               class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <p class="text-slate-400 col-span-3">
+              No mood board images uploaded yet.
+            </p>
           </div>
-          <button onclick="generateCollageCanvas()" class="bg-black text-amber-400 font-bold px-4 py-2 rounded text-xs shadow">🖼️ Compile Mood Board Grid</button>
-          <div id="mood-board-output-wrapper" class="hidden space-y-2 pt-2 border-t">
-            <canvas id="mood-board-canvas" class="max-w-full mx-auto rounded border"></canvas>
-            <a id="download-mood-board" download="vanji_mood_board.jpg" class="inline-block bg-amber-600 text-black font-black px-3 py-1.5 rounded text-xs">Download JPG</a>
+          <button
+            onclick="generateCollageCanvas()"
+            class="bg-black text-amber-400 font-bold px-4 py-2 rounded text-xs shadow">
+            🖼️ Compile Mood Board Grid
+          </button>
+          <div
+            id="mood-board-output-wrapper"
+            class="hidden space-y-2 pt-2 border-t">
+            <canvas
+              id="mood-board-canvas"
+              class="max-w-full mx-auto rounded border">
+            </canvas>
+            <a
+              id="download-mood-board"
+              download="vanji_mood_board.jpg"
+              class="inline-block bg-amber-600 text-black font-black px-3 py-1.5 rounded text-xs">
+              Download JPG
+            </a>
           </div>
         </div>
       </section>
-
-      <!-- 7. LOADING & RETURNS AUDIT (COMPREHENSIVE RETURNABLE ASSETS) -->
+      <!-- ========================================================= -->
+      <!-- 7. LOADING AUDIT -->
+      <!-- ========================================================= -->
       <section id="page-loading" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading & Godown Return Audit (Comprehensive Assets)</h3>
-              <p class="text-[10px] text-slate-400">Required vs Loaded vs Returned vs Damaged vs Missing calculation.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Loading & Godown Return Audit (Comprehensive Assets)
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Required vs Loaded vs Returned vs Damaged vs Missing calculation.
+              </p>
             </div>
-            <button onclick="addItem('loading')" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Asset</button>
+            <button
+              onclick="addItem('loading')"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Asset
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[650px]">
               <thead>
                 <tr class="bg-slate-100 text-[10px]">
-                  <th class="p-2 border">Asset Description</th>
-                  <th class="p-2 border text-center w-14">Req</th>
-                  <th class="p-2 border text-center w-14">Loaded</th>
-                  <th class="p-2 border text-center w-14">Returned</th>
-                  <th class="p-2 border text-center w-14 text-rose-600">Damaged</th>
-                  <th class="p-2 border text-center w-14 text-amber-600 font-bold">Missing</th>
-                  <th class="p-2 border text-center w-16">Godown OK</th>
+                  <th class="p-2 border">
+                    Asset Description
+                  </th>
+                  <th class="p-2 border text-center w-14">
+                    Req
+                  </th>
+                  <th class="p-2 border text-center w-14">
+                    Loaded
+                  </th>
+                  <th class="p-2 border text-center w-14">
+                    Returned
+                  </th>
+                  <th class="p-2 border text-center w-14 text-rose-600">
+                    Damaged
+                  </th>
+                  <th class="p-2 border text-center w-14 text-amber-600 font-bold">
+                    Missing
+                  </th>
+                  <th class="p-2 border text-center w-16">
+                    Godown OK
+                  </th>
                   <th class="p-2 border text-center w-10"></th>
                 </tr>
               </thead>
@@ -311,629 +631,3501 @@
           </div>
         </div>
       </section>
-
-      <!-- 8. PROFESSIONAL PRODUCTION BOARD -->
+      <!-- ========================================================= -->
+      <!-- 8. PRODUCTION BOARD -->
+      <!-- ========================================================= -->
       <section id="page-worklist" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Day-Wise Production Control Board</h3>
-              <p class="text-[10px] text-slate-400">Status enforcement (DONE vs VERIFIED), Planned vs Actual Completion Time, Owner, Vehicle, Blocked-By, and Issue Notes.</p>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                Master Day-Wise Production Control Board
+              </h3>
+              <p class="text-[10px] text-slate-400">
+                Status enforcement (DONE vs VERIFIED), Planned vs Actual Completion Time, Owner, Vehicle, Blocked-By, and Issue Notes.
+              </p>
             </div>
-            <button onclick="addWorkTaskPrompt()" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">+ Add Milestone</button>
+            <button
+              onclick="addWorkTaskPrompt()"
+              class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded text-xs">
+              + Add Milestone
+            </button>
           </div>
-          <div id="worklist-container" class="space-y-4"></div>
+          <div id="worklist-container"
+               class="space-y-4">
+          </div>
         </div>
       </section>
     </main>
-
-    <!-- VOICE AGENT FLOATING MIC -->
-    <div class="fixed bottom-6 right-6 z-40 no-print flex flex-col items-end gap-2">
-      <div id="voice-bot-bubble" class="hidden bg-black/90 border border-amber-500/50 text-amber-300 text-[11px] font-bold py-1.5 px-3 rounded-xl shadow-2xl backdrop-blur-md max-w-xs transition"></div>
-      <button onclick="toggleVoiceBot()" id="voice-bot-btn" class="h-14 w-14 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-black font-black text-xl shadow-2xl flex items-center justify-center border-2 border-amber-200 transition">🎙️</button>
+    <!-- VOICE AGENT -->
+    <div
+      class="fixed bottom-6 right-6 z-40 no-print flex flex-col items-end gap-2">
+      <div
+        id="voice-bot-bubble"
+        class="hidden bg-black/90 border border-amber-500/50 text-amber-300 text-[11px] font-bold py-1.5 px-3 rounded-xl shadow-2xl backdrop-blur-md max-w-xs transition">
+      </div>
+      <button
+        onclick="toggleVoiceBot()"
+        id="voice-bot-btn"
+        class="h-14 w-14 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-black font-black text-xl shadow-2xl flex items-center justify-center border-2 border-amber-200 transition">
+        🎙️
+      </button>
     </div>
   </div>
-
-  <script>
-    let db = null;
-    let rahulEvent = null;
-    let isVoiceListening = false;
-    let speechRecognition = null;
-
-    function escapeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+<script>
+/* ================================================================
+   VANJI DECORATORS — VERSION 41
+   Existing structure preserved.
+   ================================================================ */
+const DB_NAME = 'VanjiMasterDB';
+const DB_VERSION = 41;
+const EVENT_ID = 'VEP-Rahul-0906';
+let db = null;
+let rahulEvent = null;
+let isVoiceListening = false;
+let speechRecognition = null;
+let uploadedMoodImages = [];
+let saveTimer = null;
+let isSaving = false;
+/* ================================================================
+   SAFE HTML
+   ================================================================ */
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+/* ================================================================
+   NUMBER HELPER
+   ================================================================ */
+function numberValue(value) {
+  const n = parseFloat(value);
+  return Number.isFinite(n) ? n : 0;
+}
+/* ================================================================
+   LOGIN
+   ================================================================ */
+function handleLogin() {
+  const username =
+    (document.getElementById('login-username')?.value || '')
+      .trim()
+      .toLowerCase();
+  const password =
+    (document.getElementById('login-password')?.value || '')
+      .trim()
+      .toUpperCase();
+  const error =
+    document.getElementById('login-error');
+  if (username === 'vanji' && password === 'VANJI') {
+    if (error) {
+      error.classList.add('hidden');
     }
-
-    function handleLogin() {
-      const u = (document.getElementById('login-username')?.value || '').trim().toLowerCase();
-      const p = (document.getElementById('login-password')?.value || '').trim().toUpperCase();
-      if (u === 'vanji' && p === 'VANJI') { executeUnlock(); }
-      else { document.getElementById('login-error').classList.remove('hidden'); }
+    executeUnlock();
+  } else {
+    if (error) {
+      error.classList.remove('hidden');
     }
-    function executeUnlock() {
-      document.getElementById('login-overlay').classList.add('hidden');
-      document.getElementById('app-container').classList.remove('hidden');
-      sessionStorage.setItem('vanji_authenticated', 'true');
-      try { speakFemale("Hi Vanji. Welcome to your production studio."); } catch(e){}
-      initApp();
+  }
+}
+function executeUnlock() {
+  document.getElementById('login-overlay')
+    ?.classList.add('hidden');
+  document.getElementById('app-container')
+    ?.classList.remove('hidden');
+  sessionStorage.setItem(
+    'vanji_authenticated',
+    'true'
+  );
+  initApp()
+    .catch(err => {
+      console.error(err);
+      alert(
+        'Studio could not initialize. Please reload the page.'
+      );
+    });
+  /*
+   * Speech is attempted after user interaction.
+   * Some browsers may still block it; failure is harmless.
+   */
+  setTimeout(() => {
+    try {
+      speakFemale(
+        "Hi Vanji. Welcome to your production studio."
+      );
+    } catch (e) {
+      console.warn('Speech unavailable:', e);
     }
-    function checkExistingAuth() {
-      if (sessionStorage.getItem('vanji_authenticated') === 'true') {
-        document.getElementById('login-overlay').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        try { speakFemale("Hi Vanji. Welcome to your production studio."); } catch(e){}
-        initApp();
+  }, 250);
+}
+function lockStudio() {
+  if (
+    !confirm(
+      'Lock Vanji Production Studio?'
+    )
+  ) return;
+  sessionStorage.removeItem(
+    'vanji_authenticated'
+  );
+  if (speechRecognition) {
+    try {
+      speechRecognition.stop();
+    } catch (e) {}
+  }
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {}
+  }
+  document.getElementById('app-container')
+    ?.classList.add('hidden');
+  document.getElementById('login-overlay')
+    ?.classList.remove('hidden');
+  const user =
+    document.getElementById('login-username');
+  const pass =
+    document.getElementById('login-password');
+  if (user) user.value = '';
+  if (pass) pass.value = '';
+  document.getElementById('login-error')
+    ?.classList.add('hidden');
+}
+function checkExistingAuth() {
+  if (
+    sessionStorage.getItem(
+      'vanji_authenticated'
+    ) === 'true'
+  ) {
+    document.getElementById('login-overlay')
+      ?.classList.add('hidden');
+    document.getElementById('app-container')
+      ?.classList.remove('hidden');
+    initApp()
+      .catch(err => {
+        console.error(err);
+        sessionStorage.removeItem(
+          'vanji_authenticated'
+        );
+        document.getElementById('app-container')
+          ?.classList.add('hidden');
+        document.getElementById('login-overlay')
+          ?.classList.remove('hidden');
+      });
+  }
+}
+/* ================================================================
+   DATABASE
+   ================================================================ */
+function openDatabase() {
+  return new Promise((resolve, reject) => {
+    const request =
+      indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = function(e) {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains('events')) {
+        db.createObjectStore(
+          'events',
+          { keyPath: 'id' }
+        );
       }
+    };
+    request.onsuccess = function(e) {
+      db = e.target.result;
+      db.onversionchange = function() {
+        db.close();
+        console.warn(
+          'Database version changed. Please reload.'
+        );
+      };
+      resolve(db);
+    };
+    request.onerror = function(e) {
+      console.error(
+        'IndexedDB open error:',
+        e.target.error
+      );
+      reject(e.target.error);
+    };
+    request.onblocked = function() {
+      console.warn(
+        'IndexedDB upgrade blocked by another tab.'
+      );
+    };
+  });
+}
+function dbPut(storeName, value) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not open.'));
+      return;
     }
-
-    async function initApp() {
-      await openDatabase();
-      await seedRahulMasterData();
-      renderAllSections();
+    let transaction;
+    try {
+      transaction =
+        db.transaction(
+          storeName,
+          'readwrite'
+        );
+    } catch (error) {
+      reject(error);
+      return;
     }
-
-    function openDatabase() {
-      return new Promise((res, rej) => {
-        // Bumped version to 40 to enforce complete returnable asset loading audit and intelligence
-        const req = indexedDB.open('VanjiMasterDB', 40);
-        req.onupgradeneeded = (e) => {
-          db = e.target.result;
-          if (!db.objectStoreNames.contains('events')) {
-            db.createObjectStore('events', { keyPath: 'id' });
-          }
-        };
-        req.onsuccess = (e) => { db = e.target.result; res(db); };
-        req.onerror = rej;
+    const request =
+      transaction
+        .objectStore(storeName)
+        .put(value);
+    request.onerror = () => {
+      reject(request.error);
+    };
+    transaction.oncomplete = () => {
+      resolve(true);
+    };
+    transaction.onerror = () => {
+      reject(transaction.error);
+    };
+    transaction.onabort = () => {
+      reject(
+        transaction.error ||
+        new Error('Transaction aborted.')
+      );
+    };
+  });
+}
+function dbGet(storeName, key) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not open.'));
+      return;
+    }
+    let transaction;
+    try {
+      transaction =
+        db.transaction(
+          storeName,
+          'readonly'
+        );
+    } catch (error) {
+      reject(error);
+      return;
+    }
+    const request =
+      transaction
+        .objectStore(storeName)
+        .get(key);
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+}
+/* ================================================================
+   SAVE SYSTEM
+   ================================================================ */
+function setSaveStatus(text, type = 'saved') {
+  const indicator =
+    document.getElementById(
+      'save-status-indicator'
+    );
+  if (!indicator) return;
+  if (type === 'saving') {
+    indicator.innerText = '● Saving...';
+    indicator.className =
+      'text-[9px] text-amber-400 font-semibold';
+  } else if (type === 'error') {
+    indicator.innerText = '● Save Error';
+    indicator.className =
+      'text-[9px] text-rose-400 font-semibold';
+  } else {
+    indicator.innerText = '● Saved';
+    indicator.className =
+      'text-[9px] text-emerald-400 font-semibold';
+  }
+}
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  setSaveStatus(
+    'Saving...',
+    'saving'
+  );
+  saveTimer = setTimeout(
+    () => saveRahul(),
+    350
+  );
+}
+async function saveRahul() {
+  if (!rahulEvent || !db) return;
+  if (isSaving) return;
+  isSaving = true;
+  try {
+    await dbPut(
+      'events',
+      rahulEvent
+    );
+    setSaveStatus(
+      'Saved',
+      'saved'
+    );
+    updateDashboardMetrics();
+  } catch (error) {
+    console.error(
+      'Save failed:',
+      error
+    );
+    setSaveStatus(
+      'Save Error',
+      'error'
+    );
+  } finally {
+    isSaving = false;
+  }
+}
+/* ================================================================
+   DEFAULT DATA
+   ================================================================ */
+function getDefaultHardware() {
+  return [
+    {
+      name: 'Ladder',
+      spec: 'As required for rigging & draping',
+      timing: 'Morning',
+      purchased: true
+    },
+    {
+      name: 'Binding Wire',
+      spec: '15 kg',
+      timing: 'Morning',
+      purchased: false
+    },
+    {
+      name: 'Silver Wire',
+      spec: '5 kg',
+      timing: 'Morning',
+      purchased: false
+    },
+    {
+      name: 'Pins',
+      spec: '5 boxes',
+      timing: 'Morning',
+      purchased: false
+    },
+    {
+      name: 'Bond (Adhesive)',
+      spec: '3 Nos',
+      timing: 'Morning',
+      purchased: false
+    },
+    {
+      name: 'Tubs',
+      spec: 'For floral soaking & organization',
+      timing: 'Morning',
+      purchased: false
+    }
+  ];
+}
+function getDefaultFabrics() {
+  return [
+    {
+      name: 'Main Stage Red Velvet Curtains',
+      spec: '6ft length, 10 Nos',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Pathway Red Velvet Curtains',
+      spec: '10ft length, 6 Nos',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Galaxy Off-White Cloth (Tree Drapes)',
+      spec: '100 meters',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Light Pink Galaxy Cloth (Tree Drapes)',
+      spec: '100 meters',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'White Micro Cloth (Phool Chadar & Ceiling)',
+      spec: '5 meters',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Off-White Micro Cloth (Mandap Ceiling)',
+      spec: '5 meters x 6 nos (Total 30m)',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'White Micro Cloth (8ft Entrance Arch)',
+      spec: '15 meters',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Photo Booth Cloth (Red Lycra/Velvet)',
+      spec: '10 meters',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Mandap OffWhite - Screens (10ft)',
+      spec: '4 Nos (Fabric/ Screen)',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Valga White Screens (5ft)',
+      spec: '3 Nos (Fabric/Screen)',
+      timing: 'Morning',
+      loaded: false
+    }
+  ];
+}
+function getDefaultFlowers() {
+  return [
+    {
+      name: 'Asparagus',
+      qty: 90,
+      timing: 'Morning',
+      rate: 30,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Kamini',
+      qty: 28,
+      timing: 'Morning',
+      rate: 80,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Sangapindi',
+      qty: 22,
+      timing: 'Evening',
+      rate: 50,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Milky White Flowers',
+      qty: 172,
+      timing: 'Morning',
+      rate: 150,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Light Pink Flowers',
+      qty: 5,
+      timing: 'Evening',
+      rate: 250,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Peach Roses',
+      qty: 78,
+      timing: 'Evening',
+      rate: 200,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Pink Packets',
+      qty: 24,
+      timing: 'Morning',
+      rate: 250,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'White Rose',
+      qty: 19,
+      timing: 'Morning',
+      rate: 200,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Pink Rose',
+      qty: 25,
+      timing: 'Evening',
+      rate: 200,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Golden Rod',
+      qty: 19,
+      timing: 'Morning',
+      rate: 50,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Gypsophila (Gypsi)',
+      qty: 41,
+      timing: 'Evening',
+      rate: 200,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Oasis Foam Boxes (20/box)',
+      qty: 8,
+      timing: 'Morning',
+      rate: 450,
+      purchased: false,
+      haveIt: false
+    },
+    {
+      name: 'Mesh Rolls',
+      qty: 12,
+      timing: 'Morning',
+      rate: 220,
+      purchased: false,
+      haveIt: false
+    }
+  ];
+}
+function getDefaultFrames() {
+  return [
+    {
+      name: 'Standing Supports (10ft)',
+      spec: '10 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Locking Rods (15ft)',
+      spec: '10 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Locking Rods (12ft Mandap/Valga)',
+      spec: '6 Nos total',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Locking Rods (10ft)',
+      spec: '4 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Phool Chadar Frame',
+      spec: '1 Complete Frame Structure',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Mandap Screen Stands',
+      spec: '4 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Valga Screen Stands',
+      spec: '2 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Name Board U-Arch Frame',
+      spec: '2.5ft x 7.5ft',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Name Board Box Frames',
+      spec: '3ft Frames',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Entrance Arch U-Arch Frame',
+      spec: '8ft Frame',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Photo Booth 4x8 Frames',
+      spec: '2 Nos',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Photo Booth Smaller Boxes',
+      spec: '3ft (2 nos), 2ft (2 nos)',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Homa Setup Items',
+      spec: 'Traditional fire pit components',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Kalash Props',
+      spec: '4 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Traditional Props',
+      spec: '2 Nos',
+      timing: 'Morning',
+      loaded: false
+    },
+    {
+      name: 'Cages & Lanterns',
+      spec: 'Evening pathway/name board',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Name Board Easel Stand',
+      spec: '1 Stand',
+      timing: 'Evening',
+      loaded: false
+    },
+    {
+      name: 'Pots & Handi',
+      spec: 'Handi pots as per design',
+      timing: 'Morning',
+      loaded: false
+    }
+  ];
+}
+function getDefaultFlex() {
+  return [
+    {
+      name: 'Photo Booth Sunboard Box & Frame',
+      spec: 'Custom fabrication',
+      timing: 'Evening',
+      rate: 2000
+    },
+    {
+      name: 'Entrance Arch Flex Printing',
+      spec: 'Morning entrance arch signage',
+      timing: 'Morning',
+      rate: 250
+    },
+    {
+      name: 'Photo Booth 8x8 Flex Printing',
+      spec: 'Evening backdrop',
+      timing: 'Evening',
+      rate: 640
+    },
+    {
+      name: 'Name Board Sunboard Printing',
+      spec: 'Evening name board signage',
+      timing: 'Evening',
+      rate: 300
+    }
+  ];
+}
+function getDefaultLoading() {
+  return [
+    {
+      name: 'Standing Supports (10ft)',
+      req: 10,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: '15ft Locking Rods',
+      req: 10,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: '12ft Locking Rods (Mandap/Valga)',
+      req: 6,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: '10ft Locking Rods',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Phool Chadar Frame',
+      req: 1,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Mandap Screen Stands',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Valga Screen Stands',
+      req: 2,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Name Board U-Arch Frame',
+      req: 1,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Name Board Box Frames',
+      req: 2,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Entrance Arch U-Arch Frame',
+      req: 1,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Photo Booth 4x8 Frames',
+      req: 2,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Photo Booth Smaller Boxes',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Main Stage Red Velvet Curtains',
+      req: 10,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Pathway Red Velvet Curtains',
+      req: 6,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Mandap Screens (10ft)',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Valga Screens (5ft)',
+      req: 3,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Kalash Props',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Traditional Props',
+      req: 2,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Cages & Lanterns',
+      req: 4,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    },
+    {
+      name: 'Name Board Easel Stand',
+      req: 1,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    }
+  ];
+}
+/* ================================================================
+   WORKLIST
+   ================================================================ */
+function getDefaultWorklist() {
+  return [
+    {
+      day: '📅 Sept 3 — Pre-Production',
+      task: 'Design & Mood Board Approved',
+      status: 'DONE',
+      verified: 'VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Approved by client',
+      plannedTime: '10:00 AM',
+      actualTime: '10:00 AM'
+    },
+    {
+      day: '📅 Sept 3 — Pre-Production',
+      task: 'Review Master Flower Mandi Purchase List',
+      status: 'DONE',
+      verified: 'VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Rahul',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Scheduled for Sept 4 night',
+      plannedTime: '11:30 AM',
+      actualTime: '11:30 AM'
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Flower Mandi Purchase Completed (₹78,880)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Rahul',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Sept 4 night purchase deadline',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Flower Purchase Physically Received & Count Verified',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'None',
+      blockedBy: 'Flower Mandi Purchase',
+      notes: 'Check freshness',
+      plannedTime: 'Morning (Sept 5)',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Flower Accessories Checked (Oasis, Mesh, Wire, Pins, Bond, Tubs)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Gopal',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: '155 oasis bricks',
+      plannedTime: 'Morning',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Morning Event Items Pull from Godown',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'General Labour',
+      vehicle: 'Moin Ape',
+      blockedBy: 'None',
+      notes: 'Arch & entrance',
+      plannedTime: 'Morning',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Evening Items Pull — WITHOUT Stage (Pathway, Photo Board, Supports)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'General Labour',
+      vehicle: 'Moin Ape',
+      blockedBy: 'None',
+      notes: 'Per Section 4 PDF',
+      plannedTime: 'Evening',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 4 — Procurement + Loading',
+      task: 'Moin Ape Auto Loading Cross-Check & Departure Confirmed',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Moin',
+      vehicle: 'Moin Ape',
+      blockedBy: 'Items Pulled',
+      notes: 'Engagement dispatch',
+      plannedTime: 'Evening',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Stage Moulding & Velvet Curtains Loaded into Tempo',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Tempo Driver',
+      vehicle: 'Tempo',
+      blockedBy: 'None',
+      notes: '6ft curtains 10 nos',
+      plannedTime: 'Morning',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Stage Moulding Setup & Structure Stability Check',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'Tempo',
+      blockedBy: 'Stage Moulding Loaded',
+      notes: 'Day priority',
+      plannedTime: 'Day',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Main Stage Velvet Draping & Backdrop Preparation',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Decoration Team',
+      vehicle: 'None',
+      blockedBy: 'Stage Setup',
+      notes: 'Clean finish',
+      plannedTime: 'Day',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Tree Drapes, Walkpath Decor & Name Board Pasting (If time permits)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'OPTIONAL',
+      person: 'Decoration Team',
+      vehicle: 'None',
+      blockedBy: 'Time Permits',
+      notes: 'Optional buffer',
+      plannedTime: 'Day',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Mandap Structure Assembled',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Night production start',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Mandap Ceiling Cloth Installed',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'Mandap Structure Assembled',
+      notes: '30m micro cloth',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Phool Chadar Frame Installed',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Complete frame',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Mandap & Valga Screens Installed',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'Mandap Structure',
+      notes: '10ft & 5ft screens',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Homa / Ritual Setup Positioned',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'NORMAL',
+      person: 'Gopal',
+      vehicle: 'None',
+      blockedBy: 'None',
+      notes: 'Fire pit components',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Mandap Floral Work Completed',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'Ceiling & Screens',
+      notes: 'Roses & whites',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 5 — Stage + Mandap Production',
+      task: 'Final Mandap Inspection & MANDAP READY — 06:00 AM',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'None',
+      blockedBy: 'Floral Work',
+      notes: 'Hard deadline 6 AM',
+      plannedTime: '06:00 AM',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 — Event Day & Transition',
+      task: 'Morning Event Execution & Final Mandap Inspection',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'None',
+      blockedBy: 'Mandap Ready 6 AM',
+      notes: 'Freshness check',
+      plannedTime: 'Morning',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 — Event Day & Transition',
+      task: 'Transition: Morning Materials Cleared & Mandap Strike Started',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'General Labour',
+      vehicle: 'None',
+      blockedBy: 'Morning Event End',
+      notes: 'Clear waste',
+      plannedTime: 'Afternoon',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 — Event Day & Transition',
+      task: 'Clear Evening Stage Area & Position Evening Flowers',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'Florist Team',
+      vehicle: 'None',
+      blockedBy: 'Transition Started',
+      notes: 'Peach roses',
+      plannedTime: 'Afternoon',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 — Event Day & Transition',
+      task: 'Reception Main Stage Setup Ready (06:00 PM Hard Gate)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Decoration Team',
+      vehicle: 'None',
+      blockedBy: 'Transition Cleared',
+      notes: 'Hard deadline 6 PM',
+      plannedTime: '06:00 PM',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 Night — Mandap Strike',
+      task: 'Mandap Floral, Fabrics, Screens & Frames Dismantled',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'HIGH',
+      person: 'General Labour',
+      vehicle: 'Moin Ape',
+      blockedBy: 'Reception Started',
+      notes: 'Post-event strike',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 6 Night — Mandap Strike',
+      task: 'All Mandap Items Counted & Moin Vehicle Loaded & Dispatched',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Moin',
+      vehicle: 'Moin Ape',
+      blockedBy: 'Mandap Dismantled',
+      notes: 'Godown return check',
+      plannedTime: 'Night',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 7 — Final Strike + Godown Return',
+      task: 'Reception Stage Dismantling & Velvet / Fabric Removal',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Decoration Team',
+      vehicle: 'Tempo',
+      blockedBy: 'Reception Over',
+      notes: 'Full dismantling',
+      plannedTime: 'Morning',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 7 — Final Strike + Godown Return',
+      task: 'Stage Moulding Structure Dismantled & Hardware Collected',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'Tempo',
+      blockedBy: 'Stage Dismantled',
+      notes: 'Stands & rods',
+      plannedTime: 'Day',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 7 — Final Strike + Godown Return',
+      task: 'Godown Return Completed, Count Verified & Damage Report Updated',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Gopal',
+      vehicle: 'Tempo',
+      blockedBy: 'Final Loading',
+      notes: 'Verification audit',
+      plannedTime: 'Evening',
+      actualTime: ''
+    },
+    {
+      day: '📅 Sept 7 — Final Strike + Godown Return',
+      task: '🔒 EVENT CLOSED (All counts verified, damages noted)',
+      status: 'PENDING',
+      verified: 'NOT VERIFIED',
+      priority: 'CRITICAL',
+      person: 'Yousuf',
+      vehicle: 'None',
+      blockedBy: 'Godown Audit',
+      notes: 'Event successfully closed',
+      plannedTime: 'Evening',
+      actualTime: ''
+    }
+  ];
+}
+/* ================================================================
+   ARRAY MIGRATION
+   Preserves existing records and adds missing defaults.
+   ================================================================ */
+function mergeDefaults(existingArray, defaults) {
+  if (!Array.isArray(existingArray)) {
+    return defaults.map(item => ({ ...item }));
+  }
+  const result =
+    existingArray.map(item => ({
+      ...item
+    }));
+  const existingNames =
+    new Set(
+      result.map(item =>
+        String(item.name || '')
+          .trim()
+          .toLowerCase()
+      )
+    );
+  defaults.forEach(defaultItem => {
+    const key =
+      String(defaultItem.name || '')
+        .trim()
+        .toLowerCase();
+    if (!existingNames.has(key)) {
+      result.push({
+        ...defaultItem
       });
     }
-
-    function dbPut(s, v) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).put(v); tx.oncomplete = res; tx.onerror = rej; }); }
-    function dbGet(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).get(k); r.onsuccess = () => res(r.result); }); }
-
-    async function seedRahulMasterData() {
-      let existing = await dbGet('events', 'VEP-Rahul-0906');
-      
-      const defaultHardware = [
-        { name: 'Ladder', spec: 'As required for rigging & draping', timing: 'Morning', purchased: true },
-        { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
-        { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
-        { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
-        { name: 'Bond (Adhesive)', spec: '3 Nos', timing: 'Morning', purchased: false },
-        { name: 'Tubs', spec: 'For floral soaking & organization', timing: 'Morning', purchased: false }
-      ];
-
-      const defaultFabrics = [
-        { name: 'Main Stage Red Velvet Curtains', spec: '6ft length, 10 Nos', timing: 'Evening', loaded: false },
-        { name: 'Pathway Red Velvet Curtains', spec: '10ft length, 6 Nos', timing: 'Evening', loaded: false },
-        { name: 'Galaxy Off-White Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
-        { name: 'Light Pink Galaxy Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
-        { name: 'White Micro Cloth (Phool Chadar & Ceiling)', spec: '5 meters', timing: 'Morning', loaded: false },
-        { name: 'Off-White Micro Cloth (Mandap Ceiling)', spec: '5 meters x 6 nos (Total 30m)', timing: 'Morning', loaded: false },
-        { name: 'White Micro Cloth (8ft Entrance Arch)', spec: '15 meters', timing: 'Morning', loaded: false },
-        { name: 'Photo Booth Cloth (Red Lycra/Velvet)', spec: '10 meters', timing: 'Evening', loaded: false },
-        { name: 'Mandap OffWhite - Screens (10ft)', spec: '4 Nos (Fabric/ Screen)', timing: 'Morning', loaded: false },
-        { name: 'Valga White Screens (5ft)', spec: '3 Nos (Fabric/Screen)', timing: 'Morning', loaded: false }
-      ];
-
-      const defaultFlowers = [
-        { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
-        { name: 'Kamini', qty: 28, timing: 'Morning', rate: 80, purchased: false, haveIt: false },
-        { name: 'Sangapindi', qty: 22, timing: 'Evening', rate: 50, purchased: false, haveIt: false },
-        { name: 'Milky White Flowers', qty: 172, timing: 'Morning', rate: 150, purchased: false, haveIt: false },
-        { name: 'Light Pink Flowers', qty: 5, timing: 'Evening', rate: 250, purchased: false, haveIt: false },
-        { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
-        { name: 'Pink Packets', qty: 24, timing: 'Morning', rate: 250, purchased: false, haveIt: false },
-        { name: 'White Rose', qty: 19, timing: 'Morning', rate: 200, purchased: false, haveIt: false },
-        { name: 'Pink Rose', qty: 25, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
-        { name: 'Golden Rod', qty: 19, timing: 'Morning', rate: 50, purchased: false, haveIt: false },
-        { name: 'Gypsophila (Gypsi)', qty: 41, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
-        { name: 'Oasis Foam Boxes (20/box)', qty: 8, timing: 'Morning', rate: 450, purchased: false, haveIt: false },
-        { name: 'Mesh Rolls', qty: 12, timing: 'Morning', rate: 220, purchased: false, haveIt: false }
-      ];
-
-      const defaultFrames = [
-        { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
-        { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
-        { name: 'Locking Rods (12ft Mandap/Valga)', spec: '6 Nos total', timing: 'Morning', loaded: false },
-        { name: 'Locking Rods (10ft)', spec: '4 Nos', timing: 'Morning', loaded: false },
-        { name: 'Phool Chadar Frame', spec: '1 Complete Frame Structure', timing: 'Morning', loaded: false },
-        { name: 'Mandap Screen Stands', spec: '4 Nos', timing: 'Morning', loaded: false },
-        { name: 'Valga Screen Stands', spec: '2 Nos', timing: 'Morning', loaded: false },
-        { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
-        { name: 'Name Board Box Frames', spec: '3ft Frames', timing: 'Evening', loaded: false },
-        { name: 'Entrance Arch U-Arch Frame', spec: '8ft Frame', timing: 'Morning', loaded: false },
-        { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false },
-        { name: 'Photo Booth Smaller Boxes', spec: '3ft (2 nos), 2ft (2 nos)', timing: 'Evening', loaded: false },
-        { name: 'Homa Setup Items', spec: 'Traditional fire pit components', timing: 'Morning', loaded: false },
-        { name: 'Kalash Props', spec: '4 Nos', timing: 'Morning', loaded: false },
-        { name: 'Traditional Props', spec: '2 Nos', timing: 'Morning', loaded: false },
-        { name: 'Cages & Lanterns', spec: 'Evening pathway/name board', timing: 'Evening', loaded: false },
-        { name: 'Name Board Easel Stand', spec: '1 Stand', timing: 'Evening', loaded: false },
-        { name: 'Pots & Handi', spec: 'Handi pots as per design', timing: 'Morning', loaded: false }
-      ];
-
-      const defaultFlex = [
-        { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
-        { name: 'Entrance Arch Flex Printing', spec: 'Morning entrance arch signage', timing: 'Morning', rate: 250 },
-        { name: 'Photo Booth 8x8 Flex Printing', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
-        { name: 'Name Board Sunboard Printing', spec: 'Evening name board signage', timing: 'Evening', rate: 300 }
-      ];
-
-      const defaultLoading = [
-        { name: 'Standing Supports (10ft)', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: '15ft Locking Rods', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: '12ft Locking Rods (Mandap/Valga)', req: 6, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: '10ft Locking Rods', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Phool Chadar Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Mandap Screen Stands', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Valga Screen Stands', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Name Board U-Arch Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Name Board Box Frames', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Entrance Arch U-Arch Frame', req: 1, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Photo Booth 4x8 Frames', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Photo Booth Smaller Boxes', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Mandap Screens (10ft)', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Valga Screens (5ft)', req: 3, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Kalash Props', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Traditional Props', req: 2, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Cages & Lanterns', req: 4, loaded: 0, ret: 0, dam: 0, ok: false },
-        { name: 'Name Board Easel Stand', req: 1, loaded: 0, ret: 0, dam: 0, ok: false }
-      ];
-
-      const defaultWorklist = [
-        // SEPT 3
-        { day: '📅 Sept 3 — Pre-Production', task: 'Design & Mood Board Approved', status: 'DONE', verified: 'VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'None', notes: 'Approved by client', plannedTime: '10:00 AM', actualTime: '10:00 AM' },
-        { day: '📅 Sept 3 — Pre-Production', task: 'Review Master Flower Mandi Purchase List', status: 'DONE', verified: 'VERIFIED', priority: 'CRITICAL', person: 'Rahul', vehicle: 'None', blockedBy: 'None', notes: 'Scheduled for Sept 4 night', plannedTime: '11:30 AM', actualTime: '11:30 AM' },
-        
-        // SEPT 4
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Mandi Purchase Completed (₹78,880)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Rahul', vehicle: 'None', blockedBy: 'None', notes: 'Sept 4 night purchase deadline', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Purchase Physically Received & Count Verified', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Flower Mandi Purchase', notes: 'Check freshness', plannedTime: 'Morning (Sept 5)', actualTime: '' },
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Flower Accessories Checked (Oasis, Mesh, Wire, Pins, Bond, Tubs)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Gopal', vehicle: 'None', blockedBy: 'None', notes: '155 oasis bricks', plannedTime: 'Morning', actualTime: '' },
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Morning Event Items Pull from Godown', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'None', notes: 'Arch & entrance', plannedTime: 'Morning', actualTime: '' },
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Evening Items Pull — WITHOUT Stage (Pathway, Photo Board, Supports)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'None', notes: 'Per Section 4 PDF', plannedTime: 'Evening', actualTime: '' },
-        { day: '📅 Sept 4 — Procurement + Loading', task: 'Moin Ape Auto Loading Cross-Check & Departure Confirmed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Moin', vehicle: 'Moin Ape', blockedBy: 'Items Pulled', notes: 'Engagement dispatch', plannedTime: 'Evening', actualTime: '' },
-
-        // SEPT 5
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Stage Moulding & Velvet Curtains Loaded into Tempo', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Tempo Driver', vehicle: 'Tempo', blockedBy: 'None', notes: '6ft curtains 10 nos', plannedTime: 'Morning', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Stage Moulding Setup & Structure Stability Check', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'Tempo', blockedBy: 'Stage Moulding Loaded', notes: 'Day priority', plannedTime: 'Day', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Main Stage Velvet Draping & Backdrop Preparation', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Stage Setup', notes: 'Clean finish', plannedTime: 'Day', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Tree Drapes, Walkpath Decor & Name Board Pasting (If time permits)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'OPTIONAL', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Time Permits', notes: 'Optional buffer', plannedTime: 'Day', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Structure Assembled', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Florist Team', vehicle: 'None', blockedBy: 'None', notes: 'Night production start', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Ceiling Cloth Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Mandap Structure Assembled', notes: '30m micro cloth', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Phool Chadar Frame Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'None', notes: 'Complete frame', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap & Valga Screens Installed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Mandap Structure', notes: '10ft & 5ft screens', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Homa / Ritual Setup Positioned', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'NORMAL', person: 'Gopal', vehicle: 'None', blockedBy: 'None', notes: 'Fire pit components', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Mandap Floral Work Completed', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Florist Team', vehicle: 'None', blockedBy: 'Ceiling & Screens', notes: 'Roses & whites', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 5 — Stage + Mandap Production', task: 'Final Mandap Inspection & MANDAP READY — 06:00 AM', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Floral Work', notes: 'Hard deadline 6 AM', plannedTime: '06:00 AM', actualTime: '' },
-
-        // SEPT 6
-        { day: '📅 Sept 6 — Event Day & Transition', task: 'Morning Event Execution & Final Mandap Inspection', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Mandap Ready 6 AM', notes: 'Freshness check', plannedTime: 'Morning', actualTime: '' },
-        { day: '📅 Sept 6 — Event Day & Transition', task: 'Transition: Morning Materials Cleared & Mandap Strike Started', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'None', blockedBy: 'Morning Event End', notes: 'Clear waste', plannedTime: 'Afternoon', actualTime: '' },
-        { day: '📅 Sept 6 — Event Day & Transition', task: 'Clear Evening Stage Area & Position Evening Flowers', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Florist Team', vehicle: 'None', blockedBy: 'Transition Started', notes: 'Peach roses', plannedTime: 'Afternoon', actualTime: '' },
-        { day: '📅 Sept 6 — Event Day & Transition', task: 'Reception Main Stage Setup Ready (06:00 PM Hard Gate)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Decoration Team', vehicle: 'None', blockedBy: 'Transition Cleared', notes: 'Hard deadline 6 PM', plannedTime: '06:00 PM', actualTime: '' },
-
-        // SEPT 6 NIGHT
-        { day: '📅 Sept 6 Night — Mandap Strike', task: 'Mandap Floral, Fabrics, Screens & Frames Dismantled', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'General Labour', vehicle: 'Moin Ape', blockedBy: 'Reception Started', notes: 'Post-event strike', plannedTime: 'Night', actualTime: '' },
-        { day: '📅 Sept 6 Night — Mandap Strike', task: 'All Mandap Items Counted & Moin Vehicle Loaded & Dispatched', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Moin', vehicle: 'Moin Ape', blockedBy: 'Mandap Dismantled', notes: 'Godown return check', plannedTime: 'Night', actualTime: '' },
-
-        // SEPT 7
-        { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Reception Stage Dismantling & Velvet / Fabric Removal', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Decoration Team', vehicle: 'Tempo', blockedBy: 'Reception Over', notes: 'Full dismantling', plannedTime: 'Morning', actualTime: '' },
-        { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Stage Moulding Structure Dismantled & Hardware Collected', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'Tempo', blockedBy: 'Stage Dismantled', notes: 'Stands & rods', plannedTime: 'Day', actualTime: '' },
-        { day: '📅 Sept 7 — Final Strike + Godown Return', task: 'Godown Return Completed, Count Verified & Damage Report Updated', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Gopal', vehicle: 'Tempo', blockedBy: 'Final Loading', notes: 'Verification audit', plannedTime: 'Evening', actualTime: '' },
-        { day: '📅 Sept 7 — Final Strike + Godown Return', task: '🔒 EVENT CLOSED (All counts verified, damages noted)', status: 'PENDING', verified: 'NOT VERIFIED', priority: 'CRITICAL', person: 'Yousuf', vehicle: 'None', blockedBy: 'Godown Audit', notes: 'Event successfully closed', plannedTime: 'Evening', actualTime: '' }
-      ];
-
-      if (!existing) {
-        existing = {
-          id: 'VEP-Rahul-0906',
-          hardware: defaultHardware,
-          fabrics: defaultFabrics,
-          flowers: defaultFlowers,
-          frames: defaultFrames,
-          flex: defaultFlex,
-          loading: defaultLoading,
-          worklist: defaultWorklist,
-          moodboard: []
-        };
-      } else {
-        existing.hardware = existing.hardware && existing.hardware.length ? existing.hardware : defaultHardware;
-        existing.fabrics = existing.fabrics && existing.fabrics.length ? existing.fabrics : defaultFabrics;
-        existing.flowers = existing.flowers && existing.flowers.length ? existing.flowers : defaultFlowers;
-        existing.frames = existing.frames && existing.frames.length ? existing.frames : defaultFrames;
-        existing.flex = existing.flex && existing.flex.length ? existing.flex : defaultFlex;
-        existing.loading = existing.loading && existing.loading.length ? existing.loading : defaultLoading;
-        existing.worklist = existing.worklist && existing.worklist.length ? existing.worklist : defaultWorklist;
-        existing.moodboard = existing.moodboard || [];
-      }
-
-      await dbPut('events', existing);
-      rahulEvent = existing;
-      uploadedMoodImages = rahulEvent.moodboard || [];
-      renderMoodBoardGrid();
-    }
-
-    function navTo(p) {
-      ['dashboard', 'hardware', 'fabrics', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist'].forEach(id => {
-        const pg = document.getElementById(`page-${id}`);
-        const btn = document.getElementById(`pnav-${id}`);
-        if (pg) pg.classList.add('hidden');
-        if (btn) btn.className = 'py-2.5 px-3 border-b-2 border-transparent';
+  });
+  return result;
+}
+/* ================================================================
+   WORKLIST MIGRATION
+   ================================================================ */
+function normalizeWorkTask(task) {
+  return {
+    day: task.day || 'General',
+    task: task.task || 'Untitled Task',
+    status: task.status || 'PENDING',
+    verified: task.verified || 'NOT VERIFIED',
+    priority: task.priority || 'HIGH',
+    person: task.person || 'Yousuf',
+    vehicle: task.vehicle || 'None',
+    blockedBy: task.blockedBy || 'None',
+    notes: task.notes || '',
+    plannedTime: task.plannedTime || '',
+    actualTime: task.actualTime || ''
+  };
+}
+function mergeWorklist(existing, defaults) {
+  if (!Array.isArray(existing)) {
+    return defaults.map(
+      item => ({ ...item })
+    );
+  }
+  const result =
+    existing.map(
+      task => normalizeWorkTask(task)
+    );
+  const existingTaskKeys =
+    new Set(
+      result.map(task =>
+        `${task.day}|${task.task}`
+          .toLowerCase()
+      )
+    );
+  defaults.forEach(defaultTask => {
+    const key =
+      `${defaultTask.day}|${defaultTask.task}`
+        .toLowerCase();
+    if (!existingTaskKeys.has(key)) {
+      result.push({
+        ...defaultTask
       });
-      const activePg = document.getElementById(`page-${p}`);
-      const activeBtn = document.getElementById(`pnav-${p}`);
-      if (activePg) activePg.classList.remove('hidden');
-      if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
-      if (p !== 'dashboard' && p !== 'moodboard') renderSection(p);
-      if (p === 'dashboard') updateDashboardMetrics();
     }
-
-    async function saveRahul() {
-      await dbPut('events', rahulEvent);
-      updateDashboardMetrics();
-      const ind = document.getElementById('save-status-indicator');
-      if (ind) { ind.innerText = '● Saved'; ind.className = 'text-[9px] text-emerald-400 font-semibold'; }
+  });
+  return result;
+}
+/* ================================================================
+   SEED / MIGRATE
+   ================================================================ */
+async function seedRahulMasterData() {
+  let existing =
+    await dbGet(
+      'events',
+      EVENT_ID
+    );
+  const defaultHardware =
+    getDefaultHardware();
+  const defaultFabrics =
+    getDefaultFabrics();
+  const defaultFlowers =
+    getDefaultFlowers();
+  const defaultFrames =
+    getDefaultFrames();
+  const defaultFlex =
+    getDefaultFlex();
+  const defaultLoading =
+    getDefaultLoading();
+  const defaultWorklist =
+    getDefaultWorklist();
+  if (!existing) {
+    existing = {
+      id: EVENT_ID,
+      hardware:
+        defaultHardware,
+      fabrics:
+        defaultFabrics,
+      flowers:
+        defaultFlowers,
+      frames:
+        defaultFrames,
+      flex:
+        defaultFlex,
+      loading:
+        defaultLoading,
+      worklist:
+        defaultWorklist,
+      moodboard:
+        []
+    };
+  } else {
+    /*
+     * VERSION 41 MIGRATION
+     *
+     * Existing values are preserved.
+     * Missing default items are added.
+     */
+    existing.hardware =
+      mergeDefaults(
+        existing.hardware,
+        defaultHardware
+      );
+    existing.fabrics =
+      mergeDefaults(
+        existing.fabrics,
+        defaultFabrics
+      );
+    existing.flowers =
+      mergeDefaults(
+        existing.flowers,
+        defaultFlowers
+      );
+    existing.frames =
+      mergeDefaults(
+        existing.frames,
+        defaultFrames
+      );
+    existing.flex =
+      mergeDefaults(
+        existing.flex,
+        defaultFlex
+      );
+    existing.loading =
+      mergeDefaults(
+        existing.loading,
+        defaultLoading
+      );
+    existing.worklist =
+      mergeWorklist(
+        existing.worklist,
+        defaultWorklist
+      );
+    existing.moodboard =
+      Array.isArray(existing.moodboard)
+        ? existing.moodboard
+        : [];
+  }
+  /*
+   * Normalize legacy fields without changing
+   * the existing data structure.
+   */
+  existing.hardware =
+    existing.hardware.map(item => ({
+      name: item.name || '',
+      spec: item.spec || 'Standard',
+      timing:
+        item.timing === 'Evening'
+          ? 'Evening'
+          : 'Morning',
+      purchased:
+        Boolean(item.purchased)
+    }));
+  existing.fabrics =
+    existing.fabrics.map(item => ({
+      name: item.name || '',
+      spec: item.spec || 'Standard',
+      timing:
+        item.timing === 'Morning'
+          ? 'Morning'
+          : 'Evening',
+      loaded:
+        Boolean(item.loaded)
+    }));
+  existing.flowers =
+    existing.flowers.map(item => ({
+      name: item.name || '',
+      qty: numberValue(item.qty),
+      timing:
+        item.timing === 'Evening'
+          ? 'Evening'
+          : 'Morning',
+      rate: numberValue(item.rate),
+      purchased:
+        Boolean(item.purchased),
+      haveIt:
+        Boolean(item.haveIt)
+    }));
+  existing.frames =
+    existing.frames.map(item => ({
+      name: item.name || '',
+      spec: item.spec || 'Standard',
+      timing:
+        item.timing === 'Evening'
+          ? 'Evening'
+          : 'Morning',
+      loaded:
+        Boolean(item.loaded)
+    }));
+  existing.flex =
+    existing.flex.map(item => ({
+      name: item.name || '',
+      spec: item.spec || 'Standard',
+      timing:
+        item.timing === 'Morning'
+          ? 'Morning'
+          : 'Evening',
+      rate: numberValue(item.rate)
+    }));
+  existing.loading =
+    existing.loading.map(item => ({
+      name: item.name || '',
+      req: Math.max(0, numberValue(item.req)),
+      loaded: Math.max(0, numberValue(item.loaded)),
+      ret: Math.max(0, numberValue(item.ret)),
+      dam: Math.max(0, numberValue(item.dam)),
+      ok: Boolean(item.ok)
+    }));
+  existing.worklist =
+    existing.worklist.map(
+      task => normalizeWorkTask(task)
+    );
+  await dbPut(
+    'events',
+    existing
+  );
+  rahulEvent =
+    existing;
+  uploadedMoodImages =
+    Array.isArray(rahulEvent.moodboard)
+      ? rahulEvent.moodboard
+      : [];
+  renderMoodBoardGrid();
+}
+/* ================================================================
+   APP INITIALIZATION
+   ================================================================ */
+async function initApp() {
+  await openDatabase();
+  await seedRahulMasterData();
+  renderAllSections();
+  updateDashboardMetrics();
+}
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+function navTo(page) {
+  const pages = [
+    'dashboard',
+    'hardware',
+    'fabrics',
+    'flowers',
+    'frames',
+    'flex',
+    'moodboard',
+    'loading',
+    'worklist'
+  ];
+  pages.forEach(id => {
+    const pageElement =
+      document.getElementById(
+        `page-${id}`
+      );
+    const button =
+      document.getElementById(
+        `pnav-${id}`
+      );
+    if (pageElement) {
+      pageElement.classList.add('hidden');
     }
-
-    function updateDashboardMetrics() {
-      if (!rahulEvent) return;
-      const floralTotal = (rahulEvent.flowers || []).reduce((sum, f) => sum + ((f.qty || 0) * (f.rate || 0)), 0);
-      document.getElementById('dash-floral-outflow').innerText = `₹${floralTotal.toLocaleString()}`;
-
-      const totalTasks = rahulEvent.worklist.length;
-      const doneTasks = rahulEvent.worklist.filter(t => t.status === 'DONE').length;
-      const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-      
-      document.getElementById('dash-prod-progress').innerText = `${pct}%`;
-      document.getElementById('dash-task-counts').innerText = `${doneTasks} Done / ${totalTasks} Total`;
-
-      const hasIssues = rahulEvent.worklist.some(t => t.status === 'ISSUE');
-      const unverifiedDone = rahulEvent.worklist.some(t => t.status === 'DONE' && t.verified !== 'VERIFIED');
-      
-      const statusEl = document.getElementById('dash-exec-status');
-      if (hasIssues) {
-        statusEl.innerText = '⚠️ ACTIVE ISSUE';
-        statusEl.className = 'text-xl font-black text-rose-600';
-      } else if (unverifiedDone) {
-        statusEl.innerText = '🟡 UNVERIFIED DONE';
-        statusEl.className = 'text-xl font-black text-amber-600';
-      } else if (pct === 100) {
-        statusEl.innerText = '🟢 EVENT CLOSED';
-        statusEl.className = 'text-xl font-black text-emerald-600';
-      } else {
-        statusEl.innerText = '🟢 ON SCHEDULE';
-        statusEl.className = 'text-xl font-black text-emerald-600';
-      }
+    if (button) {
+      button.className =
+        'py-2.5 px-3 border-b-2 border-transparent';
     }
-
-    function renderAllSections() {
-      renderSection('hardware');
-      renderSection('fabrics');
-      renderSection('flowers');
-      renderSection('frames');
-      renderSection('flex');
-      renderSection('loading');
-      renderSection('worklist');
-      updateDashboardMetrics();
+  });
+  const activePage =
+    document.getElementById(
+      `page-${page}`
+    );
+  const activeButton =
+    document.getElementById(
+      `pnav-${page}`
+    );
+  if (activePage) {
+    activePage.classList.remove('hidden');
+  }
+  if (activeButton) {
+    activeButton.className =
+      'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
+  }
+  if (
+    page !== 'dashboard' &&
+    page !== 'moodboard'
+  ) {
+    renderSection(page);
+  }
+  if (page === 'dashboard') {
+    updateDashboardMetrics();
+  }
+}
+/* ================================================================
+   DASHBOARD
+   ================================================================ */
+function calculateFloralTotal() {
+  if (
+    !rahulEvent ||
+    !Array.isArray(rahulEvent.flowers)
+  ) {
+    return 0;
+  }
+  return rahulEvent.flowers.reduce(
+    (sum, flower) => {
+      return sum +
+        (
+          numberValue(flower.qty) *
+          numberValue(flower.rate)
+        );
+    },
+    0
+  );
+}
+function calculateFlexTotal() {
+  if (
+    !rahulEvent ||
+    !Array.isArray(rahulEvent.flex)
+  ) {
+    return 0;
+  }
+  return rahulEvent.flex.reduce(
+    (sum, item) =>
+      sum + numberValue(item.rate),
+    0
+  );
+}
+function updateDashboardMetrics() {
+  if (!rahulEvent) return;
+  const floralTotal =
+    calculateFloralTotal();
+  const floralElement =
+    document.getElementById(
+      'dash-floral-outflow'
+    );
+  if (floralElement) {
+    floralElement.innerText =
+      `₹${floralTotal.toLocaleString('en-IN')}`;
+  }
+  const criticalFloral =
+    document.getElementById(
+      'dash-critical-floral'
+    );
+  if (criticalFloral) {
+    criticalFloral.innerText =
+      `₹${floralTotal.toLocaleString('en-IN')}`;
+  }
+  const flowerGrandTotal =
+    document.getElementById(
+      'flowers-grand-total'
+    );
+  if (flowerGrandTotal) {
+    flowerGrandTotal.innerText =
+      `₹${floralTotal.toLocaleString('en-IN')}`;
+  }
+  /*
+   * The ₹1,62,070 figure is a MASTER ESTIMATE,
+   * not a sum of the currently editable sections.
+   *
+   * It is therefore intentionally retained rather
+   * than falsely recalculated from incomplete cost data.
+   */
+  const totalExp =
+    document.getElementById(
+      'dash-total-exp'
+    );
+  if (totalExp && !totalExp.innerText.trim()) {
+    totalExp.innerText =
+      '₹1,62,070';
+  }
+  const worklist =
+    Array.isArray(rahulEvent.worklist)
+      ? rahulEvent.worklist
+      : [];
+  const totalTasks =
+    worklist.length;
+  const doneTasks =
+    worklist.filter(
+      task => task.status === 'DONE'
+    ).length;
+  const issueTasks =
+    worklist.filter(
+      task => task.status === 'ISSUE'
+    ).length;
+  const unverifiedDone =
+    worklist.some(
+      task =>
+        task.status === 'DONE' &&
+        task.verified !== 'VERIFIED'
+    );
+  const progress =
+    totalTasks > 0
+      ? Math.round(
+          (doneTasks / totalTasks) * 100
+        )
+      : 0;
+  const progressElement =
+    document.getElementById(
+      'dash-prod-progress'
+    );
+  if (progressElement) {
+    progressElement.innerText =
+      `${progress}%`;
+  }
+  const taskCounts =
+    document.getElementById(
+      'dash-task-counts'
+    );
+  if (taskCounts) {
+    taskCounts.innerText =
+      `${doneTasks} Done / ${totalTasks} Total`;
+  }
+  const statusElement =
+    document.getElementById(
+      'dash-exec-status'
+    );
+  if (statusElement) {
+    if (issueTasks > 0) {
+      statusElement.innerText =
+        `⚠️ ${issueTasks} ACTIVE ISSUE${issueTasks > 1 ? 'S' : ''}`;
+      statusElement.className =
+        'text-xl font-black text-rose-600';
+    } else if (unverifiedDone) {
+      statusElement.innerText =
+        '🟡 UNVERIFIED DONE';
+      statusElement.className =
+        'text-xl font-black text-amber-600';
+    } else if (
+      totalTasks > 0 &&
+      doneTasks === totalTasks
+    ) {
+      statusElement.innerText =
+        '🟢 EVENT CLOSED';
+      statusElement.className =
+        'text-xl font-black text-emerald-600';
+    } else {
+      statusElement.innerText =
+        '🟢 ON SCHEDULE';
+      statusElement.className =
+        'text-xl font-black text-emerald-600';
     }
-
-    function renderSection(sec) {
-      if (!rahulEvent) return;
-      if (sec === 'hardware') {
-        document.getElementById('table-hardware').innerHTML = rahulEvent.hardware.map((it, i) => `
+  }
+}
+/* ================================================================
+   RENDER ALL
+   ================================================================ */
+function renderAllSections() {
+  [
+    'hardware',
+    'fabrics',
+    'flowers',
+    'frames',
+    'flex',
+    'loading',
+    'worklist'
+  ].forEach(
+    section =>
+      renderSection(section)
+  );
+  renderMoodBoardGrid();
+  updateDashboardMetrics();
+}
+/* ================================================================
+   SECTION RENDER
+   ================================================================ */
+function renderSection(section) {
+  if (!rahulEvent) return;
+  /* -------------------------------------------------------------
+     HARDWARE
+     ------------------------------------------------------------- */
+  if (section === 'hardware') {
+    const table =
+      document.getElementById(
+        'table-hardware'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.hardware
+        .map((item, index) => `
           <tr>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.hardware[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.hardware[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.name)}"
+                oninput="
+                  rahulEvent.hardware[${index}].name=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white">
+            </td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.spec)}"
+                oninput="
+                  rahulEvent.hardware[${index}].spec=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white">
+            </td>
             <td class="p-2 border text-center">
-              <select onchange="rahulEvent.hardware[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
-                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
-                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              <select
+                onchange="
+                  rahulEvent.hardware[${index}].timing=this.value;
+                  scheduleSave();
+                "
+                class="border rounded p-1 text-xs bg-white">
+                <option value="Morning"
+                  ${item.timing === 'Morning' ? 'selected' : ''}>
+                  Morning
+                </option>
+                <option value="Evening"
+                  ${item.timing === 'Evening' ? 'selected' : ''}>
+                  Evening
+                </option>
               </select>
             </td>
-            <td class="p-2 border text-center"><input type="checkbox" ${it.purchased?'checked':''} onchange="rahulEvent.hardware[${i}].purchased=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
-            <td class="p-2 border text-center"><button onclick="rahulEvent.hardware.splice(${i},1); saveRahul(); renderSection('hardware');" class="text-rose-500 font-bold">✕</button></td>
+            <td class="p-2 border text-center">
+              <input
+                type="checkbox"
+                ${item.purchased ? 'checked' : ''}
+                onchange="
+                  rahulEvent.hardware[${index}].purchased=this.checked;
+                  scheduleSave();
+                "
+                class="h-4 w-4 rounded accent-emerald-600">
+            </td>
+            <td class="p-2 border text-center">
+              <button
+                onclick="deleteArrayItem('hardware', ${index})"
+                class="text-rose-500 font-bold">
+                ✕
+              </button>
+            </td>
           </tr>
-        `).join('');
-      } else if (sec === 'fabrics') {
-        document.getElementById('table-fabrics').innerHTML = rahulEvent.fabrics.map((it, i) => `
+        `)
+        .join('');
+  }
+  /* -------------------------------------------------------------
+     FABRICS
+     ------------------------------------------------------------- */
+  else if (section === 'fabrics') {
+    const table =
+      document.getElementById(
+        'table-fabrics'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.fabrics
+        .map((item, index) => `
           <tr>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.fabrics[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.fabrics[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.name)}"
+                oninput="
+                  rahulEvent.fabrics[${index}].name=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white font-semibold">
+            </td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.spec)}"
+                oninput="
+                  rahulEvent.fabrics[${index}].spec=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white">
+            </td>
             <td class="p-2 border text-center">
-              <select onchange="rahulEvent.fabrics[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
-                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
-                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              <select
+                onchange="
+                  rahulEvent.fabrics[${index}].timing=this.value;
+                  scheduleSave();
+                "
+                class="border rounded p-1 text-xs bg-white">
+                <option value="Morning"
+                  ${item.timing === 'Morning' ? 'selected' : ''}>
+                  Morning
+                </option>
+                <option value="Evening"
+                  ${item.timing === 'Evening' ? 'selected' : ''}>
+                  Evening
+                </option>
               </select>
             </td>
-            <td class="p-2 border text-center"><input type="checkbox" ${it.loaded?'checked':''} onchange="rahulEvent.fabrics[${i}].loaded=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
-            <td class="p-2 border text-center"><button onclick="rahulEvent.fabrics.splice(${i},1); saveRahul(); renderSection('fabrics');" class="text-rose-500 font-bold">✕</button></td>
-          </tr>
-        `).join('');
-      } else if (sec === 'flowers') {
-        document.getElementById('table-flowers').innerHTML = rahulEvent.flowers.map((it, i) => `
-          <tr class="${it.purchased?'bg-emerald-50':(it.haveIt?'bg-indigo-50':'')}">
-            <td class="p-2 border text-center"><input type="checkbox" ${it.purchased?'checked':''} onchange="rahulEvent.flowers[${i}].purchased=this.checked; if(this.checked)rahulEvent.flowers[${i}].haveIt=false; saveRahul(); recalcFlowers();" class="h-4 w-4 accent-emerald-600"></td>
-            <td class="p-2 border text-center"><input type="checkbox" ${it.haveIt?'checked':''} onchange="rahulEvent.flowers[${i}].haveIt=this.checked; if(this.checked)rahulEvent.flowers[${i}].purchased=false; saveRahul(); recalcFlowers();" class="h-4 w-4 accent-indigo-600"></td>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.flowers[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
-            <td class="p-2 border w-16 text-center"><input type="number" value="${it.qty}" oninput="rahulEvent.flowers[${i}].qty=parseFloat(this.value)||0; recalcFlowers();" class="w-full border rounded p-1 text-center text-xs bg-white"></td>
             <td class="p-2 border text-center">
-              <select onchange="rahulEvent.flowers[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
-                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
-                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
-              </select>
+              <input
+                type="checkbox"
+                ${item.loaded ? 'checked' : ''}
+                onchange="
+                  rahulEvent.fabrics[${index}].loaded=this.checked;
+                  scheduleSave();
+                "
+                class="h-4 w-4 rounded accent-emerald-600">
             </td>
-            <td class="p-2 border text-right w-20"><input type="number" value="${it.rate}" oninput="rahulEvent.flowers[${i}].rate=parseFloat(this.value)||0; recalcFlowers();" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
-            <td class="p-2 border text-right font-bold">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
-            <td class="p-2 border text-center"><button onclick="rahulEvent.flowers.splice(${i},1); recalcFlowers(); renderSection('flowers');" class="text-rose-500 font-bold">✕</button></td>
-          </tr>
-        `).join('');
-        recalcFlowers();
-      } else if (sec === 'frames') {
-        document.getElementById('table-frames').innerHTML = rahulEvent.frames.map((it, i) => `
-          <tr>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.frames[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.frames[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
             <td class="p-2 border text-center">
-              <select onchange="rahulEvent.frames[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
-                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
-                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
-              </select>
+              <button
+                onclick="deleteArrayItem('fabrics', ${index})"
+                class="text-rose-500 font-bold">
+                ✕
+              </button>
             </td>
-            <td class="p-2 border text-center"><input type="checkbox" ${it.loaded?'checked':''} onchange="rahulEvent.frames[${i}].loaded=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
-            <td class="p-2 border text-center"><button onclick="rahulEvent.frames.splice(${i},1); saveRahul(); renderSection('frames');" class="text-rose-500 font-bold">✕</button></td>
           </tr>
-        `).join('');
-      } else if (sec === 'flex') {
-        document.getElementById('table-flex').innerHTML = rahulEvent.flex.map((it, i) => `
-          <tr>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.flex[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
-            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.flex[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
-            <td class="p-2 border text-center">
-              <select onchange="rahulEvent.flex[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
-                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
-                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
-              </select>
-            </td>
-            <td class="p-2 border text-right"><input type="number" value="${it.rate}" oninput="rahulEvent.flex[${i}].rate=parseFloat(this.value)||0; saveRahul();" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
-            <td class="p-2 border text-center"><button onclick="rahulEvent.flex.splice(${i},1); saveRahul(); renderSection('flex');" class="text-rose-500 font-bold">✕</button></td>
-          </tr>
-        `).join('');
-      } else if (sec === 'loading') {
-        document.getElementById('table-loading').innerHTML = rahulEvent.loading.map((it, i) => {
-          const req = it.req || 0;
-          const ret = it.ret || 0;
-          const dam = it.dam || 0;
-          const missing = Math.max(0, req - (ret + dam));
+        `)
+        .join('');
+  }
+  /* -------------------------------------------------------------
+     FLOWERS
+     ------------------------------------------------------------- */
+  else if (section === 'flowers') {
+    const table =
+      document.getElementById(
+        'table-flowers'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.flowers
+        .map((item, index) => {
+          const qty =
+            numberValue(item.qty);
+          const rate =
+            numberValue(item.rate);
+          const lineTotal =
+            Math.round(
+              qty * rate
+            );
+          const rowClass =
+            item.purchased
+              ? 'bg-emerald-50'
+              : item.haveIt
+                ? 'bg-indigo-50'
+                : '';
           return `
-            <tr>
-              <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.loading[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
-              <td class="p-2 border text-center"><input type="number" value="${req}" oninput="rahulEvent.loading[${i}].req=parseFloat(this.value)||0; saveRahul(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs"></td>
-              <td class="p-2 border text-center"><input type="number" value="${it.loaded || 0}" oninput="rahulEvent.loading[${i}].loaded=parseFloat(this.value)||0; saveRahul(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs"></td>
-              <td class="p-2 border text-center"><input type="number" value="${ret}" oninput="rahulEvent.loading[${i}].ret=parseFloat(this.value)||0; saveRahul(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs"></td>
-              <td class="p-2 border text-center"><input type="number" value="${dam}" oninput="rahulEvent.loading[${i}].dam=parseFloat(this.value)||0; saveRahul(); renderSection('loading');" class="w-14 border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
-              <td class="p-2 border text-center font-bold text-amber-700">${missing > 0 ? missing + ' 🔴' : '0'}</td>
-              <td class="p-2 border text-center"><input type="checkbox" ${it.ok?'checked':''} onchange="rahulEvent.loading[${i}].ok=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
-              <td class="p-2 border text-center"><button onclick="rahulEvent.loading.splice(${i},1); saveRahul(); renderSection('loading');" class="text-rose-500 font-bold">✕</button></td>
+            <tr class="${rowClass}">
+              <td class="p-2 border text-center">
+                <input
+                  type="checkbox"
+                  ${item.purchased ? 'checked' : ''}
+                  onchange="
+                    rahulEvent.flowers[${index}].purchased=this.checked;
+                    if(this.checked){
+                      rahulEvent.flowers[${index}].haveIt=false;
+                    }
+                    scheduleSave();
+                    renderSection('flowers');
+                  "
+                  class="h-4 w-4 accent-emerald-600">
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="checkbox"
+                  ${item.haveIt ? 'checked' : ''}
+                  onchange="
+                    rahulEvent.flowers[${index}].haveIt=this.checked;
+                    if(this.checked){
+                      rahulEvent.flowers[${index}].purchased=false;
+                    }
+                    scheduleSave();
+                    renderSection('flowers');
+                  "
+                  class="h-4 w-4 accent-indigo-600">
+              </td>
+              <td class="p-2 border">
+                <input
+                  type="text"
+                  value="${escapeHTML(item.name)}"
+                  oninput="
+                    rahulEvent.flowers[${index}].name=this.value;
+                    scheduleSave();
+                  "
+                  class="w-full border rounded p-1 text-xs bg-white font-semibold">
+              </td>
+              <td class="p-2 border w-16 text-center">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${qty}"
+                  oninput="
+                    rahulEvent.flowers[${index}].qty=numberValue(this.value);
+                    recalcFlowers(false);
+                  "
+                  onchange="
+                    scheduleSave();
+                    recalcFlowers(false);
+                  "
+                  class="w-full border rounded p-1 text-center text-xs bg-white">
+              </td>
+              <td class="p-2 border text-center">
+                <select
+                  onchange="
+                    rahulEvent.flowers[${index}].timing=this.value;
+                    scheduleSave();
+                  "
+                  class="border rounded p-1 text-xs bg-white">
+                  <option value="Morning"
+                    ${item.timing === 'Morning' ? 'selected' : ''}>
+                    Morning
+                  </option>
+                  <option value="Evening"
+                    ${item.timing === 'Evening' ? 'selected' : ''}>
+                    Evening
+                  </option>
+                </select>
+              </td>
+              <td class="p-2 border text-right w-20">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${rate}"
+                  oninput="
+                    rahulEvent.flowers[${index}].rate=numberValue(this.value);
+                    recalcFlowers(false);
+                  "
+                  onchange="
+                    scheduleSave();
+                    recalcFlowers(false);
+                  "
+                  class="w-full border rounded p-1 text-right text-xs bg-white">
+              </td>
+              <td class="p-2 border text-right font-bold">
+                ₹${lineTotal.toLocaleString('en-IN')}
+              </td>
+              <td class="p-2 border text-center">
+                <button
+                  onclick="deleteArrayItem('flowers', ${index})"
+                  class="text-rose-500 font-bold">
+                  ✕
+                </button>
+              </td>
             </tr>
           `;
-        }).join('');
-      } else if (sec === 'worklist') {
-        const container = document.getElementById('worklist-container');
-        const groups = {};
-        rahulEvent.worklist.forEach((it, i) => {
-          const dayKey = it.day || 'General';
-          if (!groups[dayKey]) groups[dayKey] = [];
-          groups[dayKey].push({ ...it, originalIndex: i });
+        })
+        .join('');
+    recalcFlowers(false);
+  }
+  /* -------------------------------------------------------------
+     FRAMES
+     ------------------------------------------------------------- */
+  else if (section === 'frames') {
+    const table =
+      document.getElementById(
+        'table-frames'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.frames
+        .map((item, index) => `
+          <tr>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.name)}"
+                oninput="
+                  rahulEvent.frames[${index}].name=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white font-semibold">
+            </td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.spec)}"
+                oninput="
+                  rahulEvent.frames[${index}].spec=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white">
+            </td>
+            <td class="p-2 border text-center">
+              <select
+                onchange="
+                  rahulEvent.frames[${index}].timing=this.value;
+                  scheduleSave();
+                "
+                class="border rounded p-1 text-xs bg-white">
+                <option value="Morning"
+                  ${item.timing === 'Morning' ? 'selected' : ''}>
+                  Morning
+                </option>
+                <option value="Evening"
+                  ${item.timing === 'Evening' ? 'selected' : ''}>
+                  Evening
+                </option>
+              </select>
+            </td>
+            <td class="p-2 border text-center">
+              <input
+                type="checkbox"
+                ${item.loaded ? 'checked' : ''}
+                onchange="
+                  rahulEvent.frames[${index}].loaded=this.checked;
+                  scheduleSave();
+                "
+                class="h-4 w-4 rounded accent-emerald-600">
+            </td>
+            <td class="p-2 border text-center">
+              <button
+                onclick="deleteArrayItem('frames', ${index})"
+                class="text-rose-500 font-bold">
+                ✕
+              </button>
+            </td>
+          </tr>
+        `)
+        .join('');
+  }
+  /* -------------------------------------------------------------
+     FLEX
+     ------------------------------------------------------------- */
+  else if (section === 'flex') {
+    const table =
+      document.getElementById(
+        'table-flex'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.flex
+        .map((item, index) => `
+          <tr>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.name)}"
+                oninput="
+                  rahulEvent.flex[${index}].name=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white font-semibold">
+            </td>
+            <td class="p-2 border">
+              <input
+                type="text"
+                value="${escapeHTML(item.spec)}"
+                oninput="
+                  rahulEvent.flex[${index}].spec=this.value;
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-xs bg-white">
+            </td>
+            <td class="p-2 border text-center">
+              <select
+                onchange="
+                  rahulEvent.flex[${index}].timing=this.value;
+                  scheduleSave();
+                "
+                class="border rounded p-1 text-xs bg-white">
+                <option value="Morning"
+                  ${item.timing === 'Morning' ? 'selected' : ''}>
+                  Morning
+                </option>
+                <option value="Evening"
+                  ${item.timing === 'Evening' ? 'selected' : ''}>
+                  Evening
+                </option>
+              </select>
+            </td>
+            <td class="p-2 border text-right">
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value="${numberValue(item.rate)}"
+                oninput="
+                  rahulEvent.flex[${index}].rate=numberValue(this.value);
+                  scheduleSave();
+                "
+                class="w-full border rounded p-1 text-right text-xs bg-white">
+            </td>
+            <td class="p-2 border text-center">
+              <button
+                onclick="deleteArrayItem('flex', ${index})"
+                class="text-rose-500 font-bold">
+                ✕
+              </button>
+            </td>
+          </tr>
+        `)
+        .join('');
+  }
+  /* -------------------------------------------------------------
+     LOADING
+     ------------------------------------------------------------- */
+  else if (section === 'loading') {
+    const table =
+      document.getElementById(
+        'table-loading'
+      );
+    if (!table) return;
+    table.innerHTML =
+      rahulEvent.loading
+        .map((item, index) => {
+          const req =
+            Math.max(
+              0,
+              numberValue(item.req)
+            );
+          const loaded =
+            Math.max(
+              0,
+              numberValue(item.loaded)
+            );
+          const ret =
+            Math.max(
+              0,
+              numberValue(item.ret)
+            );
+          const dam =
+            Math.max(
+              0,
+              numberValue(item.dam)
+            );
+          /*
+           * Final missing quantity:
+           *
+           * Required - Returned - Damaged
+           *
+           * Loaded is NOT subtracted because an item
+           * can be loaded now and returned later.
+           */
+          const missing =
+            Math.max(
+              0,
+              req - ret - dam
+            );
+          const invalidReturn =
+            ret + dam > req;
+          const loadedShort =
+            loaded < req;
+          return `
+            <tr>
+              <td class="p-2 border">
+                <input
+                  type="text"
+                  value="${escapeHTML(item.name)}"
+                  oninput="
+                    rahulEvent.loading[${index}].name=this.value;
+                    scheduleSave();
+                  "
+                  class="w-full border rounded p-1 text-xs bg-white font-semibold">
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${req}"
+                  oninput="
+                    rahulEvent.loading[${index}].req=Math.max(0,numberValue(this.value));
+                    scheduleSave();
+                    renderSection('loading');
+                  "
+                  class="w-14 border rounded p-1 text-center text-xs">
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${loaded}"
+                  oninput="
+                    rahulEvent.loading[${index}].loaded=Math.max(0,numberValue(this.value));
+                    scheduleSave();
+                    renderSection('loading');
+                  "
+                  class="w-14 border rounded p-1 text-center text-xs">
+                ${loadedShort && req > 0
+                  ? `<div class="text-[8px] text-amber-600 mt-0.5">Short Load</div>`
+                  : ''}
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${ret}"
+                  oninput="
+                    rahulEvent.loading[${index}].ret=Math.max(0,numberValue(this.value));
+                    scheduleSave();
+                    renderSection('loading');
+                  "
+                  class="w-14 border rounded p-1 text-center text-xs">
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${dam}"
+                  oninput="
+                    rahulEvent.loading[${index}].dam=Math.max(0,numberValue(this.value));
+                    scheduleSave();
+                    renderSection('loading');
+                  "
+                  class="w-14 border rounded p-1 text-center text-xs text-rose-600 font-bold">
+              </td>
+              <td class="p-2 border text-center font-bold
+                ${invalidReturn ? 'text-rose-700 bg-rose-50' : 'text-amber-700'}">
+                ${invalidReturn
+                  ? 'ERROR ⚠️'
+                  : missing > 0
+                    ? `${missing} 🔴`
+                    : '0 🟢'}
+              </td>
+              <td class="p-2 border text-center">
+                <input
+                  type="checkbox"
+                  ${item.ok ? 'checked' : ''}
+                  ${missing > 0 || invalidReturn ? 'disabled' : ''}
+                  onchange="
+                    rahulEvent.loading[${index}].ok=this.checked;
+                    scheduleSave();
+                  "
+                  class="h-4 w-4 rounded accent-emerald-600">
+              </td>
+              <td class="p-2 border text-center">
+                <button
+                  onclick="deleteArrayItem('loading', ${index})"
+                  class="text-rose-500 font-bold">
+                  ✕
+                </button>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+  }
+  /* -------------------------------------------------------------
+     WORKLIST
+     ------------------------------------------------------------- */
+  else if (section === 'worklist') {
+    const container =
+      document.getElementById(
+        'worklist-container'
+      );
+    if (!container) return;
+    const groups = {};
+    rahulEvent.worklist.forEach(
+      (task, index) => {
+        const dayKey =
+          task.day || 'General';
+        if (!groups[dayKey]) {
+          groups[dayKey] = [];
+        }
+        groups[dayKey].push({
+          ...task,
+          originalIndex: index
         });
-
-        container.innerHTML = Object.keys(groups).map(day => `
+      }
+    );
+    container.innerHTML =
+      Object.keys(groups)
+        .map(day => `
           <div class="border rounded-xl p-3 bg-slate-50 space-y-2">
-            <h4 class="font-bold text-amber-900 text-xs uppercase tracking-wider border-b pb-1">${day}</h4>
+            <h4
+              class="font-bold text-amber-900 text-xs uppercase tracking-wider border-b pb-1">
+              ${escapeHTML(day)}
+            </h4>
             <div class="space-y-2">
-              ${groups[day].map(it => {
-                const isDoneUnverified = (it.status === 'DONE' && it.verified !== 'VERIFIED');
-                const isBlocked = (it.blockedBy && it.blockedBy !== 'None' && it.blockedBy !== '');
-                return `
-                  <div class="p-2.5 border rounded-lg bg-white space-y-2 shadow-sm text-xs ${isDoneUnverified ? 'border-amber-400 bg-amber-50/40' : ''}">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                      <div class="flex items-center gap-2 flex-grow min-w-[260px]">
-                        <select onchange="rahulEvent.worklist[${it.originalIndex}].status=this.value; saveRahul(); renderSection('worklist');" class="border rounded p-1 text-[10px] font-bold ${it.status==='DONE'?'bg-emerald-100 text-emerald-800':(it.status==='IN PROGRESS'?'bg-amber-100 text-amber-800':(it.status==='ISSUE'?'bg-rose-100 text-rose-800':'bg-slate-100 text-slate-800'))}">
-                          <option value="PENDING" ${it.status==='PENDING'?'selected':''}>🔴 PENDING</option>
-                          <option value="IN PROGRESS" ${it.status==='IN PROGRESS'?'selected':''}>🟡 IN PROGRESS</option>
-                          <option value="DONE" ${it.status==='DONE'?'selected':''}>🟢 DONE</option>
-                          <option value="ISSUE" ${it.status==='ISSUE'?'selected':''}>⚠️ ISSUE</option>
-                        </select>
-                        <input type="text" value="${escapeHTML(it.task)}" oninput="rahulEvent.worklist[${it.originalIndex}].task=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white flex-grow font-semibold">
+              ${groups[day]
+                .map(task => {
+                  const index =
+                    task.originalIndex;
+                  const isDoneUnverified =
+                    task.status === 'DONE' &&
+                    task.verified !== 'VERIFIED';
+                  const isBlocked =
+                    task.blockedBy &&
+                    task.blockedBy !== 'None' &&
+                    task.blockedBy !== '';
+                  return `
+                    <div
+                      class="p-2.5 border rounded-lg bg-white space-y-2 shadow-sm text-xs
+                      ${isDoneUnverified
+                        ? 'border-amber-400 bg-amber-50/40'
+                        : ''}">
+                      <div
+                        class="flex flex-wrap items-center justify-between gap-2">
+                        <div
+                          class="flex items-center gap-2 flex-grow min-w-[260px]">
+                          <select
+                            onchange="
+                              rahulEvent.worklist[${index}].status=this.value;
+                              scheduleSave();
+                              renderSection('worklist');
+                            "
+                            class="border rounded p-1 text-[10px] font-bold
+                            ${task.status === 'DONE'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : task.status === 'IN PROGRESS'
+                                ? 'bg-amber-100 text-amber-800'
+                                : task.status === 'ISSUE'
+                                  ? 'bg-rose-100 text-rose-800'
+                                  : 'bg-slate-100 text-slate-800'}">
+                            <option value="PENDING"
+                              ${task.status === 'PENDING' ? 'selected' : ''}>
+                              🔴 PENDING
+                            </option>
+                            <option value="IN PROGRESS"
+                              ${task.status === 'IN PROGRESS' ? 'selected' : ''}>
+                              🟡 IN PROGRESS
+                            </option>
+                            <option value="DONE"
+                              ${task.status === 'DONE' ? 'selected' : ''}>
+                              🟢 DONE
+                            </option>
+                            <option value="ISSUE"
+                              ${task.status === 'ISSUE' ? 'selected' : ''}>
+                              ⚠️ ISSUE
+                            </option>
+                          </select>
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.task)}"
+                            oninput="
+                              rahulEvent.worklist[${index}].task=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-1 text-xs bg-white flex-grow font-semibold">
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <select
+                            onchange="
+                              rahulEvent.worklist[${index}].verified=this.value;
+                              scheduleSave();
+                              renderSection('worklist');
+                            "
+                            class="border rounded p-1 text-[10px] font-bold
+                            ${task.verified === 'VERIFIED'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                              : 'bg-amber-50 text-amber-700 border-amber-300'}">
+                            <option value="NOT VERIFIED"
+                              ${task.verified === 'NOT VERIFIED' ? 'selected' : ''}>
+                              ⚠️ Not Verified
+                            </option>
+                            <option value="VERIFIED"
+                              ${task.verified === 'VERIFIED' ? 'selected' : ''}>
+                              ✓ VERIFIED
+                            </option>
+                          </select>
+                          <button
+                            onclick="deleteWorkTask(${index})"
+                            class="text-rose-500 font-bold px-1">
+                            ✕
+                          </button>
+                        </div>
                       </div>
-                      <div class="flex items-center gap-1.5">
-                        <select onchange="rahulEvent.worklist[${it.originalIndex}].verified=this.value; saveRahul(); renderSection('worklist');" class="border rounded p-1 text-[10px] font-bold ${it.verified==='VERIFIED'?'bg-emerald-50 text-emerald-700 border-emerald-300':'bg-amber-50 text-amber-700 border-amber-300'}">
-                          <option value="NOT VERIFIED" ${it.verified==='NOT VERIFIED'?'selected':''}>⚠️ Not Verified</option>
-                          <option value="VERIFIED" ${it.verified==='VERIFIED'?'selected':''}>✓ VERIFIED</option>
-                        </select>
-                        <button onclick="rahulEvent.worklist.splice(${it.originalIndex},1); saveRahul(); renderSection('worklist');" class="text-rose-500 font-bold px-1">✕</button>
+                      ${isDoneUnverified
+                        ? `
+                          <div
+                            class="text-[10px] text-amber-700 font-bold bg-amber-100/60 p-1 rounded">
+                            ⚠️ WARNING: Task is marked DONE but requires Verification check!
+                          </div>
+                        `
+                        : ''}
+                      ${task.status === 'ISSUE'
+                        ? `
+                          <div
+                            class="text-[10px] text-rose-700 font-bold bg-rose-100 p-1 rounded">
+                            ⚠️ ACTIVE ISSUE — Resolve before event closure.
+                          </div>
+                        `
+                        : ''}
+                      ${isBlocked
+                        ? `
+                          <div
+                            class="text-[10px] text-slate-600 font-semibold bg-slate-100 p-1 rounded">
+                            🔒 Dependency:
+                            ${escapeHTML(task.blockedBy)}
+                          </div>
+                        `
+                        : ''}
+                      <div
+                        class="flex flex-wrap gap-2 text-[10px] text-slate-500 pt-1 border-t items-center">
+                        <span>
+                          Priority:
+                          <select
+                            onchange="
+                              rahulEvent.worklist[${index}].priority=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 font-bold">
+                            <option value="CRITICAL"
+                              ${task.priority === 'CRITICAL' ? 'selected' : ''}>
+                              Critical
+                            </option>
+                            <option value="HIGH"
+                              ${task.priority === 'HIGH' ? 'selected' : ''}>
+                              High
+                            </option>
+                            <option value="NORMAL"
+                              ${task.priority === 'NORMAL' ? 'selected' : ''}>
+                              Normal
+                            </option>
+                            <option value="OPTIONAL"
+                              ${task.priority === 'OPTIONAL' ? 'selected' : ''}>
+                              Optional
+                            </option>
+                          </select>
+                        </span>
+                        <span>
+                          Owner:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.person)}"
+                            oninput="
+                              rahulEvent.worklist[${index}].person=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-20">
+                        </span>
+                        <span>
+                          Vehicle:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.vehicle)}"
+                            oninput="
+                              rahulEvent.worklist[${index}].vehicle=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-16">
+                        </span>
+                        <span>
+                          Blocked By:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.blockedBy)}"
+                            oninput="
+                              rahulEvent.worklist[${index}].blockedBy=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-24">
+                        </span>
+                        <span>
+                          Planned:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.plannedTime)}"
+                            placeholder="e.g. 06:00 AM"
+                            oninput="
+                              rahulEvent.worklist[${index}].plannedTime=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-20 font-bold text-slate-700">
+                        </span>
+                        <span>
+                          Actual:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.actualTime)}"
+                            placeholder="e.g. 5:48 AM"
+                            oninput="
+                              rahulEvent.worklist[${index}].actualTime=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-20 font-bold text-indigo-700">
+                        </span>
+                        <span>
+                          Notes:
+                          <input
+                            type="text"
+                            value="${escapeHTML(task.notes)}"
+                            oninput="
+                              rahulEvent.worklist[${index}].notes=this.value;
+                              scheduleSave();
+                            "
+                            class="border rounded p-0.5 w-28">
+                        </span>
                       </div>
                     </div>
-                    
-                    ${isDoneUnverified ? `<div class="text-[10px] text-amber-700 font-bold bg-amber-100/60 p-1 rounded">⚠️ WARNING: Task is marked DONE but requires Verification check!</div>` : ''}
-                    ${isBlocked ? `<div class="text-[10px] text-slate-600 font-semibold bg-slate-100 p-1 rounded">🔒 Dependency: ${escapeHTML(it.blockedBy)}</div>` : ''}
-
-                    <div class="flex flex-wrap gap-2 text-[10px] text-slate-500 pt-1 border-t items-center">
-                      <span>Priority: <select onchange="rahulEvent.worklist[${it.originalIndex}].priority=this.value; saveRahul();" class="border rounded p-0.5 font-bold"><option value="CRITICAL" ${it.priority==='CRITICAL'?'selected':''}>Critical</option><option value="HIGH" ${it.priority==='HIGH'?'selected':''}>High</option><option value="NORMAL" ${it.priority==='NORMAL'?'selected':''}>Normal</option><option value="OPTIONAL" ${it.priority==='OPTIONAL'?'selected':''}>Optional</option></select></span>
-                      <span>Owner: <input type="text" value="${escapeHTML(it.person||'Yousuf')}" oninput="rahulEvent.worklist[${it.originalIndex}].person=this.value; saveRahul();" class="border rounded p-0.5 w-20"></span>
-                      <span>Vehicle: <input type="text" value="${escapeHTML(it.vehicle||'None')}" oninput="rahulEvent.worklist[${it.originalIndex}].vehicle=this.value; saveRahul();" class="border rounded p-0.5 w-16"></span>
-                      <span>Blocked By: <input type="text" value="${escapeHTML(it.blockedBy||'None')}" oninput="rahulEvent.worklist[${it.originalIndex}].blockedBy=this.value; saveRahul();" class="border rounded p-0.5 w-24"></span>
-                      <span>Planned: <input type="text" value="${escapeHTML(it.plannedTime||'')}" placeholder="e.g. 06:00 AM" oninput="rahulEvent.worklist[${it.originalIndex}].plannedTime=this.value; saveRahul();" class="border rounded p-0.5 w-20 font-bold text-slate-700"></span>
-                      <span>Actual: <input type="text" value="${escapeHTML(it.actualTime||'')}" placeholder="e.g. 5:48 AM" oninput="rahulEvent.worklist[${it.originalIndex}].actualTime=this.value; saveRahul();" class="border rounded p-0.5 w-20 font-bold text-indigo-700"></span>
-                      <span>Notes: <input type="text" value="${escapeHTML(it.notes||'')}" oninput="rahulEvent.worklist[${it.originalIndex}].notes=this.value; saveRahul();" class="border rounded p-0.5 w-28"></span>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
+                  `;
+                })
+                .join('')}
             </div>
           </div>
-        `).join('');
-      }
-    }
-
-    function recalcFlowers() {
-      const total = rahulEvent.flowers.reduce((sum, f) => sum + ((f.qty || 0) * (f.rate || 0)), 0);
-      document.getElementById('flowers-grand-total').innerText = `₹${total.toLocaleString()}`;
-      saveRahul();
-    }
-
-    function addItem(sec) {
-      const name = prompt('Item Name / Description:');
-      if (!name) return;
-      if (sec === 'hardware') rahulEvent.hardware.push({ name, spec: 'Standard', timing: 'Morning', purchased: false });
-      else if (sec === 'fabrics') rahulEvent.fabrics.push({ name, spec: 'Standard', timing: 'Evening', loaded: false });
-      else if (sec === 'flowers') rahulEvent.flowers.push({ name, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false });
-      else if (sec === 'frames') rahulEvent.frames.push({ name, spec: '1 Nos', timing: 'Morning', loaded: false });
-      else if (sec === 'flex') rahulEvent.flex.push({ name, spec: 'Standard', timing: 'Evening', rate: 500 });
-      else if (sec === 'loading') rahulEvent.loading.push({ name, req: 1, loaded: 0, ret: 0, dam: 0, ok: false });
-      saveRahul();
-      renderSection(sec);
-    }
-
-    function addWorkTaskPrompt() {
-      const day = prompt('Day Grouping (e.g., 📅 Sept 4 — Procurement + Loading):', '📅 Sept 4 — Procurement + Loading');
-      const task = prompt('Task Milestone Description:');
-      if (!day || !task) return;
-      rahulEvent.worklist.push({ day, task, status: 'PENDING', verified: 'NOT VERIFIED', priority: 'HIGH', person: 'Yousuf', vehicle: 'None', blockedBy: 'None', notes: '', plannedTime: '', actualTime: '' });
-      saveRahul();
-      renderSection('worklist');
-    }
-
-    let uploadedMoodImages = [];
-    function handleMoodBoardUpload(e) {
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          uploadedMoodImages.push(ev.target.result);
-          rahulEvent.moodboard = uploadedMoodImages;
-          saveRahul();
-          renderMoodBoardGrid();
+        `)
+        .join('');
+  }
+}
+/* ================================================================
+   FLOWER CALCULATION
+   ================================================================ */
+function recalcFlowers(shouldSave = false) {
+  if (!rahulEvent) return;
+  const total =
+    calculateFloralTotal();
+  const totalElement =
+    document.getElementById(
+      'flowers-grand-total'
+    );
+  if (totalElement) {
+    totalElement.innerText =
+      `₹${total.toLocaleString('en-IN')}`;
+  }
+  const dashboardElement =
+    document.getElementById(
+      'dash-floral-outflow'
+    );
+  if (dashboardElement) {
+    dashboardElement.innerText =
+      `₹${total.toLocaleString('en-IN')}`;
+  }
+  const criticalElement =
+    document.getElementById(
+      'dash-critical-floral'
+    );
+  if (criticalElement) {
+    criticalElement.innerText =
+      `₹${total.toLocaleString('en-IN')}`;
+  }
+  if (shouldSave) {
+    scheduleSave();
+  }
+}
+/* ================================================================
+   DELETE ARRAY ITEM
+   ================================================================ */
+function deleteArrayItem(section, index) {
+  if (!rahulEvent[section]) return;
+  const item =
+    rahulEvent[section][index];
+  const label =
+    item?.name ||
+    'this item';
+  if (
+    !confirm(
+      `Delete "${label}"?`
+    )
+  ) return;
+  rahulEvent[section].splice(
+    index,
+    1
+  );
+  scheduleSave();
+  renderSection(section);
+  updateDashboardMetrics();
+}
+/* ================================================================
+   ADD ITEM
+   ================================================================ */
+function addItem(section) {
+  const name =
+    prompt(
+      'Item Name / Description:'
+    );
+  if (!name || !name.trim()) {
+    return;
+  }
+  const cleanName =
+    name.trim();
+  if (section === 'hardware') {
+    rahulEvent.hardware.push({
+      name: cleanName,
+      spec: 'Standard',
+      timing: 'Morning',
+      purchased: false
+    });
+  }
+  else if (section === 'fabrics') {
+    rahulEvent.fabrics.push({
+      name: cleanName,
+      spec: 'Standard',
+      timing: 'Evening',
+      loaded: false
+    });
+  }
+  else if (section === 'flowers') {
+    rahulEvent.flowers.push({
+      name: cleanName,
+      qty: 1,
+      timing: 'Morning',
+      rate: 100,
+      purchased: false,
+      haveIt: false
+    });
+  }
+  else if (section === 'frames') {
+    rahulEvent.frames.push({
+      name: cleanName,
+      spec: '1 Nos',
+      timing: 'Morning',
+      loaded: false
+    });
+  }
+  else if (section === 'flex') {
+    rahulEvent.flex.push({
+      name: cleanName,
+      spec: 'Standard',
+      timing: 'Evening',
+      rate: 500
+    });
+  }
+  else if (section === 'loading') {
+    rahulEvent.loading.push({
+      name: cleanName,
+      req: 1,
+      loaded: 0,
+      ret: 0,
+      dam: 0,
+      ok: false
+    });
+  }
+  scheduleSave();
+  renderSection(section);
+}
+/* ================================================================
+   WORK TASK ADD
+   ================================================================ */
+function addWorkTaskPrompt() {
+  const day =
+    prompt(
+      'Day Grouping (e.g., 📅 Sept 4 — Procurement + Loading):',
+      '📅 Sept 4 — Procurement + Loading'
+    );
+  if (!day || !day.trim()) return;
+  const task =
+    prompt(
+      'Task Milestone Description:'
+    );
+  if (!task || !task.trim()) return;
+  rahulEvent.worklist.push({
+    day: day.trim(),
+    task: task.trim(),
+    status: 'PENDING',
+    verified: 'NOT VERIFIED',
+    priority: 'HIGH',
+    person: 'Yousuf',
+    vehicle: 'None',
+    blockedBy: 'None',
+    notes: '',
+    plannedTime: '',
+    actualTime: ''
+  });
+  scheduleSave();
+  renderSection(
+    'worklist'
+  );
+  updateDashboardMetrics();
+}
+function deleteWorkTask(index) {
+  if (
+    !rahulEvent.worklist[index]
+  ) return;
+  const task =
+    rahulEvent.worklist[index];
+  if (
+    !confirm(
+      `Delete milestone "${task.task}"?`
+    )
+  ) return;
+  rahulEvent.worklist.splice(
+    index,
+    1
+  );
+  scheduleSave();
+  renderSection(
+    'worklist'
+  );
+  updateDashboardMetrics();
+}
+/* ================================================================
+   MOOD BOARD — IMAGE COMPRESSION
+   ================================================================ */
+function resizeImageForStorage(
+  file,
+  maxDimension = 1400,
+  quality = 0.78
+) {
+  return new Promise(
+    (resolve, reject) => {
+      const reader =
+        new FileReader();
+      reader.onload = function(event) {
+        const image =
+          new Image();
+        image.onload =
+          function() {
+            let width =
+              image.naturalWidth;
+            let height =
+              image.naturalHeight;
+            const scale =
+              Math.min(
+                1,
+                maxDimension /
+                Math.max(
+                  width,
+                  height
+                )
+              );
+            width =
+              Math.round(
+                width * scale
+              );
+            height =
+              Math.round(
+                height * scale
+              );
+            const canvas =
+              document.createElement(
+                'canvas'
+              );
+            canvas.width =
+              width;
+            canvas.height =
+              height;
+            const ctx =
+              canvas.getContext(
+                '2d'
+              );
+            ctx.drawImage(
+              image,
+              0,
+              0,
+              width,
+              height
+            );
+            /*
+             * JPEG is dramatically smaller than
+             * storing original phone images.
+             */
+            resolve(
+              canvas.toDataURL(
+                'image/jpeg',
+                quality
+              )
+            );
+          };
+        image.onerror =
+          function() {
+            reject(
+              new Error(
+                'Unable to decode image.'
+              )
+            );
+          };
+        image.src =
+          event.target.result;
+      };
+      reader.onerror =
+        function() {
+          reject(
+            reader.error ||
+            new Error(
+              'Unable to read image.'
+            )
+          );
         };
-        reader.readAsDataURL(file);
-      });
+      reader.readAsDataURL(file);
     }
-
-    function renderMoodBoardGrid() {
-      const container = document.getElementById('mood-board-grid');
-      if (!container) return;
-      if (uploadedMoodImages.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 col-span-3">No mood board images uploaded yet.</p>`;
-        return;
+  );
+}
+async function handleMoodBoardUpload(event) {
+  const files =
+    Array.from(
+      event.target.files || []
+    );
+  if (!files.length) return;
+  const input =
+    event.target;
+  try {
+    for (const file of files) {
+      if (
+        !file.type.startsWith(
+          'image/'
+        )
+      ) {
+        continue;
       }
-      container.innerHTML = uploadedMoodImages.map((src, index) => `
-        <div class="relative border rounded-lg overflow-hidden bg-black/5">
-          <img src="${src}" class="h-32 w-full object-cover">
-          <span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">Ref ${index+1}</span>
-          <button onclick="removeMoodImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full h-5 w-5 text-xs font-bold">✕</button>
-        </div>
-      `).join('');
+      const compressed =
+        await resizeImageForStorage(
+          file
+        );
+      uploadedMoodImages.push(
+        compressed
+      );
     }
-
-    function removeMoodImage(idx) {
-      uploadedMoodImages.splice(idx, 1);
-      rahulEvent.moodboard = uploadedMoodImages;
-      saveRahul();
-      renderMoodBoardGrid();
+    /*
+     * Same existing data structure:
+     * moodboard remains an array of image strings.
+     */
+    rahulEvent.moodboard =
+      uploadedMoodImages;
+    await saveRahul();
+    renderMoodBoardGrid();
+  } catch (error) {
+    console.error(
+      'Mood board upload error:',
+      error
+    );
+    alert(
+      'One or more images could not be added.'
+    );
+  } finally {
+    /*
+     * Allows the same image to be selected again.
+     */
+    if (input) {
+      input.value = '';
     }
-
-    function generateCollageCanvas() {
-      if (uploadedMoodImages.length === 0) return alert('Please upload images first.');
-      const canvas = document.getElementById('mood-board-canvas');
-      const ctx = canvas.getContext('2d');
-      const cols = 3, rows = Math.ceil(uploadedMoodImages.length / cols);
-      const cellW = 300, cellH = 300;
-      canvas.width = cols * cellW; canvas.height = rows * cellH;
-      ctx.fillStyle = '#FAF9F6'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-      let loaded = 0;
-      uploadedMoodImages.forEach((src) => {
-        const img = new Image();
-        img.onload = () => {
-          const idx = loaded;
-          ctx.drawImage(img, (idx % cols) * cellW + 10, Math.floor(idx / cols) * cellH + 10, cellW - 20, cellH - 20);
-          loaded++;
-          if (loaded === uploadedMoodImages.length) {
-            document.getElementById('download-mood-board').href = canvas.toDataURL('image/jpeg', 0.9);
-            document.getElementById('mood-board-output-wrapper').classList.remove('hidden');
-            alert('Mood Board compiled successfully.');
+  }
+}
+function renderMoodBoardGrid() {
+  const container =
+    document.getElementById(
+      'mood-board-grid'
+    );
+  if (!container) return;
+  if (
+    !Array.isArray(
+      uploadedMoodImages
+    ) ||
+    uploadedMoodImages.length === 0
+  ) {
+    container.innerHTML =
+      `
+        <p class="text-slate-400 col-span-3">
+          No mood board images uploaded yet.
+        </p>
+      `;
+    return;
+  }
+  container.innerHTML =
+    uploadedMoodImages
+      .map(
+        (src, index) => `
+          <div
+            class="relative border rounded-lg overflow-hidden bg-black/5">
+            <img
+              src="${src}"
+              alt="Mood board reference ${index + 1}"
+              class="h-32 w-full object-cover">
+            <span
+              class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">
+              Ref ${index + 1}
+            </span>
+            <button
+              onclick="removeMoodImage(${index})"
+              class="absolute top-1 right-1 bg-rose-600 text-white rounded-full h-5 w-5 text-xs font-bold">
+              ✕
+            </button>
+          </div>
+        `
+      )
+      .join('');
+}
+async function removeMoodImage(index) {
+  if (
+    index < 0 ||
+    index >= uploadedMoodImages.length
+  ) return;
+  uploadedMoodImages.splice(
+    index,
+    1
+  );
+  rahulEvent.moodboard =
+    uploadedMoodImages;
+  renderMoodBoardGrid();
+  await saveRahul();
+}
+/* ================================================================
+   COLLAGE
+   ================================================================ */
+function generateCollageCanvas() {
+  if (
+    uploadedMoodImages.length === 0
+  ) {
+    alert(
+      'Please upload images first.'
+    );
+    return;
+  }
+  const canvas =
+    document.getElementById(
+      'mood-board-canvas'
+    );
+  const outputWrapper =
+    document.getElementById(
+      'mood-board-output-wrapper'
+    );
+  const downloadLink =
+    document.getElementById(
+      'download-mood-board'
+    );
+  if (
+    !canvas ||
+    !outputWrapper ||
+    !downloadLink
+  ) return;
+  const ctx =
+    canvas.getContext(
+      '2d'
+    );
+  const cols = 3;
+  const rows =
+    Math.ceil(
+      uploadedMoodImages.length /
+      cols
+    );
+  const cellW = 300;
+  const cellH = 300;
+  canvas.width =
+    cols * cellW;
+  canvas.height =
+    rows * cellH;
+  ctx.fillStyle =
+    '#FAF9F6';
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+  /*
+   * FIX:
+   * Use the actual array index rather than
+   * "loaded" order. This preserves image order
+   * even when images load at different speeds.
+   */
+  let completed = 0;
+  uploadedMoodImages.forEach(
+    (src, index) => {
+      const image =
+        new Image();
+      image.onload =
+        function() {
+          const x =
+            (index % cols) *
+            cellW + 10;
+          const y =
+            Math.floor(
+              index / cols
+            ) *
+            cellH + 10;
+          const maxW =
+            cellW - 20;
+          const maxH =
+            cellH - 20;
+          const scale =
+            Math.min(
+              maxW / image.width,
+              maxH / image.height
+            );
+          const drawW =
+            image.width *
+            scale;
+          const drawH =
+            image.height *
+            scale;
+          const offsetX =
+            x +
+            (maxW - drawW) / 2;
+          const offsetY =
+            y +
+            (maxH - drawH) / 2;
+          ctx.drawImage(
+            image,
+            offsetX,
+            offsetY,
+            drawW,
+            drawH
+          );
+          completed++;
+          if (
+            completed ===
+            uploadedMoodImages.length
+          ) {
+            downloadLink.href =
+              canvas.toDataURL(
+                'image/jpeg',
+                0.9
+              );
+            outputWrapper
+              .classList
+              .remove(
+                'hidden'
+              );
+            alert(
+              'Mood Board compiled successfully.'
+            );
           }
         };
-        img.src = src;
-      });
+      image.onerror =
+        function() {
+          completed++;
+          if (
+            completed ===
+            uploadedMoodImages.length
+          ) {
+            downloadLink.href =
+              canvas.toDataURL(
+                'image/jpeg',
+                0.9
+              );
+            outputWrapper
+              .classList
+              .remove(
+                'hidden'
+              );
+          }
+        };
+      image.src =
+        src;
     }
-
-    function toggleVoiceBot() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) return alert('Speech recognition unsupported.');
-      speechRecognition = new SpeechRecognition();
-      speechRecognition.lang = 'en-IN';
-      const bubble = document.getElementById('voice-bot-bubble');
-      bubble.innerText = 'Listening for command...';
-      bubble.classList.remove('hidden');
-
-      speechRecognition.onresult = (event) => {
-        const cmd = event.results[0][0].transcript.toLowerCase();
-        bubble.innerText = `"${cmd}"`;
-        
-        // Intelligent production assistant answers
-        if (cmd.includes('status') || cmd.includes('progress')) {
-          const totalTasks = rahulEvent.worklist.length;
-          const doneTasks = rahulEvent.worklist.filter(t => t.status === 'DONE').length;
-          const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-          const issues = rahulEvent.worklist.filter(t => t.status === 'ISSUE').length;
-          speakFemale(`Production is ${pct} percent complete. There are ${totalTasks - doneTasks} pending tasks and ${issues} active issues.`);
-        } else if (cmd.includes('critical') || cmd.includes('today')) {
-          speakFemale('Today is September 3rd. Design approval is completed, and the flower mandi purchase of ₹78,880 is due tonight.');
-        } else if (cmd.includes('mandap ready') || cmd.includes('mandap')) {
-          const mandapTask = rahulEvent.worklist.find(t => t.task.includes('MANDAP READY'));
-          speakFemale(mandapTask ? `Mandap ready status is ${mandapTask.status}.` : 'Mandap task not found.');
-        } else if (cmd.includes('floral total') || cmd.includes('flower total')) {
-          const floralTotal = rahulEvent.flowers.reduce((sum, f) => sum + ((f.qty || 0) * (f.rate || 0)), 0);
-          speakFemale(`Total floral purchase outflow is ₹${floralTotal.toLocaleString()}`);
-        } else if (cmd.includes('dashboard') || cmd.includes('command')) {
-          navTo('dashboard'); speakFemale('Opening Command Center.');
-        } else if (cmd.includes('hardware')) {
-          navTo('hardware'); speakFemale('Opening Hardware.');
-        } else if (cmd.includes('fabric')) {
-          navTo('fabrics'); speakFemale('Opening Fabrics list.');
-        } else if (cmd.includes('flower')) {
-          navTo('flowers'); speakFemale('Opening Flower list.');
-        } else if (cmd.includes('frame')) {
-          navTo('frames'); speakFemale('Opening Frames.');
-        } else if (cmd.includes('flex')) {
-          navTo('flex'); speakFemale('Opening Flex list.');
-        } else if (cmd.includes('mood')) {
-          navTo('moodboard'); speakFemale('Opening Mood board.');
-        } else if (cmd.includes('loading') || cmd.includes('audit')) {
-          navTo('loading'); speakFemale('Opening Loading and Audit list.');
-        } else if (cmd.includes('checklist') || cmd.includes('work') || cmd.includes('board')) {
-          navTo('worklist'); speakFemale('Opening Production board.');
-        } else {
-          speakFemale("I am your production assistant. Ask me about your status, critical tasks, floral total, or mandap readiness.");
-        }
-      };
-      speechRecognition.onend = () => { bubble.classList.add('hidden'); };
-      speechRecognition.start();
+  );
+}
+/* ================================================================
+   VOICE ASSISTANT
+   ================================================================ */
+function toggleVoiceBot() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert(
+      'Speech recognition is unsupported in this browser.'
+    );
+    return;
+  }
+  if (isVoiceListening) {
+    try {
+      speechRecognition.stop();
+    } catch (e) {}
+    return;
+  }
+  speechRecognition =
+    new SpeechRecognition();
+  speechRecognition.lang =
+    'en-IN';
+  speechRecognition.interimResults =
+    false;
+  speechRecognition.continuous =
+    false;
+  speechRecognition.maxAlternatives =
+    1;
+  const bubble =
+    document.getElementById(
+      'voice-bot-bubble'
+    );
+  const button =
+    document.getElementById(
+      'voice-bot-btn'
+    );
+  if (bubble) {
+    bubble.innerText =
+      'Listening for command...';
+    bubble.classList.remove(
+      'hidden'
+    );
+  }
+  if (button) {
+    button.innerText =
+      '🔴';
+  }
+  isVoiceListening =
+    true;
+  speechRecognition.onresult =
+    function(event) {
+      const transcript =
+        event.results?.[0]?.[0]?.transcript ||
+        '';
+      const command =
+        transcript
+          .toLowerCase()
+          .trim();
+      if (bubble) {
+        bubble.innerText =
+          `"${command}"`;
+      }
+      processVoiceCommand(
+        command
+      );
+    };
+  speechRecognition.onerror =
+    function(event) {
+      console.warn(
+        'Speech recognition error:',
+        event.error
+      );
+      if (bubble) {
+        bubble.innerText =
+          event.error === 'not-allowed'
+            ? 'Microphone permission denied.'
+            : 'Could not understand the command.';
+      }
+    };
+  speechRecognition.onend =
+    function() {
+      isVoiceListening =
+        false;
+      if (button) {
+        button.innerText =
+          '🎙️';
+      }
+      setTimeout(
+        () => {
+          if (bubble) {
+            bubble.classList.add(
+              'hidden'
+            );
+          }
+        },
+        1500
+      );
+    };
+  try {
+    speechRecognition.start();
+  } catch (error) {
+    console.error(
+      'Speech start error:',
+      error
+    );
+    isVoiceListening =
+      false;
+  }
+}
+function processVoiceCommand(command) {
+  if (!rahulEvent) return;
+  /* STATUS */
+  if (
+    command.includes('status') ||
+    command.includes('progress')
+  ) {
+    const totalTasks =
+      rahulEvent.worklist.length;
+    const doneTasks =
+      rahulEvent.worklist.filter(
+        task =>
+          task.status === 'DONE'
+      ).length;
+    const issues =
+      rahulEvent.worklist.filter(
+        task =>
+          task.status === 'ISSUE'
+      ).length;
+    const percentage =
+      totalTasks > 0
+        ? Math.round(
+            doneTasks /
+            totalTasks *
+            100
+          )
+        : 0;
+    speakFemale(
+      `Production is ${percentage} percent complete. There are ${totalTasks - doneTasks} pending or incomplete tasks and ${issues} active issues.`
+    );
+    return;
+  }
+  /* CRITICAL */
+  if (
+    command.includes('critical') ||
+    command.includes('today')
+  ) {
+    const floralTotal =
+      calculateFloralTotal();
+    speakFemale(
+      `Today is September 3rd. Design approval is completed. The flower mandi purchase is scheduled for September 4th night. The current floral estimate is ${floralTotal.toLocaleString('en-IN')} rupees.`
+    );
+    return;
+  }
+  /* MANDAP */
+  if (
+    command.includes('mandap ready') ||
+    command === 'mandap' ||
+    command.includes('mandap status')
+  ) {
+    const mandapTask =
+      rahulEvent.worklist.find(
+        task =>
+          task.task
+            .toLowerCase()
+            .includes(
+              'mandap ready'
+            )
+      );
+    if (mandapTask) {
+      speakFemale(
+        `Mandap readiness status is ${mandapTask.status}. Verification is ${mandapTask.verified}.`
+      );
+    } else {
+      speakFemale(
+        'Mandap readiness task was not found.'
+      );
     }
-
-    function speakFemale(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.pitch = 1.15;
-      utterance.rate = 0.95;
-      window.speechSynthesis.speak(utterance);
+    return;
+  }
+  /* FLOWER TOTAL */
+  if (
+    command.includes('floral total') ||
+    command.includes('flower total') ||
+    command.includes('flower cost')
+  ) {
+    const total =
+      calculateFloralTotal();
+    speakFemale(
+      `The total floral purchase outflow is ${total.toLocaleString('en-IN')} rupees.`
+    );
+    return;
+  }
+  /* DASHBOARD */
+  if (
+    command.includes('dashboard') ||
+    command.includes('command center') ||
+    command === 'command'
+  ) {
+    navTo('dashboard');
+    speakFemale(
+      'Opening Command Center.'
+    );
+    return;
+  }
+  /* HARDWARE */
+  if (
+    command.includes('hardware') ||
+    command.includes('tools')
+  ) {
+    navTo('hardware');
+    speakFemale(
+      'Opening Hardware and Tools.'
+    );
+    return;
+  }
+  /* FABRICS */
+  if (
+    command.includes('fabric') ||
+    command.includes('drape')
+  ) {
+    navTo('fabrics');
+    speakFemale(
+      'Opening Fabrics and Drapes.'
+    );
+    return;
+  }
+  /* FLOWERS */
+  if (
+    command.includes('flower') ||
+    command.includes('mandi')
+  ) {
+    navTo('flowers');
+    speakFemale(
+      'Opening Flower Mandi list.'
+    );
+    return;
+  }
+  /* FRAMES */
+  if (
+    command.includes('frame') ||
+    command.includes('prop')
+  ) {
+    navTo('frames');
+    speakFemale(
+      'Opening Frames and Props.'
+    );
+    return;
+  }
+  /* FLEX */
+  if (
+    command.includes('flex') ||
+    command.includes('printing') ||
+    command.includes('print')
+  ) {
+    navTo('flex');
+    speakFemale(
+      'Opening Flex and Print list.'
+    );
+    return;
+  }
+  /* MOOD BOARD */
+  if (
+    command.includes('mood') ||
+    command.includes('visual')
+  ) {
+    navTo('moodboard');
+    speakFemale(
+      'Opening Mood Board.'
+    );
+    return;
+  }
+  /* LOADING */
+  if (
+    command.includes('loading') ||
+    command.includes('audit') ||
+    command.includes('godown')
+  ) {
+    navTo('loading');
+    speakFemale(
+      'Opening Loading and Godown Audit.'
+    );
+    return;
+  }
+  /* PRODUCTION BOARD */
+  if (
+    command.includes('checklist') ||
+    command.includes('production') ||
+    command.includes('work') ||
+    command.includes('board')
+  ) {
+    navTo('worklist');
+    speakFemale(
+      'Opening Production Board.'
+    );
+    return;
+  }
+  speakFemale(
+    'I am your production assistant. Ask me about production status, critical tasks, floral total, mandap readiness, or open a studio module.'
+  );
+}
+/* ================================================================
+   TEXT TO SPEECH
+   ================================================================ */
+function speakFemale(text) {
+  if (
+    !('speechSynthesis' in window)
+  ) {
+    return;
+  }
+  try {
+    window.speechSynthesis.cancel();
+    const utterance =
+      new SpeechSynthesisUtterance(
+        text
+      );
+    utterance.pitch =
+      1.15;
+    utterance.rate =
+      0.95;
+    /*
+     * Try to select a female/English India voice
+     * when the browser exposes one.
+     */
+    const voices =
+      window.speechSynthesis
+        .getVoices();
+    const preferred =
+      voices.find(
+        voice =>
+          /female/i.test(
+            voice.name
+          ) &&
+          /en-IN|en-US|en-GB/i.test(
+            voice.lang
+          )
+      ) ||
+      voices.find(
+        voice =>
+          /en-IN/i.test(
+            voice.lang
+          )
+      );
+    if (preferred) {
+      utterance.voice =
+        preferred;
     }
-
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
-    else checkExistingAuth();
-  </script>
+    window.speechSynthesis.speak(
+      utterance
+    );
+  } catch (error) {
+    console.warn(
+      'Speech synthesis unavailable:',
+      error
+    );
+  }
+}
+/* ================================================================
+   PAGE START
+   ================================================================ */
+if (
+  document.readyState ===
+  'loading'
+) {
+  document.addEventListener(
+    'DOMContentLoaded',
+    checkExistingAuth
+  );
+} else {
+  checkExistingAuth();
+}
+/* ================================================================
+   SAFETY: SAVE BEFORE PAGE CLOSE
+   ================================================================ */
+window.addEventListener(
+  'beforeunload',
+  function() {
+    if (
+      rahulEvent &&
+      db &&
+      saveTimer
+    ) {
+      clearTimeout(
+        saveTimer
+      );
+      /*
+       * IndexedDB transactions are asynchronous.
+       * This starts the save, but browser shutdown timing
+       * is outside page control.
+       */
+      dbPut(
+        'events',
+        rahulEvent
+      ).catch(
+        console.error
+      );
+    }
+  }
+);
+</script>
 </body>
 </html>
