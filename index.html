@@ -61,10 +61,11 @@
     </header>
 
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
-      <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">📊 Master Dashboard</button>
-      <button onclick="navTo('hardware')" id="pnav-hardware" class="py-2.5 px-3 border-b-2 border-transparent">🔩 Hardware & Tools</button>
+      <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">📊 Dashboard</button>
+      <button onclick="navTo('hardware')" id="pnav-hardware" class="py-2.5 px-3 border-b-2 border-transparent">🔩 Hardware</button>
+      <button onclick="navTo('fabrics')" id="pnav-fabrics" class="py-2.5 px-3 border-b-2 border-transparent">🧵 Fabrics List</button>
       <button onclick="navTo('flowers')" id="pnav-flowers" class="py-2.5 px-3 border-b-2 border-transparent">🌸 Flower List</button>
-      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frame List</button>
+      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frames & Structures</button>
       <button onclick="navTo('flex')" id="pnav-flex" class="py-2.5 px-3 border-b-2 border-transparent">📜 Flex & Print</button>
       <button onclick="navTo('moodboard')" id="pnav-moodboard" class="py-2.5 px-3 border-b-2 border-transparent">🖼️ Mood Board</button>
       <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Returns</button>
@@ -111,8 +112,9 @@
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Sections Overview</h2>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <button onclick="navTo('hardware')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🔩 Hardware & Tools</button>
+            <button onclick="navTo('fabrics')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🧵 Fabrics List</button>
             <button onclick="navTo('flowers')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🌸 Flower List</button>
-            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frame List</button>
+            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frames & Structures</button>
             <button onclick="navTo('flex')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📜 Flex & Print</button>
             <button onclick="navTo('moodboard')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🖼️ Mood Board Grid</button>
             <button onclick="navTo('loading')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📦 Loading & Returns</button>
@@ -125,12 +127,26 @@
       <section id="page-hardware" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools, Adhesives & Hardware</h3>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools & Adhesives (Section 1.1)</h3>
             <button onclick="addItem('hardware')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Item</button>
           </div>
           <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
             <tbody id="table-hardware" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- FABRICS SECTION -->
+      <section id="page-fabrics" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Fabrics, Draping & Screens (Section 1.2)</h3>
+            <button onclick="addItem('fabrics')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Fabric</button>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Fabric Item</th><th class="p-2 border">Quantity / Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <tbody id="table-fabrics" class="divide-y"></tbody>
           </table>
         </div>
       </section>
@@ -171,11 +187,11 @@
       <section id="page-frames" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Locking Hardware</h3>
-            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame</button>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Locking Hardware (Section 1.3 & 1.4)</h3>
+            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame/Prop</button>
           </div>
           <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Frame / Structure Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
             <tbody id="table-frames" class="divide-y"></tbody>
           </table>
         </div>
@@ -185,7 +201,7 @@
       <section id="page-flex" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Scope</h3>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope (Section 2)</h3>
             <button onclick="addItem('flex')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Print Item</button>
           </div>
           <table class="w-full text-left border-collapse">
@@ -247,7 +263,7 @@
       <section id="page-worklist" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist</h3>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist & Strike Plan</h3>
             <button onclick="addItem('worklist')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Task</button>
           </div>
           <div id="worklist-container" class="space-y-2"></div>
@@ -283,6 +299,7 @@
       document.getElementById('login-overlay').classList.add('hidden');
       document.getElementById('app-container').classList.remove('hidden');
       sessionStorage.setItem('vanji_authenticated', 'true');
+      try { speakFemale("Hi Vanji, welcome to your production studio."); } catch(e){}
       initApp();
     }
     function checkExistingAuth() {
@@ -301,7 +318,7 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiMasterDB', 25);
+        const req = indexedDB.open('VanjiMasterDB', 28);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
           if (!db.objectStoreNames.contains('events')) db.createObjectStore('events', { keyPath: 'id' });
@@ -323,29 +340,66 @@
             { name: 'Ladder', spec: 'Rigging & draping', timing: 'Morning', purchased: true },
             { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
             { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
-            { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false }
+            { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
+            { name: 'Bond (Adhesive)', spec: '3 Nos', timing: 'Morning', purchased: false },
+            { name: 'Tubs', spec: 'Floral soaking', timing: 'Morning', purchased: false }
+          ],
+          fabrics: [
+            { name: 'Main Stage Red Velvet Curtains', spec: '6ft length, 10 Nos', timing: 'Evening', loaded: false },
+            { name: 'Pathway Red Velvet Curtains', spec: '10ft length, 6 Nos', timing: 'Evening', loaded: false },
+            { name: 'Galaxy Off-White Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
+            { name: 'Light Pink Galaxy Cloth (Tree Drapes)', spec: '100 meters', timing: 'Morning', loaded: false },
+            { name: 'White Micro Cloth (Phool Chadar & Ceiling)', spec: '5 meters', timing: 'Morning', loaded: false },
+            { name: 'Off-White Micro Cloth (Mandap Ceiling)', spec: '5m x 6 nos (30m)', timing: 'Morning', loaded: false },
+            { name: 'White Micro Cloth (8ft Entrance Arch)', spec: '15 meters', timing: 'Morning', loaded: false },
+            { name: 'Photo Booth Cloth (Red Lycra/Velvet)', spec: '10 meters', timing: 'Evening', loaded: false }
           ],
           flowers: [
             { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
             { name: 'Kamini', qty: 28, timing: 'Morning', rate: 80, purchased: false, haveIt: false },
+            { name: 'Sangapindi', qty: 22, timing: 'Evening', rate: 50, purchased: false, haveIt: false },
             { name: 'Milky White Flowers', qty: 172, timing: 'Morning', rate: 150, purchased: false, haveIt: false },
-            { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false }
+            { name: 'Light Pink Flowers', qty: 5, timing: 'Evening', rate: 250, purchased: false, haveIt: false },
+            { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+            { name: 'Pink Packets', qty: 24, timing: 'Morning', rate: 250, purchased: false, haveIt: false },
+            { name: 'White Rose', qty: 19, timing: 'Morning', rate: 200, purchased: false, haveIt: false },
+            { name: 'Pink Rose', qty: 25, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+            { name: 'Golden Rod', qty: 19, timing: 'Morning', rate: 50, purchased: false, haveIt: false },
+            { name: 'Gypsophila (Gypsi)', qty: 41, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+            { name: 'Oasis Foam Boxes (20/box)', qty: 8, timing: 'Morning', rate: 450, purchased: false, haveIt: false },
+            { name: 'Mesh Rolls', qty: 12, timing: 'Morning', rate: 220, purchased: false, haveIt: false }
           ],
           frames: [
             { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
-            { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false }
+            { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
+            { name: 'Locking Rods (12ft Mandap/Valga)', spec: '6 Nos total', timing: 'Morning', loaded: false },
+            { name: 'Phool Chadar Frame', spec: '1 Complete Frame', timing: 'Morning', loaded: false },
+            { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
+            { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false },
+            { name: 'Homa Setup Items', spec: 'Fire pit components', timing: 'Morning', loaded: false },
+            { name: 'Kalash Props', spec: '4 Nos', timing: 'Morning', loaded: false }
           ],
           flex: [
             { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
-            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 }
+            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 },
+            { name: 'Photo Booth 8x8 Flex', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
+            { name: 'Name Board Sunboard Printing', spec: 'Evening signage', timing: 'Evening', rate: 300 }
           ],
           loading: [
             { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
-            { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true }
+            { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true },
+            { name: 'Standing Supports (10ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
+            { name: 'Locking Rods (15ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true }
           ],
           worklist: [
             { task: 'Design & Mood Board Approved', date: '2026-09-03', timing: 'Morning', done: true },
-            { task: 'Flower Mandi Purchases Completed', date: '2026-09-03', timing: 'Evening', done: false }
+            { task: 'Flower Mandi Purchases Completed (₹78,880)', date: '2026-09-03', timing: 'Evening', done: false },
+            { task: 'Engagement Event Setup & Ape Auto Dispatch', date: '2026-09-04', timing: 'Evening', done: false },
+            { task: 'Stage Moulding Setup & Red Velvet Draping', date: '2026-09-05', timing: 'Morning', done: false },
+            { task: 'Mandap Ready State for Morning Event', date: '2026-09-06', timing: 'Morning', done: false },
+            { task: 'Transition to Evening Event Items', date: '2026-09-06', timing: 'Evening', done: false },
+            { task: 'Mandap Strike & Godown Return', date: '2026-09-06', timing: 'Evening', done: false },
+            { task: 'Final Strike of Stage Moulding Structure', date: '2026-09-07', timing: 'Morning', done: false }
           ]
         };
         await dbPut('events', existing);
@@ -354,7 +408,7 @@
     }
 
     function navTo(p) {
-      ['dashboard', 'hardware', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist'].forEach(id => {
+      ['dashboard', 'hardware', 'fabrics', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist'].forEach(id => {
         const pg = document.getElementById(`page-${id}`);
         const btn = document.getElementById(`pnav-${id}`);
         if (pg) pg.classList.add('hidden');
@@ -375,6 +429,7 @@
 
     function renderAllSections() {
       renderSection('hardware');
+      renderSection('fabrics');
       renderSection('flowers');
       renderSection('frames');
       renderSection('flex');
@@ -397,6 +452,21 @@
             </td>
             <td class="p-2 border text-center"><input type="checkbox" ${it.purchased?'checked':''} onchange="rahulEvent.hardware[${i}].purchased=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
             <td class="p-2 border text-center"><button onclick="rahulEvent.hardware.splice(${i},1); saveRahul(); renderSection('hardware');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+      } else if (sec === 'fabrics') {
+        document.getElementById('table-fabrics').innerHTML = rahulEvent.fabrics.map((it, i) => `
+          <tr>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.fabrics[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.fabrics[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border text-center">
+              <select onchange="rahulEvent.fabrics[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              </select>
+            </td>
+            <td class="p-2 border text-center"><input type="checkbox" ${it.loaded?'checked':''} onchange="rahulEvent.fabrics[${i}].loaded=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.fabrics.splice(${i},1); saveRahul(); renderSection('fabrics');" class="text-rose-500 font-bold">✕</button></td>
           </tr>
         `).join('');
       } else if (sec === 'flowers') {
@@ -488,6 +558,7 @@
       const name = prompt('Item Name / Description:');
       if (!name) return;
       if (sec === 'hardware') rahulEvent.hardware.push({ name, spec: 'Standard', timing: 'Morning', purchased: false });
+      else if (sec === 'fabrics') rahulEvent.fabrics.push({ name, spec: 'Standard', timing: 'Evening', loaded: false });
       else if (sec === 'flowers') rahulEvent.flowers.push({ name, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false });
       else if (sec === 'frames') rahulEvent.frames.push({ name, spec: '1 Nos', timing: 'Morning', loaded: false });
       else if (sec === 'flex') rahulEvent.flex.push({ name, spec: 'Standard', timing: 'Evening', rate: 500 });
@@ -515,7 +586,7 @@
     }
 
     function generateCollageCanvas() {
-      if (uploadedMoodImages.length === 0) return alert('Please upload images first.');
+      if (uploadedMoodImages.length === 0) return alert('Please upload images first[span_7](start_span)[span_7](end_span).');
       const canvas = document.getElementById('mood-board-canvas');
       const ctx = canvas.getContext('2d');
       const cols = 3, rows = Math.ceil(uploadedMoodImages.length / cols);
@@ -531,7 +602,7 @@
           if (loaded === uploadedMoodImages.length) {
             document.getElementById('download-mood-board').href = canvas.toDataURL('image/jpeg', 0.9);
             document.getElementById('mood-board-output-wrapper').classList.remove('hidden');
-            alert('Mood Board compiled successfully.');
+            alert('Mood Board compiled successfully[span_8](start_span)[span_8](end_span)!');
           }
         };
         img.src = src;
@@ -552,6 +623,7 @@
         bubble.innerText = `"${cmd}"`;
         if (cmd.includes('dashboard')) { navTo('dashboard'); speakFemale('Opening Dashboard.'); }
         else if (cmd.includes('hardware')) { navTo('hardware'); speakFemale('Opening Hardware.'); }
+        else if (cmd.includes('fabric')) { navTo('fabrics'); speakFemale('Opening Fabrics list.'); }
         else if (cmd.includes('flower')) { navTo('flowers'); speakFemale('Opening Flower list.'); }
         else if (cmd.includes('frame')) { navTo('frames'); speakFemale('Opening Frames.'); }
         else if (cmd.includes('flex')) { navTo('flex'); speakFemale('Opening Flex list.'); }
@@ -567,7 +639,10 @@
     function speakFemale(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 1.15;
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
