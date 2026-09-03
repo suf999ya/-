@@ -6,14 +6,11 @@
   <title>Vanji Decorators - Enterprise Production Studio</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="logo.png.PNG">
-  <link rel="icon" type="image/png" href="logo.png.PNG">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @media print {
       body { background: white !important; font-size: 8.5pt; color: black !important; margin: 0; padding: 0; }
       .no-print { display: none !important; }
-      .print-page { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; }
     }
     .mic-pulse { animation: pulse 1.5s infinite; }
     @keyframes pulse {
@@ -28,7 +25,6 @@
   <!-- AUTH LOGIN MODAL -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl space-y-4">
-      <img src="logo.png.PNG" alt="Vanji Logo" class="h-16 w-16 mx-auto object-contain rounded-full border border-amber-400/40 p-1" onerror="this.style.display='none'">
       <div>
         <h2 class="text-base font-black text-amber-400 uppercase tracking-wider">Vanji Decorators</h2>
         <p class="text-xs text-slate-400 mt-0.5">Enterprise Production Studio</p>
@@ -54,17 +50,13 @@
   <div id="app-container" class="hidden">
     <header class="bg-black text-white sticky top-0 z-40 px-4 py-2.5 flex justify-between items-center shadow-lg border-b border-amber-900/40 no-print">
       <div class="flex items-center gap-2.5">
-        <img src="logo.png.PNG" alt="Vanji" class="h-10 w-10 object-contain rounded-full bg-black border border-amber-500/30 shadow-sm" onerror="this.style.display='none'">
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="text-sm font-black tracking-wider uppercase text-amber-400">VANJI</h1>
-            <span class="text-[9px] bg-amber-950 text-amber-200 border border-amber-800 px-1.5 py-0.5 rounded font-mono font-bold" id="active-event-badge">RAHUL-0906</span>
+            <span class="text-[9px] bg-amber-950 text-amber-200 border border-amber-800 px-1.5 py-0.5 rounded font-mono font-bold">RAHUL-0906</span>
           </div>
           <div><span id="save-status-indicator" class="text-[9px] text-emerald-400 font-semibold">● Ready</span></div>
         </div>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <button onclick="openBackupModal()" class="bg-zinc-800 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-zinc-700 font-semibold">💾 Data</button>
       </div>
     </header>
 
@@ -75,13 +67,13 @@
       <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frame List</button>
       <button onclick="navTo('flex')" id="pnav-flex" class="py-2.5 px-3 border-b-2 border-transparent">📜 Flex & Print</button>
       <button onclick="navTo('moodboard')" id="pnav-moodboard" class="py-2.5 px-3 border-b-2 border-transparent">🖼️ Mood Board</button>
-      <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Godown Return</button>
+      <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Returns</button>
       <button onclick="navTo('worklist')" id="pnav-worklist" class="py-2.5 px-3 border-b-2 border-transparent">✅ Work Checklist</button>
     </nav>
 
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
 
-      <!-- DEADLINE & REMINDER BANNER -->
+      <!-- DEADLINE BANNER -->
       <div class="bg-gradient-to-r from-amber-900 to-black text-amber-200 p-3 rounded-xl shadow border border-amber-700/50 flex justify-between items-center text-xs">
         <div>
           <span class="font-bold uppercase tracking-wider text-amber-400 block text-[11px]">⚠️ Production Deadline Alert</span>
@@ -90,7 +82,7 @@
         <button onclick="navTo('flowers')" class="bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px]">Review Mandi</button>
       </div>
 
-      <!-- 1. MASTER DASHBOARD SECTION -->
+      <!-- DASHBOARD -->
       <section id="page-dashboard" class="space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
@@ -129,29 +121,29 @@
         </div>
       </section>
 
-      <!-- 2. HARDWARE & TOOLS SECTION -->
+      <!-- HARDWARE SECTION -->
       <section id="page-hardware" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools, Adhesives & Hardware</h3>
-            <button onclick="addItemModal('hardware')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Hardware Item</button>
+            <button onclick="addItem('hardware')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Item</button>
           </div>
           <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
             <tbody id="table-hardware" class="divide-y"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 3. FLOWER LIST SECTION -->
+      <!-- FLOWERS SECTION -->
       <section id="page-flowers" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <div>
               <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Purchase List (Sept 4th Night)</h3>
-              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock items. Edit rates and quantities live.</p>
+              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock. Edit rates & quantities live.</p>
             </div>
-            <button onclick="addItemModal('flowers')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Flower</button>
+            <button onclick="addItem('flowers')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Flower</button>
           </div>
           <table class="w-full text-left border-collapse">
             <thead>
@@ -160,7 +152,7 @@
                 <th class="p-2 border text-center w-12">Have It</th>
                 <th class="p-2 border">Flower Item</th>
                 <th class="p-2 border text-center w-16">Qty</th>
-                <th class="p-2 border text-center w-20">Timing</th>
+                <th class="p-2 border text-center w-24">Timing</th>
                 <th class="p-2 border text-right w-20">Rate (₹)</th>
                 <th class="p-2 border text-right w-20">Total (₹)</th>
                 <th class="p-2 border text-center w-10"></th>
@@ -175,40 +167,40 @@
         </div>
       </section>
 
-      <!-- 4. FRAME LIST SECTION -->
+      <!-- FRAMES SECTION -->
       <section id="page-frames" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Locking Hardware</h3>
-            <button onclick="addItemModal('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame/Structure</button>
+            <button onclick="addItem('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame</button>
           </div>
           <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Frame / Structure Item</th><th class="p-2 border">Specification / Dimensions</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Frame / Structure Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
             <tbody id="table-frames" class="divide-y"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 5. FLEX & PRINT SECTION -->
+      <!-- FLEX SECTION -->
       <section id="page-flex" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope</h3>
-            <button onclick="addItemModal('flex')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Print Item</button>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Scope</h3>
+            <button onclick="addItem('flex')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Print Item</button>
           </div>
           <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print / Banner Item</th><th class="p-2 border">Specification / Scope</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print Item</th><th class="p-2 border">Specification</th><th class="p-2 border text-center w-24">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
             <tbody id="table-flex" class="divide-y"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 6. MOOD BOARD GRID SECTION -->
+      <!-- MOOD BOARD SECTION -->
       <section id="page-moodboard" class="hidden space-y-4">
         <div class="bg-black text-white p-4 rounded-xl shadow flex justify-between items-center text-xs">
           <div>
             <h2 class="font-black text-amber-400 text-sm">Visual Design Mood Board Grid</h2>
-            <p class="text-[10px] text-slate-300">Upload multiple reference photos to organize your theme layout.</p>
+            <p class="text-[10px] text-slate-300">Upload multiple reference photos to organize theme layout.</p>
           </div>
           <input type="file" accept="image/*" multiple class="text-xs text-slate-300" onchange="handleMoodBoardUpload(event)">
         </div>
@@ -224,7 +216,7 @@
         </div>
       </section>
 
-      <!-- 7. LOADING & GODOWN RETURN CHECKLIST -->
+      <!-- LOADING & RETURNS SECTION -->
       <section id="page-loading" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
@@ -232,7 +224,7 @@
               <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading & Godown Return Audit</h3>
               <p class="text-[10px] text-slate-400">Track items loaded for event and returned/damaged back to godown.</p>
             </div>
-            <button onclick="addItemModal('loading')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Gear</button>
+            <button onclick="addItem('loading')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Gear</button>
           </div>
           <table class="w-full text-left border-collapse">
             <thead>
@@ -251,12 +243,12 @@
         </div>
       </section>
 
-      <!-- 8. WORK CHECKLIST SECTION -->
+      <!-- WORK CHECKLIST SECTION -->
       <section id="page-worklist" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist</h3>
-            <button onclick="addWorkItemPrompt()" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Task</button>
+            <button onclick="addItem('worklist')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Task</button>
           </div>
           <div id="worklist-container" class="space-y-2"></div>
         </div>
@@ -267,23 +259,6 @@
     <div class="fixed bottom-6 right-6 z-40 no-print flex flex-col items-end gap-2">
       <div id="voice-bot-bubble" class="hidden bg-black/90 border border-amber-500/50 text-amber-300 text-[11px] font-bold py-1.5 px-3 rounded-xl shadow-2xl backdrop-blur-md max-w-xs transition"></div>
       <button onclick="toggleVoiceBot()" id="voice-bot-btn" class="h-14 w-14 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-black font-black text-xl shadow-2xl flex items-center justify-center border-2 border-amber-200 transition">🎙️</button>
-    </div>
-  </div>
-
-  <!-- SETTINGS -->
-  <section id="page-settings" class="hidden max-w-4xl mx-auto p-4 space-y-4 text-xs">
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-      <h2 class="font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Studio Credentials & Gemini Key</h2>
-      <div><label class="block text-slate-400 text-[10px] mb-1">Google Gemini API Key</label><input id="set-aikey" type="password" class="w-full border rounded p-1.5"></div>
-      <button onclick="saveAppSettings()" class="bg-amber-700 text-white font-bold py-1.5 px-3 rounded">Save Settings</button>
-    </div>
-  </section>
-
-  <!-- BACKUP MODAL -->
-  <div id="modal-backup" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
-    <div class="bg-white w-full max-w-sm rounded-xl p-5 space-y-3 text-xs shadow-2xl">
-      <div class="flex justify-between items-center border-b pb-2"><h2 class="text-sm font-bold">Backup & Restore</h2><button onclick="document.getElementById('modal-backup').classList.add('hidden')">✕</button></div>
-      <button onclick="exportFullBackup()" class="w-full bg-black text-amber-400 font-bold py-2 rounded">Export All Data (.json)</button>
     </div>
   </div>
 
@@ -304,7 +279,6 @@
       if (u === 'vanji' && p === 'VANJI') { executeUnlock(); }
       else { document.getElementById('login-error').classList.remove('hidden'); }
     }
-    function bypassUnlock() { executeUnlock(); }
     function executeUnlock() {
       document.getElementById('login-overlay').classList.add('hidden');
       document.getElementById('app-container').classList.remove('hidden');
@@ -327,12 +301,10 @@
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiMasterDB', 22);
+        const req = indexedDB.open('VanjiMasterDB', 25);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
-          ['events', 'settings'].forEach(s => {
-            if (!db.objectStoreNames.contains(s)) db.createObjectStore(s, { keyPath: s === 'settings' ? 'key' : 'id' });
-          });
+          if (!db.objectStoreNames.contains('events')) db.createObjectStore('events', { keyPath: 'id' });
         };
         req.onsuccess = (e) => { db = e.target.result; res(db); };
         req.onerror = rej;
@@ -347,50 +319,33 @@
       if (!existing) {
         existing = {
           id: 'VEP-Rahul-0906',
-          client: 'Rahul',
-          date: '2026-09-06',
-          venue: 'Golden Landmark',
           hardware: [
             { name: 'Ladder', spec: 'Rigging & draping', timing: 'Morning', purchased: true },
             { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
             { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
-            { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
-            { name: 'Bond Adhesive', spec: '3 Nos', timing: 'Morning', purchased: false },
-            { name: 'Tubs', spec: 'Floral soaking', timing: 'Morning', purchased: false }
+            { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false }
           ],
           flowers: [
             { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
             { name: 'Kamini', qty: 28, timing: 'Morning', rate: 80, purchased: false, haveIt: false },
-            { name: 'Sangapindi', qty: 22, timing: 'Evening', rate: 50, purchased: false, haveIt: false },
             { name: 'Milky White Flowers', qty: 172, timing: 'Morning', rate: 150, purchased: false, haveIt: false },
-            { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
-            { name: 'Gypsophila', qty: 41, timing: 'Evening', rate: 200, purchased: false, haveIt: false }
+            { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false }
           ],
           frames: [
             { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
-            { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
-            { name: 'Phool Chadar Frame', spec: '1 Complete Frame', timing: 'Morning', loaded: false },
-            { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
-            { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false }
+            { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false }
           ],
           flex: [
             { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
-            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 },
-            { name: 'Photo Booth 8x8 Flex', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
-            { name: 'Name Board Sunboard Printing', spec: 'Evening signage', timing: 'Evening', rate: 300 }
+            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 }
           ],
           loading: [
             { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
-            { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true },
-            { name: 'Standing Supports (10ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true }
+            { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true }
           ],
           worklist: [
             { task: 'Design & Mood Board Approved', date: '2026-09-03', timing: 'Morning', done: true },
-            { task: 'Flower Mandi Purchases Completed', date: '2026-09-03', timing: 'Evening', done: false },
-            { task: 'Engagement Event Setup', date: '2026-09-04', timing: 'Evening', done: false },
-            { task: 'Mandap Setup Complete', date: '2026-09-06', timing: 'Morning', done: false },
-            { task: 'Main Event & Evening Transition', date: '2026-09-06', timing: 'Evening', done: false },
-            { task: 'Strike & Godown Return', date: '2026-09-07', timing: 'Morning', done: false }
+            { task: 'Flower Mandi Purchases Completed', date: '2026-09-03', timing: 'Evening', done: false }
           ]
         };
         await dbPut('events', existing);
@@ -399,7 +354,7 @@
     }
 
     function navTo(p) {
-      ['dashboard', 'hardware', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist', 'settings'].forEach(id => {
+      ['dashboard', 'hardware', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist'].forEach(id => {
         const pg = document.getElementById(`page-${id}`);
         const btn = document.getElementById(`pnav-${id}`);
         if (pg) pg.classList.add('hidden');
@@ -409,7 +364,7 @@
       const activeBtn = document.getElementById(`pnav-${p}`);
       if (activePg) activePg.classList.remove('hidden');
       if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
-      if (p !== 'dashboard' && p !== 'settings' && p !== 'moodboard') renderSection(p);
+      if (p !== 'dashboard' && p !== 'moodboard') renderSection(p);
     }
 
     async function saveRahul() {
@@ -529,24 +484,17 @@
       saveRahul();
     }
 
-    function addItemModal(sec) {
+    function addItem(sec) {
       const name = prompt('Item Name / Description:');
       if (!name) return;
-      if (sec === 'hardware') { rahulEvent.hardware.push({ name, spec: 'Standard', timing: 'Morning', purchased: false }); }
-      else if (sec === 'flowers') { rahulEvent.flowers.push({ name, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false }); }
-      else if (sec === 'frames') { rahulEvent.frames.push({ name, spec: '1 Nos', timing: 'Morning', loaded: false }); }
-      else if (sec === 'flex') { rahulEvent.flex.push({ name, spec: 'Standard', timing: 'Evening', rate: 500 }); }
-      else if (sec === 'loading') { rahulEvent.loading.push({ name, req: 1, loaded: 1, ret: 0, dam: 0, ok: true }); }
+      if (sec === 'hardware') rahulEvent.hardware.push({ name, spec: 'Standard', timing: 'Morning', purchased: false });
+      else if (sec === 'flowers') rahulEvent.flowers.push({ name, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false });
+      else if (sec === 'frames') rahulEvent.frames.push({ name, spec: '1 Nos', timing: 'Morning', loaded: false });
+      else if (sec === 'flex') rahulEvent.flex.push({ name, spec: 'Standard', timing: 'Evening', rate: 500 });
+      else if (sec === 'loading') rahulEvent.loading.push({ name, req: 1, loaded: 1, ret: 0, dam: 0, ok: true });
+      else if (sec === 'worklist') rahulEvent.worklist.push({ task: name, date: '2026-09-06', timing: 'Morning', done: false });
       saveRahul();
       renderSection(sec);
-    }
-
-    function addWorkItemPrompt() {
-      const task = prompt('Task Description:');
-      if (!task) return;
-      rahulEvent.worklist.push({ task, date: '2026-09-06', timing: 'Morning', done: false });
-      saveRahul();
-      renderSection('worklist');
     }
 
     let uploadedMoodImages = [];
@@ -567,7 +515,7 @@
     }
 
     function generateCollageCanvas() {
-      if (uploadedMoodImages.length === 0) return alert('Please upload images first[span_0](start_span)[span_0](end_span).');
+      if (uploadedMoodImages.length === 0) return alert('Please upload images first.');
       const canvas = document.getElementById('mood-board-canvas');
       const ctx = canvas.getContext('2d');
       const cols = 3, rows = Math.ceil(uploadedMoodImages.length / cols);
@@ -583,14 +531,13 @@
           if (loaded === uploadedMoodImages.length) {
             document.getElementById('download-mood-board').href = canvas.toDataURL('image/jpeg', 0.9);
             document.getElementById('mood-board-output-wrapper').classList.remove('hidden');
-            alert('Mood Board compiled[span_1](start_span)[span_1](end_span)!');
+            alert('Mood Board compiled successfully.');
           }
         };
         img.src = src;
       });
     }
 
-    // VOICE BOT AGENT
     function toggleVoiceBot() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) return alert('Speech recognition unsupported.');
@@ -607,11 +554,11 @@
         else if (cmd.includes('hardware')) { navTo('hardware'); speakFemale('Opening Hardware.'); }
         else if (cmd.includes('flower')) { navTo('flowers'); speakFemale('Opening Flower list.'); }
         else if (cmd.includes('frame')) { navTo('frames'); speakFemale('Opening Frames.'); }
-        else if (cmd.includes('flex')) { navTo('flex'); speakFemale('Opening Flex.'); }
+        else if (cmd.includes('flex')) { navTo('flex'); speakFemale('Opening Flex list.'); }
         else if (cmd.includes('mood')) { navTo('moodboard'); speakFemale('Opening Mood board.'); }
         else if (cmd.includes('loading')) { navTo('loading'); speakFemale('Opening Loading list.'); }
         else if (cmd.includes('checklist') || cmd.includes('work')) { navTo('worklist'); speakFemale('Opening Work checklist.'); }
-        else { speakFemale(`Processed: ${cmd}`); }
+        else { speakFemale(`Command processed.`); }
       };
       speechRecognition.onend = () => { bubble.classList.add('hidden'); };
       speechRecognition.start();
@@ -621,12 +568,6 @@
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-    }
-
-    function saveAppSettings() { alert('Settings saved.'); }
-    function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
-    function exportFullBackup() {
-      const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(rahulEvent)); a.download = `Vanji_Rahul_Backup.json`; a.click();
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
