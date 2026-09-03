@@ -65,19 +65,18 @@
       </div>
       <div class="flex items-center gap-1.5">
         <button onclick="openBackupModal()" class="bg-zinc-800 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-zinc-700 font-semibold">💾 Data</button>
-        <button onclick="createNewEventFlow()" class="bg-amber-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold shadow">+ New Event</button>
       </div>
     </header>
 
     <nav class="bg-white border-b border-slate-200 sticky top-[57px] z-40 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 no-print shadow-sm">
-      <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950">🏠 Dashboard</button>
-      <button onclick="navTo('events')" id="pnav-events" class="py-2.5 px-3 border-b-2 border-transparent">📁 Events</button>
-      <button onclick="navTo('workspace')" id="pnav-workspace" class="py-2.5 px-3 border-b-2 border-transparent text-indigo-900">⚡ Active Workspace (Rahul)</button>
-      <button onclick="navTo('design')" id="pnav-design" class="py-2.5 px-3 border-b-2 border-transparent text-amber-900 font-extrabold">🤖 AI & Mood Board</button>
-      <button onclick="navTo('pricebook')" id="pnav-pricebook" class="py-2.5 px-3 border-b-2 border-transparent">💰 Master Rates</button>
-      <button onclick="navTo('inventory')" id="pnav-inventory" class="py-2.5 px-3 border-b-2 border-transparent">📦 Inventory</button>
-      <button onclick="navTo('labour')" id="pnav-labour" class="py-2.5 px-3 border-b-2 border-transparent">👷 Labour & Crew</button>
-      <button onclick="navTo('settings')" id="pnav-settings" class="py-2.5 px-3 border-b-2 border-transparent">⚙️ Settings</button>
+      <button onclick="navTo('dashboard')" id="pnav-dashboard" class="py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold">📊 Master Dashboard</button>
+      <button onclick="navTo('hardware')" id="pnav-hardware" class="py-2.5 px-3 border-b-2 border-transparent">🔩 Hardware & Tools</button>
+      <button onclick="navTo('flowers')" id="pnav-flowers" class="py-2.5 px-3 border-b-2 border-transparent">🌸 Flower List</button>
+      <button onclick="navTo('frames')" id="pnav-frames" class="py-2.5 px-3 border-b-2 border-transparent">🏛️ Frame List</button>
+      <button onclick="navTo('flex')" id="pnav-flex" class="py-2.5 px-3 border-b-2 border-transparent">📜 Flex & Print</button>
+      <button onclick="navTo('moodboard')" id="pnav-moodboard" class="py-2.5 px-3 border-b-2 border-transparent">🖼️ Mood Board</button>
+      <button onclick="navTo('loading')" id="pnav-loading" class="py-2.5 px-3 border-b-2 border-transparent">📦 Loading & Godown Return</button>
+      <button onclick="navTo('worklist')" id="pnav-worklist" class="py-2.5 px-3 border-b-2 border-transparent">✅ Work Checklist</button>
     </nav>
 
     <main class="max-w-4xl mx-auto p-4 space-y-4 no-print">
@@ -86,401 +85,213 @@
       <div class="bg-gradient-to-r from-amber-900 to-black text-amber-200 p-3 rounded-xl shadow border border-amber-700/50 flex justify-between items-center text-xs">
         <div>
           <span class="font-bold uppercase tracking-wider text-amber-400 block text-[11px]">⚠️ Production Deadline Alert</span>
-          <span>Today is <strong>Sept 3rd</strong>: Last day for purchases (£78,880 total). Engagement event is tomorrow <strong>Sept 4th</strong>!</span>
+          <span>Today is <strong>Sept 3rd</strong>: Last day for purchases (₹78,880 total). Engagement event is tomorrow <strong>Sept 4th</strong>!</span>
         </div>
-        <button onclick="navTo('workspace'); switchWsTab('flowers');" class="bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px]">Review Mandi List</button>
+        <button onclick="navTo('flowers')" class="bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px]">Review Mandi</button>
       </div>
 
-      <!-- DASHBOARD -->
+      <!-- 1. MASTER DASHBOARD SECTION -->
       <section id="page-dashboard" class="space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Total Bookings</span>
-            <p class="text-xl font-black text-slate-900" id="dash-total-events">1</p>
-            <span class="text-[9px] text-amber-700 font-bold">1 Active (Rahul Sept 6-7)</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Active Event</span>
+            <p class="text-sm font-black text-slate-900">Rahul's Event</p>
+            <span class="text-[9px] text-amber-700 font-bold">Sept 6th-7th, 2026</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Contract Pipeline</span>
-            <p class="text-xl font-black text-amber-700" id="dash-total-contract">₹1,62,070</p>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Total Expenditure</span>
+            <p class="text-xl font-black text-amber-700">₹1,62,070</p>
             <span class="text-[9px] text-slate-400">Master Estimate</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400">Production Outflow</span>
-            <p class="text-xl font-black text-slate-700" id="dash-total-outflow">₹1,62,070</p>
-            <span class="text-[9px] text-slate-400">Florals + Labor + Freight</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Floral Outflow</span>
+            <p class="text-xl font-black text-slate-700">₹78,880</p>
+            <span class="text-[9px] text-slate-400">Sept 4th Purchase</span>
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400">Execution Status</span>
             <p class="text-xl font-black text-emerald-600">On Schedule</p>
-            <span class="text-[9px] text-emerald-700 font-bold">Sept 4th Engagement Ready</span>
+            <span class="text-[9px] text-emerald-700 font-bold">Godown Return Active</span>
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Rahul's Execution Timeline</h2>
-          <div class="space-y-2 text-xs">
-            <div class="p-2 border-l-4 border-amber-600 bg-amber-50/50 rounded flex justify-between items-center">
-              <span><strong>Sept 3rd (Today):</strong> Complete Master Flower Mandi & Material Purchases[span_1](start_span)[span_1](end_span)</span>
-              <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-bold">Urgent</span>
-            </div>
-            <div class="p-2 border-l-4 border-indigo-600 bg-indigo-50/50 rounded flex justify-between items-center">
-              <span><strong>Sept 4th:</strong> Ape Auto Trip (Load Morning & Evening Items minus Stage) + Engagement List Setup[span_2](start_span)[span_2](end_span)</span>
-              <span class="text-[10px] bg-indigo-200 text-indigo-900 px-2 py-0.5 rounded font-bold">Tomorrow</span>
-            </div>
-            <div class="p-2 border-l-4 border-slate-600 bg-slate-50 rounded flex justify-between items-center">
-              <span><strong>Sept 6th - 7th:</strong> Main Event Execution & Strike Plan[span_3](start_span)[span_3](end_span)</span>
-              <span class="text-[10px] bg-slate-200 text-slate-800 px-2 py-0.5 rounded font-bold">Execution</span>
-            </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Sections Overview</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <button onclick="navTo('hardware')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🔩 Hardware & Tools</button>
+            <button onclick="navTo('flowers')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🌸 Flower List</button>
+            <button onclick="navTo('frames')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🏛️ Frame List</button>
+            <button onclick="navTo('flex')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📜 Flex & Print</button>
+            <button onclick="navTo('moodboard')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">🖼️ Mood Board Grid</button>
+            <button onclick="navTo('loading')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">📦 Loading & Returns</button>
+            <button onclick="navTo('worklist')" class="p-3 border rounded-lg bg-slate-50 hover:bg-amber-50 font-bold text-left">✅ Work Checklist</button>
           </div>
         </div>
       </section>
 
-      <!-- EVENTS MASTER LIST -->
-      <section id="page-events" class="hidden space-y-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Master Event Register</h2>
-            <button onclick="createNewEventFlow()" class="bg-black text-amber-400 border border-amber-800 text-xs px-3 py-1.5 rounded-lg font-bold">+ Create Event</button>
-          </div>
-          <input id="events-search-filter" oninput="renderEventsList()" type="text" placeholder="Search by client, venue, or event ID..." class="w-full text-xs p-2.5 border rounded-lg outline-none focus:ring-1 focus:ring-amber-500">
-          <div id="events-master-list" class="divide-y divide-slate-100 text-xs space-y-2"></div>
-        </div>
-      </section>
-
-      <!-- AI STUDIO & MOOD BOARD GENERATOR -->
-      <section id="page-design" class="hidden space-y-4">
-        <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-sm font-black text-amber-400 uppercase tracking-wide">Vanji AI Botanical Studio & Mood Board Grid</h2>
-              <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-mono">RAHUL'S EVENT</span>
-            </div>
-            <p class="text-[10px] text-slate-400 mt-0.5">Upload multiple venue/floral reference images to automatically assemble a master design mood board grid[span_4](start_span)[span_4](end_span).</p>
-          </div>
-        </div>
-
+      <!-- 2. HARDWARE & TOOLS SECTION -->
+      <section id="page-hardware" class="hidden space-y-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] border-b pb-1">Upload Multiple Design References for Mood Board</h3>
-          <div class="flex gap-2">
-            <input id="mood-board-files" type="file" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-slate-100" onchange="handleMoodBoardUpload(event)">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">General Tools, Adhesives & Hardware</h3>
+            <button onclick="addItemModal('hardware')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Hardware Item</button>
           </div>
-          <div id="mood-board-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-            <p class="text-[11px] text-slate-400 col-span-3">No mood board images uploaded yet. Select multiple photos to preview grid layout[span_5](start_span)[span_5](end_span).</p>
-          </div>
-          <button onclick="generateCollageCanvas()" class="w-full bg-black text-amber-400 font-bold py-2.5 rounded text-xs shadow mt-2">
-            🖼️ Generate & Compile Mood Board Grid
-          </button>
-        </div>
-
-        <div id="mood-board-output-wrapper" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs text-center">
-          <h4 class="font-bold text-slate-700 uppercase tracking-wider">Compiled Design Mood Board</h4>
-          <canvas id="mood-board-canvas" class="max-w-full mx-auto rounded-lg border shadow-inner"></canvas>
-          <a id="download-mood-board" download="vanji_mood_board.jpg" class="inline-block bg-amber-600 text-black font-black px-4 py-2 rounded text-xs mt-2">Download Mood Board (.jpg)</a>
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Item Description</th><th class="p-2 border">Specification / Notes</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-center w-16">Purchased</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <tbody id="table-hardware" class="divide-y"></tbody>
+          </table>
         </div>
       </section>
 
-      <!-- ACTIVE WORKSPACE (RAHUL'S EVENT) -->
-      <section id="page-workspace" class="space-y-4">
-        <div class="bg-black text-white p-4 rounded-xl border border-amber-900/60 shadow flex justify-between items-center">
+      <!-- 3. FLOWER LIST SECTION -->
+      <section id="page-flowers" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flower Mandi Purchase List (Sept 4th Night)</h3>
+              <p class="text-[10px] text-rose-700 font-bold">Tick purchased or in-stock items. Edit rates and quantities live.</p>
+            </div>
+            <button onclick="addItemModal('flowers')" class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Flower</button>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-[10px]">
+                <th class="p-2 border text-center w-12">Bought</th>
+                <th class="p-2 border text-center w-12">Have It</th>
+                <th class="p-2 border">Flower Item</th>
+                <th class="p-2 border text-center w-16">Qty</th>
+                <th class="p-2 border text-center w-20">Timing</th>
+                <th class="p-2 border text-right w-20">Rate (₹)</th>
+                <th class="p-2 border text-right w-20">Total (₹)</th>
+                <th class="p-2 border text-center w-10"></th>
+              </tr>
+            </thead>
+            <tbody id="table-flowers" class="divide-y"></tbody>
+          </table>
+          <div class="flex justify-between font-bold border-t pt-2 text-indigo-950 text-sm">
+            <span>Total Flower Expenditure:</span>
+            <span id="flowers-grand-total">₹78,880</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FRAME LIST SECTION -->
+      <section id="page-frames" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Frames, Structures & Locking Hardware</h3>
+            <button onclick="addItemModal('frames')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Frame/Structure</button>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Frame / Structure Item</th><th class="p-2 border">Specification / Dimensions</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-center w-16">Loaded</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <tbody id="table-frames" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. FLEX & PRINT SECTION -->
+      <section id="page-flex" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Flex, Sunboard & Print Person Scope</h3>
+            <button onclick="addItemModal('flex')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Print Item</button>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-slate-100 text-[10px]"><th class="p-2 border">Print / Banner Item</th><th class="p-2 border">Specification / Scope</th><th class="p-2 border text-center w-20">Timing</th><th class="p-2 border text-right w-20">Rate (₹)</th><th class="p-2 border text-center w-10"></th></tr></thead>
+            <tbody id="table-flex" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. MOOD BOARD GRID SECTION -->
+      <section id="page-moodboard" class="hidden space-y-4">
+        <div class="bg-black text-white p-4 rounded-xl shadow flex justify-between items-center text-xs">
           <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-base font-black text-amber-400" id="ws-event-name">Rahul's Master Event</h2>
-              <span class="text-[10px] bg-amber-950 text-amber-300 border border-amber-700 px-1.5 py-0.5 rounded font-mono font-bold" id="ws-event-id">VEP-2026-0906</span>
-            </div>
-            <p class="text-xs text-slate-300 mt-0.5" id="ws-event-subtitle">Venue: Golden Landmark / Banquet Hall | Date: Sept 6th-7th, 2026</p>
+            <h2 class="font-black text-amber-400 text-sm">Visual Design Mood Board Grid</h2>
+            <p class="text-[10px] text-slate-300">Upload multiple reference photos to organize your theme layout.</p>
           </div>
-          <div class="flex gap-1.5">
-            <button onclick="cloneCurrentEvent()" class="bg-zinc-800 text-amber-300 border border-zinc-700 text-[11px] px-2.5 py-1 rounded font-semibold">📋 Clone</button>
-            <button onclick="saveActiveEventToStore()" class="bg-amber-700 text-white text-[11px] px-3 py-1 rounded font-bold">Save</button>
-            <button onclick="if(activeEvent) deleteEventById(activeEvent.id);" class="bg-rose-950 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded font-bold">🗑️ Delete</button>
-          </div>
+          <input type="file" accept="image/*" multiple class="text-xs text-slate-300" onchange="handleMoodBoardUpload(event)">
         </div>
-
-        <nav class="bg-white border-b border-slate-200 sticky top-[95px] z-30 overflow-x-auto whitespace-nowrap flex text-xs font-bold text-slate-600 shadow-sm rounded-lg p-1">
-          <button onclick="switchWsTab('overview')" id="wstab-overview" class="py-1.5 px-2.5 rounded bg-amber-100 text-amber-950">Overview</button>
-          <button onclick="switchWsTab('quotation')" id="wstab-quotation" class="py-1.5 px-2.5 rounded">Master Rates & Costing</button>
-          <button onclick="switchWsTab('scope')" id="wstab-scope" class="py-1.5 px-2.5 rounded">Loading & Hardware</button>
-          <button onclick="switchWsTab('flowers')" id="wstab-flowers" class="py-1.5 px-2.5 rounded">Flower Mandi (Sept 4th)</button>
-          <button onclick="switchWsTab('labour')" id="wstab-labour" class="py-1.5 px-2.5 rounded">Labour & Crew</button>
-          <button onclick="switchWsTab('schedule')" id="wstab-schedule" class="py-1.5 px-2.5 rounded">Logistics & Strike</button>
-          <button onclick="switchWsTab('checklist')" id="wstab-checklist" class="py-1.5 px-2.5 rounded">Checklist</button>
-          <button onclick="switchWsTab('printdocs')" id="wstab-printdocs" class="py-1.5 px-2.5 rounded text-emerald-700">Print Sheets</button>
-        </nav>
-
-        <!-- OVERVIEW -->
-        <div id="ws-tab-overview" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div><label class="block text-slate-400 text-[10px] mb-1">Client Full Name *</label><input id="inp-client-name" type="text" value="Rahul" class="w-full border rounded p-2 font-bold" oninput="markUnsaved()"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Mobile / WhatsApp Number *</label><input id="inp-client-phone" type="tel" value="9845000000" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Event Date *</label><input id="inp-event-date" type="date" value="2026-09-06" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Venue & Location *</label><input id="inp-venue" type="text" value="Golden Landmark / Banquet Hall" class="w-full border rounded p-2 font-semibold" oninput="markUnsaved()"></div>
-            <div>
-              <label class="block text-slate-400 text-[10px] mb-1">Status</label>
-              <select id="inp-event-status" class="w-full border rounded p-2 font-bold bg-slate-50" onchange="markUnsaved()">
-                <option value="Confirmed" selected>4. Confirmed (Execution Ready)</option>
-                <option value="Production">7. Production</option>
-                <option value="Completed">12. Completed</option>
-              </select>
-            </div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Event Type</label><input id="inp-event-type" type="text" value="Wedding & Reception (Sept 6-7)" class="w-full border rounded p-2" oninput="markUnsaved()"></div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs text-center">
+          <div id="mood-board-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <p class="text-slate-400 col-span-3">No mood board images uploaded yet.</p>
           </div>
-          <div>
-            <label class="block text-slate-400 text-[10px] mb-1">Operational & Logistics Notes (Master PDF)</label>
-            <textarea id="inp-event-notes" rows="3" class="w-full border rounded p-2" oninput="markUnsaved()">Sept 4th Night: Complete Mandi flower purchase (£78,880). Moin Ape Auto trip for morning & evening items without stage. Sept 5th Tempo for stage moulding & red velvet curtains.</textarea>
-          </div>
-        </div>
-
-        <!-- MASTER RATES & COSTING -->
-        <div id="ws-tab-quotation" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="flex justify-between items-center border-b pb-2">
-            <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Rahul's Master Costing & Rate Sheet (Editable)</h3>
-              <p class="text-[10px] text-slate-400">Change unit rates in real-time as work commences. Authority fully granted[span_6](start_span)[span_6](end_span).</p>
-            </div>
-            <button onclick="addCustomQuotationRow()" class="bg-black text-amber-400 font-bold px-2.5 py-1 rounded border text-[11px]">+ Add Cost Item</button>
-          </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b text-[11px]">
-                <th class="pb-1">Item / Service Description</th>
-                <th class="pb-1 text-center w-16">Qty</th>
-                <th class="pb-1 text-center w-16">Unit</th>
-                <th class="pb-1 text-right w-24">Rate (₹)</th>
-                <th class="pb-1 text-right w-24">Total (₹)</th>
-                <th class="pb-1 text-center w-8"></th>
-              </tr>
-            </thead>
-            <tbody id="ws-quote-items-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-
-          <div class="flex justify-end pt-2 border-t">
-            <div class="w-72 space-y-1.5 text-xs">
-              <div class="flex justify-between font-black text-sm border-t pt-1 text-indigo-950">
-                <span>Final Grand Total Expenditure:</span>
-                <span id="ws-quote-grand">₹1,62,070</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LOADING & HARDWARE -->
-        <div id="ws-tab-scope" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="flex justify-between items-center border-b pb-2">
-            <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading Lists, Fabrics & Hardware</h3>
-              <p class="text-[10px] text-slate-400">Section 1 from master operations guide[span_7](start_span)[span_7](end_span).</p>
-            </div>
-            <button onclick="addCustomScopeRow()" class="bg-black text-amber-400 font-bold px-2 py-1 rounded border text-[11px]">+ Add Hardware</button>
-          </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b text-[10px]">
-                <th class="pb-1">Item Description</th>
-                <th class="pb-1 text-center w-14">Required</th>
-                <th class="pb-1 text-center w-14">Loaded</th>
-                <th class="pb-1 text-center w-14">Returned</th>
-                <th class="pb-1 text-center w-14 text-rose-600">Damaged</th>
-                <th class="pb-1 text-center w-12">Unit</th>
-                <th class="pb-1 text-center w-6"></th>
-              </tr>
-            </thead>
-            <tbody id="ws-scope-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-
-        <!-- FLOWER MANDI PROCUREMENT -->
-        <div id="ws-tab-flowers" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="flex justify-between items-center border-b pb-2">
-            <div>
-              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Flower Purchase List (Sept 4th Night)[span_8](start_span)[span_8](end_span)</h3>
-              <p class="text-[10px] text-rose-700 font-bold">Deadline: Purchase completion today Sept 3rd!</p>
-            </div>
-            <button onclick="addFlowerRow()" class="bg-amber-100 text-amber-900 font-bold px-2 py-1 rounded border text-[11px]">+ Add Flower</button>
-          </div>
-          <div id="ws-flowers-container" class="space-y-1.5"></div>
-          <div class="flex justify-between font-bold border-t pt-2 text-indigo-950">
-            <span>Total Floral Purchase Outflow:</span>
-            <span id="ws-flowers-total-outflow">₹78,880</span>
-          </div>
-        </div>
-
-        <!-- LABOUR & CREW -->
-        <div id="ws-tab-labour" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="flex justify-between items-center border-b pb-2">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Specialized Crew & Labor Deployment</h3>
-            <button onclick="addLabourRow()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border text-xs">+ Add Labor Group</button>
-          </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b text-[10px]">
-                <th class="pb-1">Role / Trade</th>
-                <th class="pb-1 text-center w-16">Men/Staff</th>
-                <th class="pb-1 text-center w-16">Days</th>
-                <th class="pb-1 text-right w-24">Rate/Day (₹)</th>
-                <th class="pb-1 text-right w-24">Total Wage</th>
-                <th class="pb-1 text-center w-8"></th>
-              </tr>
-            </thead>
-            <tbody id="labour-table-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-          <div class="flex justify-between items-center font-bold text-xs border-t pt-2">
-            <span>Total Labor Subtotal:</span>
-            <span id="labour-total-cost-val" class="text-amber-900 text-sm">₹44,100</span>
-          </div>
-        </div>
-
-        <!-- LOGISTICS & STRIKE -->
-        <div id="ws-tab-schedule" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px] border-b pb-1">Logistics, Loading Schedule & Strike Plan[span_9](start_span)[span_9](end_span)</h3>
-          <div class="space-y-2 text-xs">
-            <div class="p-2 border rounded bg-slate-50"><strong>Sept 4th (Moin Ape Auto):</strong> Load Morning & Evening Items without Stage (Pathway, photo booth, name board, supports).</div>
-            <div class="p-2 border rounded bg-slate-50"><strong>Sept 5th (Tempo):</strong> Load Stage Items (Moulding) + Main Stage Red Velvet Curtains (6ft, 10 nos).</div>
-            <div class="p-2 border rounded bg-slate-50"><strong>Sept 5th Day/Night:</strong> Complete stage moulding setup & main stage draping. Mandap ready by Sept 6th 06:00 AM.</div>
-            <div class="p-2 border rounded bg-slate-50"><strong>Sept 6th:</strong> Complete morning event; transition immediately to evening items (06:00 PM). Strike mandap post-event.</div>
-            <div class="p-2 border rounded bg-slate-50"><strong>Sept 7th:</strong> Final strike of stage moulding structure.</div>
-          </div>
-        </div>
-
-        <!-- CHECKLIST -->
-        <div id="ws-tab-checklist" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]" id="ws-checklist-grid"></div>
-        </div>
-
-        <!-- PRINT DOCS -->
-        <div id="ws-tab-printdocs" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button onclick="openPrintModal('quotation')" class="p-3 bg-indigo-950 text-amber-300 font-bold rounded shadow">1. Master Costing Sheet</button>
-            <button onclick="openPrintModal('jobsheet')" class="p-3 bg-black text-amber-400 font-bold rounded shadow">2. Operations Job Sheet</button>
-            <button onclick="openPrintModal('warehouse')" class="p-3 bg-amber-700 text-white font-bold rounded shadow">3. Loading & Return Audit</button>
+          <button onclick="generateCollageCanvas()" class="bg-black text-amber-400 font-bold px-4 py-2 rounded text-xs shadow">🖼️ Compile Mood Board Grid</button>
+          <div id="mood-board-output-wrapper" class="hidden space-y-2 pt-2 border-t">
+            <canvas id="mood-board-canvas" class="max-w-full mx-auto rounded border"></canvas>
+            <a id="download-mood-board" download="vanji_mood_board.jpg" class="inline-block bg-amber-600 text-black font-black px-3 py-1.5 rounded text-xs">Download JPG</a>
           </div>
         </div>
       </section>
 
-      <!-- MASTER PRICE BOOK -->
-      <section id="page-pricebook" class="hidden space-y-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Master Price Book & Individual Rates</h2>
-            <button onclick="openPriceBookEditModal()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border text-xs">+ New Item</button>
+      <!-- 7. LOADING & GODOWN RETURN CHECKLIST -->
+      <section id="page-loading" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <div>
+              <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Loading & Godown Return Audit</h3>
+              <p class="text-[10px] text-slate-400">Track items loaded for event and returned/damaged back to godown.</p>
+            </div>
+            <button onclick="addItemModal('loading')" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Gear</button>
           </div>
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="text-slate-400 border-b text-[11px]">
-                <th class="pb-1">Item Name</th>
-                <th class="pb-1">Category</th>
-                <th class="pb-1 text-center w-14">Unit</th>
-                <th class="pb-1 text-right w-20 text-indigo-900 font-bold">Selling ₹</th>
-                <th class="pb-1 text-right w-20 text-slate-600">Internal ₹</th>
-                <th class="pb-1 text-center w-12"></th>
+              <tr class="bg-slate-100 text-[10px]">
+                <th class="p-2 border">Gear Description</th>
+                <th class="p-2 border text-center w-16">Req</th>
+                <th class="p-2 border text-center w-16">Loaded</th>
+                <th class="p-2 border text-center w-16">Returned</th>
+                <th class="p-2 border text-center w-16 text-rose-600">Damaged</th>
+                <th class="p-2 border text-center w-16">Godown OK</th>
+                <th class="p-2 border text-center w-10"></th>
               </tr>
             </thead>
-            <tbody id="pricebook-tbody" class="divide-y divide-slate-100"></tbody>
+            <tbody id="table-loading" class="divide-y"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- WAREHOUSE INVENTORY -->
-      <section id="page-inventory" class="hidden space-y-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Warehouse Stock Register</h2>
-            <button onclick="openInventoryAddModal()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border text-xs">+ Add Asset</button>
+      <!-- 8. WORK CHECKLIST SECTION -->
+      <section id="page-worklist" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Master Execution Work Checklist</h3>
+            <button onclick="addWorkItemPrompt()" class="bg-black text-amber-400 font-bold px-2 py-1 rounded text-xs">+ Add Task</button>
           </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b text-[11px]">
-                <th class="pb-1">Asset Description</th>
-                <th class="pb-1 text-center w-24">Total Stock</th>
-                <th class="pb-1 text-center w-32">Location</th>
-                <th class="pb-1 text-center w-12"></th>
-              </tr>
-            </thead>
-            <tbody id="inventory-master-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- LABOUR & CREW -->
-      <section id="page-labour" class="hidden space-y-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Crew Deployment Register</h2>
-            <button onclick="addLabourRow()" class="bg-black text-amber-400 font-bold px-3 py-1.5 rounded-lg border text-xs">+ Add Role</button>
-          </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b text-[10px]">
-                <th class="pb-1">Role / Trade</th>
-                <th class="pb-1 text-center w-16">Men</th>
-                <th class="pb-1 text-center w-16">Days</th>
-                <th class="pb-1 text-right w-24">Rate/Day (₹)</th>
-                <th class="pb-1 text-right w-24">Total Wage</th>
-                <th class="pb-1 text-center w-8"></th>
-              </tr>
-            </thead>
-            <tbody id="labour-master-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section id="page-settings" class="hidden space-y-4 text-xs">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Company Profile & Gemini Credentials</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div><label class="block text-slate-400 text-[10px] mb-1">Company Name</label><input id="set-name" type="text" class="w-full border rounded p-1.5 font-bold" value="VANJI DECORATORS"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Phone / WhatsApp</label><input id="set-phone" type="text" class="w-full border rounded p-1.5" value="9845000000"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">GSTIN Number</label><input id="set-gst" type="text" class="w-full border rounded p-1.5"></div>
-            <div><label class="block text-slate-400 text-[10px] mb-1">Google Gemini API Key</label><input id="set-aikey" type="password" class="w-full border rounded p-1.5"></div>
-          </div>
-          <button onclick="saveAppSettings()" class="bg-amber-700 text-white font-bold py-1.5 px-3 rounded">Save Settings</button>
+          <div id="worklist-container" class="space-y-2"></div>
         </div>
       </section>
     </main>
 
-    <!-- VOICE AGENT -->
+    <!-- VOICE AGENT FLOATING MIC -->
     <div class="fixed bottom-6 right-6 z-40 no-print flex flex-col items-end gap-2">
       <div id="voice-bot-bubble" class="hidden bg-black/90 border border-amber-500/50 text-amber-300 text-[11px] font-bold py-1.5 px-3 rounded-xl shadow-2xl backdrop-blur-md max-w-xs transition"></div>
       <button onclick="toggleVoiceBot()" id="voice-bot-btn" class="h-14 w-14 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-black font-black text-xl shadow-2xl flex items-center justify-center border-2 border-amber-200 transition">🎙️</button>
     </div>
   </div>
 
-  <!-- PRINT MODAL -->
-  <div id="modal-print-hub" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-    <div class="bg-white w-full max-w-3xl rounded-xl shadow-2xl p-6 sm:p-8 relative max-h-[95vh] overflow-y-auto">
-      <button onclick="document.getElementById('modal-print-hub').classList.add('hidden')" class="no-print absolute top-3 right-3 text-slate-400 text-lg font-bold">✕</button>
-      <div id="print-sheet-content" class="print-page space-y-4 text-slate-800"></div>
-      <div class="mt-4 no-print border-t pt-2"><button onclick="window.print()" class="w-full bg-black text-amber-400 font-bold py-2 rounded text-xs">Print A4 Document</button></div>
+  <!-- SETTINGS -->
+  <section id="page-settings" class="hidden max-w-4xl mx-auto p-4 space-y-4 text-xs">
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+      <h2 class="font-bold uppercase tracking-wider text-slate-700 border-b pb-1">Studio Credentials & Gemini Key</h2>
+      <div><label class="block text-slate-400 text-[10px] mb-1">Google Gemini API Key</label><input id="set-aikey" type="password" class="w-full border rounded p-1.5"></div>
+      <button onclick="saveAppSettings()" class="bg-amber-700 text-white font-bold py-1.5 px-3 rounded">Save Settings</button>
     </div>
-  </div>
+  </section>
 
   <!-- BACKUP MODAL -->
   <div id="modal-backup" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
     <div class="bg-white w-full max-w-sm rounded-xl p-5 space-y-3 text-xs shadow-2xl">
       <div class="flex justify-between items-center border-b pb-2"><h2 class="text-sm font-bold">Backup & Restore</h2><button onclick="document.getElementById('modal-backup').classList.add('hidden')">✕</button></div>
       <button onclick="exportFullBackup()" class="w-full bg-black text-amber-400 font-bold py-2 rounded">Export All Data (.json)</button>
-      <input type="file" accept=".json" onchange="importFullBackup(event)" class="w-full text-xs pt-2">
     </div>
   </div>
 
   <script>
     let db = null;
-    let activeEvent = null;
-    let isDirty = false;
-    let autoSaveTimer = null;
-
-    const checklistStages = [
-      { id: 'chk_des', label: 'Design & Mood Board Approved' },
-      { id: 'chk_flw', label: 'Flower Mandi Purchased (Sept 3-4 Deadline)' },
-      { id: 'chk_flx', label: 'Flex & Sunboard Printing (₹3,190)' },
-      { id: 'chk_frm', label: 'Truss & Standing Supports (10ft/15ft)' },
-      { id: 'chk_fur', label: 'Prop & Ritual Setup (Kalash, Homa)' },
-      { id: 'chk_lgt', label: 'Stage Lighting & Spot Wash' },
-      { id: 'chk_gen', label: 'Generator & Power Backup' },
-      { id: 'chk_lod', label: 'Ape Auto / Tempo Loading (Sept 4-5)' },
-      { id: 'chk_stp', label: 'Mandap Setup Complete (Sept 6 06:00 AM)' },
-      { id: 'chk_ret', label: 'Strike & Material Return (Sept 7)' }
-    ];
+    let rahulEvent = null;
+    let isVoiceListening = false;
+    let speechRecognition = null;
 
     function escapeHTML(str) {
       if (!str) return '';
@@ -510,18 +321,16 @@
 
     async function initApp() {
       await openDatabase();
-      await seedRahulEventMaster();
-      renderChecklistGrid();
-      await updateDashboard();
-      await loadAppSettings();
+      await seedRahulMasterData();
+      renderAllSections();
     }
 
     function openDatabase() {
       return new Promise((res, rej) => {
-        const req = indexedDB.open('VanjiMasterDB', 19);
+        const req = indexedDB.open('VanjiMasterDB', 22);
         req.onupgradeneeded = (e) => {
           db = e.target.result;
-          ['events', 'pricebook', 'inventory', 'settings'].forEach(s => {
+          ['events', 'settings'].forEach(s => {
             if (!db.objectStoreNames.contains(s)) db.createObjectStore(s, { keyPath: s === 'settings' ? 'key' : 'id' });
           });
         };
@@ -531,90 +340,66 @@
     }
 
     function dbPut(s, v) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).put(v); tx.oncomplete = res; tx.onerror = rej; }); }
-    function dbGetAll(s) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).getAll(); r.onsuccess = () => res(r.result || []); }); }
     function dbGet(s, k) { return new Promise((res) => { const tx = db.transaction(s, 'readonly'); const r = tx.objectStore(s).get(k); r.onsuccess = () => res(r.result); }); }
-    function dbDelete(s, k) { return new Promise((res, rej) => { const tx = db.transaction(s, 'readwrite'); tx.objectStore(s).delete(k); tx.oncomplete = res; tx.onerror = rej; }); }
 
-    async function seedRahulEventMaster() {
-      const existing = await dbGet('events', 'VEP-2026-0906');
+    async function seedRahulMasterData() {
+      let existing = await dbGet('events', 'VEP-Rahul-0906');
       if (!existing) {
-        const rahulMaster = {
-          id: 'VEP-2026-0906',
+        existing = {
+          id: 'VEP-Rahul-0906',
           client: 'Rahul',
-          phone: '9845000000',
           date: '2026-09-06',
-          venue: 'Golden Landmark / Banquet Hall',
-          status: 'Confirmed',
-          type: 'Wedding & Reception (Sept 6-7)',
-          notes: 'Master Operations loaded from PDF.',
-          dimensions: { width: 40, depth: 12, height: 18, walkway: 30 },
-          venuePhotos: [],
-          quoteItems: [
-            { name: 'Asparagus', qty: 90, unit: 'Units', rate: 30 },
-            { name: 'Kamini', qty: 28, unit: 'Units', rate: 80 },
-            { name: 'Sangapindi', qty: 22, unit: 'Units', rate: 50 },
-            { name: 'Milky White Flowers', qty: 172, unit: 'Bunches', rate: 150 },
-            { name: 'Light Pink Flowers', qty: 5, unit: 'Bunches', rate: 250 },
-            { name: 'Peach Roses', qty: 78, unit: 'Bunches', rate: 200 },
-            { name: 'Pink Packets', qty: 24, unit: 'Packets', rate: 250 },
-            { name: 'White Rose', qty: 19, unit: 'Bunches', rate: 200 },
-            { name: 'Pink Rose', qty: 25, unit: 'Bunches', rate: 200 },
-            { name: 'Golden Rod', qty: 19, unit: 'Bunches', rate: 50 },
-            { name: 'Gypsophila (Gypsi)', qty: 41, unit: 'Bunches', rate: 200 },
-            { name: 'Oasis Foam Boxes (20 bricks/box)', qty: 8, unit: 'Boxes', rate: 450 },
-            { name: 'Mesh Rolls', qty: 12, unit: 'Rolls', rate: 220 },
-            { name: 'Galaxy Off-White & Light Pink Drapes', qty: 200, unit: 'Meters', rate: 12 },
-            { name: 'Micro Cloths (Mandap 30m, Arch 15m, Chadar 5m)', qty: 50, unit: 'Meters', rate: 18 },
-            { name: 'Binding Wire', qty: 15, unit: 'Kg', rate: 120 },
-            { name: 'Silver Wire', qty: 5, unit: 'Kg', rate: 150 },
-            { name: 'Pins', qty: 5, unit: 'Boxes', rate: 30 },
-            { name: 'Bond (Adhesive)', qty: 3, unit: 'Nos', rate: 50 },
-            { name: 'Photo Booth Sunboard Box & Frame', qty: 1, unit: 'Job', rate: 2000 },
-            { name: 'Entrance Arch Flex Printing', qty: 1, unit: 'Job', rate: 250 },
-            { name: 'Photo Booth 8x8 Flex Printing', qty: 1, unit: 'Job', rate: 640 },
-            { name: 'Name Board Sunboard Printing', qty: 1, unit: 'Job', rate: 300 },
-            { name: 'Homa Setup Items', qty: 1, unit: 'Set', rate: 750 },
-            { name: 'Kalash Props (Set of 4)', qty: 4, unit: 'Nos', rate: 3250 },
-            { name: 'Traditional Props (Set of 2)', qty: 2, unit: 'Nos', rate: 1500 },
-            { name: 'Artificial Hangings, Cages & Lanterns', qty: 1, unit: 'Lot', rate: 1000 },
-            { name: 'General Transportation', qty: 1, unit: 'Job', rate: 5000 },
-            { name: 'Ape Auto Bangalore', qty: 1, unit: 'Trip', rate: 4000 },
-            { name: 'Ape Auto Golden Landmark Trips', qty: 6, unit: 'Trips', rate: 500 }
-          ],
-          quoteTransport: 0, quoteLabour: 0, quoteDiscount: 0, quoteTaxMode: 'none', quoteAdvance: 0, quoteGrand: 162070,
-          scopeItems: [
-            { name: 'Ladder', req: 1, loaded: 1, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Main Stage Red Velvet Curtains (6ft)', req: 10, loaded: 10, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Pathway Red Velvet Curtains (10ft)', req: 6, loaded: 6, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Standing Supports (10ft)', req: 10, loaded: 10, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Locking Rods (15ft)', req: 10, loaded: 10, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Locking Rods (12ft Mandap/Valga)', req: 6, loaded: 6, ret: 0, dam: 0, unit: 'Nos' },
-            { name: 'Photo Booth 4x8 Frames', req: 2, loaded: 2, ret: 0, dam: 0, unit: 'Nos' }
+          venue: 'Golden Landmark',
+          hardware: [
+            { name: 'Ladder', spec: 'Rigging & draping', timing: 'Morning', purchased: true },
+            { name: 'Binding Wire', spec: '15 kg', timing: 'Morning', purchased: false },
+            { name: 'Silver Wire', spec: '5 kg', timing: 'Morning', purchased: false },
+            { name: 'Pins', spec: '5 boxes', timing: 'Morning', purchased: false },
+            { name: 'Bond Adhesive', spec: '3 Nos', timing: 'Morning', purchased: false },
+            { name: 'Tubs', spec: 'Floral soaking', timing: 'Morning', purchased: false }
           ],
           flowers: [
-            { name: 'Milky White Flowers', qty: 172, rate: 150 },
-            { name: 'Peach Roses', qty: 78, rate: 200 },
-            { name: 'Gypsophila', qty: 41, rate: 200 }
+            { name: 'Asparagus', qty: 90, timing: 'Morning', rate: 30, purchased: false, haveIt: false },
+            { name: 'Kamini', qty: 28, timing: 'Morning', rate: 80, purchased: false, haveIt: false },
+            { name: 'Sangapindi', qty: 22, timing: 'Evening', rate: 50, purchased: false, haveIt: false },
+            { name: 'Milky White Flowers', qty: 172, timing: 'Morning', rate: 150, purchased: false, haveIt: false },
+            { name: 'Peach Roses', qty: 78, timing: 'Evening', rate: 200, purchased: false, haveIt: false },
+            { name: 'Gypsophila', qty: 41, timing: 'Evening', rate: 200, purchased: false, haveIt: false }
           ],
-          labourGroups: [
-            { role: 'General Labor (Circle)', men: 10, days: 1, rate: 850 },
-            { role: 'Florists Crew', men: 18, days: 1, rate: 1500 },
-            { role: 'Traveling Labor', men: 1, days: 1, rate: 3000 },
-            { role: 'Gopal Staff', men: 1, days: 1, rate: 1000 },
-            { role: 'Moin Operational Support', men: 4, days: 1, rate: 900 },
-            { role: 'Fazil Staff', men: 1, days: 1, rate: 1000 }
+          frames: [
+            { name: 'Standing Supports (10ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
+            { name: 'Locking Rods (15ft)', spec: '10 Nos', timing: 'Morning', loaded: false },
+            { name: 'Phool Chadar Frame', spec: '1 Complete Frame', timing: 'Morning', loaded: false },
+            { name: 'Name Board U-Arch Frame', spec: '2.5ft x 7.5ft', timing: 'Evening', loaded: false },
+            { name: 'Photo Booth 4x8 Frames', spec: '2 Nos', timing: 'Evening', loaded: false }
           ],
-          schedule: { dispatch: '2026-09-04T08:00', setup: '2026-09-05T10:00', event: '2026-09-06T06:00', teardown: '2026-09-07T18:00' },
-          checklists: {}
+          flex: [
+            { name: 'Photo Booth Sunboard Box & Frame', spec: 'Custom fabrication', timing: 'Evening', rate: 2000 },
+            { name: 'Entrance Arch Flex Printing', spec: 'Morning signage', timing: 'Morning', rate: 250 },
+            { name: 'Photo Booth 8x8 Flex', spec: 'Evening backdrop', timing: 'Evening', rate: 640 },
+            { name: 'Name Board Sunboard Printing', spec: 'Evening signage', timing: 'Evening', rate: 300 }
+          ],
+          loading: [
+            { name: 'Main Stage Red Velvet Curtains', req: 10, loaded: 10, ret: 0, dam: 0, ok: true },
+            { name: 'Pathway Red Velvet Curtains', req: 6, loaded: 6, ret: 0, dam: 0, ok: true },
+            { name: 'Standing Supports (10ft)', req: 10, loaded: 10, ret: 0, dam: 0, ok: true }
+          ],
+          worklist: [
+            { task: 'Design & Mood Board Approved', date: '2026-09-03', timing: 'Morning', done: true },
+            { task: 'Flower Mandi Purchases Completed', date: '2026-09-03', timing: 'Evening', done: false },
+            { task: 'Engagement Event Setup', date: '2026-09-04', timing: 'Evening', done: false },
+            { task: 'Mandap Setup Complete', date: '2026-09-06', timing: 'Morning', done: false },
+            { task: 'Main Event & Evening Transition', date: '2026-09-06', timing: 'Evening', done: false },
+            { task: 'Strike & Godown Return', date: '2026-09-07', timing: 'Morning', done: false }
+          ]
         };
-        await dbPut('events', rahulMaster);
+        await dbPut('events', existing);
       }
-      activeEvent = await dbGet('events', 'VEP-2026-0906');
-      loadActiveEventIntoUI();
+      rahulEvent = existing;
     }
 
     function navTo(p) {
-      ['dashboard', 'events', 'workspace', 'design', 'pricebook', 'inventory', 'labour', 'settings'].forEach(id => {
+      ['dashboard', 'hardware', 'flowers', 'frames', 'flex', 'moodboard', 'loading', 'worklist', 'settings'].forEach(id => {
         const pg = document.getElementById(`page-${id}`);
         const btn = document.getElementById(`pnav-${id}`);
         if (pg) pg.classList.add('hidden');
@@ -624,31 +409,146 @@
       const activeBtn = document.getElementById(`pnav-${p}`);
       if (activePg) activePg.classList.remove('hidden');
       if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-amber-600 text-amber-950 font-bold';
-      if (p === 'dashboard') updateDashboard();
+      if (p !== 'dashboard' && p !== 'settings' && p !== 'moodboard') renderSection(p);
     }
 
-    function switchWsTab(t) {
-      ['overview', 'quotation', 'scope', 'flowers', 'labour', 'schedule', 'checklist', 'printdocs'].forEach(id => {
-        const tabEl = document.getElementById(`ws-tab-${id}`);
-        const btnEl = document.getElementById(`wstab-${id}`);
-        if (tabEl) tabEl.classList.add('hidden');
-        if (btnEl) btnEl.className = 'py-1.5 px-2.5 rounded text-slate-600';
-      });
-      const targetTab = document.getElementById(`ws-tab-${t}`);
-      const targetBtn = document.getElementById(`wstab-${t}`);
-      if (targetTab) targetTab.classList.remove('hidden');
-      if (targetBtn) targetBtn.className = 'py-1.5 px-2.5 rounded bg-amber-100 text-amber-950 font-bold';
-    }
-
-    function markUnsaved() {
-      isDirty = true;
+    async function saveRahul() {
+      await dbPut('events', rahulEvent);
       const ind = document.getElementById('save-status-indicator');
-      if (ind) { ind.innerText = '● Unsaved'; ind.className = 'text-[9px] text-amber-400 font-semibold'; }
-      clearTimeout(autoSaveTimer);
-      autoSaveTimer = setTimeout(() => { if (isDirty && activeEvent) saveActiveEventToStore(true); }, 3500);
+      if (ind) { ind.innerText = '● Saved'; ind.className = 'text-[9px] text-emerald-400 font-semibold'; }
     }
 
-    // MULTIPLE MOOD BOARD GRID GENERATOR
+    function renderAllSections() {
+      renderSection('hardware');
+      renderSection('flowers');
+      renderSection('frames');
+      renderSection('flex');
+      renderSection('loading');
+      renderSection('worklist');
+    }
+
+    function renderSection(sec) {
+      if (!rahulEvent) return;
+      if (sec === 'hardware') {
+        document.getElementById('table-hardware').innerHTML = rahulEvent.hardware.map((it, i) => `
+          <tr>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.hardware[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.hardware[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border text-center">
+              <select onchange="rahulEvent.hardware[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              </select>
+            </td>
+            <td class="p-2 border text-center"><input type="checkbox" ${it.purchased?'checked':''} onchange="rahulEvent.hardware[${i}].purchased=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.hardware.splice(${i},1); saveRahul(); renderSection('hardware');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+      } else if (sec === 'flowers') {
+        document.getElementById('table-flowers').innerHTML = rahulEvent.flowers.map((it, i) => `
+          <tr class="${it.purchased?'bg-emerald-50':(it.haveIt?'bg-indigo-50':'')}">
+            <td class="p-2 border text-center"><input type="checkbox" ${it.purchased?'checked':''} onchange="rahulEvent.flowers[${i}].purchased=this.checked; if(this.checked)rahulEvent.flowers[${i}].haveIt=false; saveRahul(); renderSection('flowers');" class="h-4 w-4 accent-emerald-600"></td>
+            <td class="p-2 border text-center"><input type="checkbox" ${it.haveIt?'checked':''} onchange="rahulEvent.flowers[${i}].haveIt=this.checked; if(this.checked)rahulEvent.flowers[${i}].purchased=false; saveRahul(); renderSection('flowers');" class="h-4 w-4 accent-indigo-600"></td>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.flowers[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+            <td class="p-2 border w-16 text-center"><input type="number" value="${it.qty}" oninput="rahulEvent.flowers[${i}].qty=parseFloat(this.value)||0; saveRahul(); recalcFlowers();" class="w-full border rounded p-1 text-center text-xs bg-white"></td>
+            <td class="p-2 border text-center">
+              <select onchange="rahulEvent.flowers[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              </select>
+            </td>
+            <td class="p-2 border text-right w-20"><input type="number" value="${it.rate}" oninput="rahulEvent.flowers[${i}].rate=parseFloat(this.value)||0; saveRahul(); recalcFlowers();" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
+            <td class="p-2 border text-right font-bold">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.flowers.splice(${i},1); saveRahul(); renderSection('flowers');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+        recalcFlowers();
+      } else if (sec === 'frames') {
+        document.getElementById('table-frames').innerHTML = rahulEvent.frames.map((it, i) => `
+          <tr>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.frames[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.frames[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border text-center">
+              <select onchange="rahulEvent.frames[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              </select>
+            </td>
+            <td class="p-2 border text-center"><input type="checkbox" ${it.loaded?'checked':''} onchange="rahulEvent.frames[${i}].loaded=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.frames.splice(${i},1); saveRahul(); renderSection('frames');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+      } else if (sec === 'flex') {
+        document.getElementById('table-flex').innerHTML = rahulEvent.flex.map((it, i) => `
+          <tr>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.flex[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.spec)}" oninput="rahulEvent.flex[${i}].spec=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white"></td>
+            <td class="p-2 border text-center">
+              <select onchange="rahulEvent.flex[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+                <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+                <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+              </select>
+            </td>
+            <td class="p-2 border text-right"><input type="number" value="${it.rate}" oninput="rahulEvent.flex[${i}].rate=parseFloat(this.value)||0; saveRahul();" class="w-full border rounded p-1 text-right text-xs bg-white"></td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.flex.splice(${i},1); saveRahul(); renderSection('flex');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+      } else if (sec === 'loading') {
+        document.getElementById('table-loading').innerHTML = rahulEvent.loading.map((it, i) => `
+          <tr>
+            <td class="p-2 border"><input type="text" value="${escapeHTML(it.name)}" oninput="rahulEvent.loading[${i}].name=this.value; saveRahul();" class="w-full border rounded p-1 text-xs bg-white font-semibold"></td>
+            <td class="p-2 border text-center"><input type="number" value="${it.req}" oninput="rahulEvent.loading[${i}].req=parseFloat(this.value)||0; saveRahul();" class="w-16 border rounded p-1 text-center text-xs"></td>
+            <td class="p-2 border text-center"><input type="number" value="${it.loaded}" oninput="rahulEvent.loading[${i}].loaded=parseFloat(this.value)||0; saveRahul();" class="w-16 border rounded p-1 text-center text-xs"></td>
+            <td class="p-2 border text-center"><input type="number" value="${it.ret}" oninput="rahulEvent.loading[${i}].ret=parseFloat(this.value)||0; saveRahul();" class="w-16 border rounded p-1 text-center text-xs"></td>
+            <td class="p-2 border text-center"><input type="number" value="${it.dam}" oninput="rahulEvent.loading[${i}].dam=parseFloat(this.value)||0; saveRahul();" class="w-16 border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
+            <td class="p-2 border text-center"><input type="checkbox" ${it.ok?'checked':''} onchange="rahulEvent.loading[${i}].ok=this.checked; saveRahul();" class="h-4 w-4 rounded accent-emerald-600"></td>
+            <td class="p-2 border text-center"><button onclick="rahulEvent.loading.splice(${i},1); saveRahul(); renderSection('loading');" class="text-rose-500 font-bold">✕</button></td>
+          </tr>
+        `).join('');
+      } else if (sec === 'worklist') {
+        document.getElementById('worklist-container').innerHTML = rahulEvent.worklist.map((it, i) => `
+          <div class="flex items-center justify-between p-2.5 border rounded bg-slate-50 gap-2">
+            <div class="flex items-center gap-2 flex-grow">
+              <input type="checkbox" ${it.done?'checked':''} onchange="rahulEvent.worklist[${i}].done=this.checked; saveRahul();" class="h-4 w-4 rounded accent-amber-600">
+              <input type="text" value="${escapeHTML(it.task)}" oninput="rahulEvent.worklist[${i}].task=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white flex-grow font-semibold">
+            </div>
+            <input type="date" value="${it.date||''}" onchange="rahulEvent.worklist[${i}].date=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+            <select onchange="rahulEvent.worklist[${i}].timing=this.value; saveRahul();" class="border rounded p-1 text-xs bg-white">
+              <option value="Morning" ${it.timing==='Morning'?'selected':''}>Morning</option>
+              <option value="Evening" ${it.timing==='Evening'?'selected':''}>Evening</option>
+            </select>
+            <button onclick="rahulEvent.worklist.splice(${i},1); saveRahul(); renderSection('worklist');" class="text-rose-500 font-bold">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function recalcFlowers() {
+      const total = rahulEvent.flowers.reduce((sum, f) => sum + (f.qty * f.rate), 0);
+      document.getElementById('flowers-grand-total').innerText = `₹${total.toLocaleString()}`;
+      saveRahul();
+    }
+
+    function addItemModal(sec) {
+      const name = prompt('Item Name / Description:');
+      if (!name) return;
+      if (sec === 'hardware') { rahulEvent.hardware.push({ name, spec: 'Standard', timing: 'Morning', purchased: false }); }
+      else if (sec === 'flowers') { rahulEvent.flowers.push({ name, qty: 1, timing: 'Morning', rate: 100, purchased: false, haveIt: false }); }
+      else if (sec === 'frames') { rahulEvent.frames.push({ name, spec: '1 Nos', timing: 'Morning', loaded: false }); }
+      else if (sec === 'flex') { rahulEvent.flex.push({ name, spec: 'Standard', timing: 'Evening', rate: 500 }); }
+      else if (sec === 'loading') { rahulEvent.loading.push({ name, req: 1, loaded: 1, ret: 0, dam: 0, ok: true }); }
+      saveRahul();
+      renderSection(sec);
+    }
+
+    function addWorkItemPrompt() {
+      const task = prompt('Task Description:');
+      if (!task) return;
+      rahulEvent.worklist.push({ task, date: '2026-09-06', timing: 'Morning', done: false });
+      saveRahul();
+      renderSection('worklist');
+    }
+
     let uploadedMoodImages = [];
     function handleMoodBoardUpload(e) {
       const files = e.target.files;
@@ -656,192 +556,78 @@
       uploadedMoodImages = [];
       const container = document.getElementById('mood-board-grid');
       container.innerHTML = '';
-
       Array.from(files).forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
           uploadedMoodImages.push(ev.target.result);
-          container.innerHTML += `
-            <div class="relative border rounded-lg overflow-hidden bg-black/5">
-              <img src="${ev.target.result}" class="h-32 w-full object-cover">
-              <span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">Ref ${index+1}</span>
-            </div>
-          `;
+          container.innerHTML += `<div class="relative border rounded-lg overflow-hidden bg-black/5"><img src="${ev.target.result}" class="h-32 w-full object-cover"><span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5">Ref ${index+1}</span></div>`;
         };
         reader.readAsDataURL(file);
       });
     }
 
     function generateCollageCanvas() {
-      if (uploadedMoodImages.length === 0) return alert('Please upload at least one design image first[span_10](start_span)[span_10](end_span).');
+      if (uploadedMoodImages.length === 0) return alert('Please upload images first[span_0](start_span)[span_0](end_span).');
       const canvas = document.getElementById('mood-board-canvas');
       const ctx = canvas.getContext('2d');
-      const cols = 3;
-      const rows = Math.ceil(uploadedMoodImages.length / cols);
+      const cols = 3, rows = Math.ceil(uploadedMoodImages.length / cols);
       const cellW = 300, cellH = 300;
-
-      canvas.width = cols * cellW;
-      canvas.height = rows * cellH;
-      ctx.fillStyle = '#FAF9F6';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      let loadedCount = 0;
+      canvas.width = cols * cellW; canvas.height = rows * cellH;
+      ctx.fillStyle = '#FAF9F6'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      let loaded = 0;
       uploadedMoodImages.forEach((src, idx) => {
         const img = new Image();
         img.onload = () => {
-          const r = Math.floor(idx / cols);
-          const c = idx % cols;
-          ctx.drawImage(img, c * cellW + 10, r * cellH + 10, cellW - 20, cellH - 20);
-          loadedCount++;
-          if (loadedCount === uploadedMoodImages.length) {
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-            document.getElementById('download-mood-board').href = dataUrl;
+          ctx.drawImage(img, (idx % cols) * cellW + 10, Math.floor(idx / cols) * cellH + 10, cellW - 20, cellH - 20);
+          loaded++;
+          if (loaded === uploadedMoodImages.length) {
+            document.getElementById('download-mood-board').href = canvas.toDataURL('image/jpeg', 0.9);
             document.getElementById('mood-board-output-wrapper').classList.remove('hidden');
-            alert('Mood Board compiled successfully[span_11](start_span)[span_11](end_span)!');
+            alert('Mood Board compiled[span_1](start_span)[span_1](end_span)!');
           }
         };
         img.src = src;
       });
     }
 
-    // EVENT MANAGEMENT
-    async function loadActiveEventIntoUI() {
-      if (!activeEvent) return;
-      document.getElementById('active-event-badge').innerText = activeEvent.id;
-      document.getElementById('ws-event-id').innerText = activeEvent.id;
-      document.getElementById('ws-event-name').innerText = `Rahul's Master Event (${activeEvent.client})`;
-      document.getElementById('ws-event-subtitle').innerText = `Venue: ${activeEvent.venue} | Date: ${activeEvent.date}`;
+    // VOICE BOT AGENT
+    function toggleVoiceBot() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return alert('Speech recognition unsupported.');
+      speechRecognition = new SpeechRecognition();
+      speechRecognition.lang = 'en-IN';
+      const bubble = document.getElementById('voice-bot-bubble');
+      bubble.innerText = 'Listening for command...';
+      bubble.classList.remove('hidden');
 
-      renderQuotationRows();
-      renderScopeRows();
-      renderFlowerRows();
-      renderLabourRows();
-      recalcQuotation();
+      speechRecognition.onresult = (event) => {
+        const cmd = event.results[0][0].transcript.toLowerCase();
+        bubble.innerText = `"${cmd}"`;
+        if (cmd.includes('dashboard')) { navTo('dashboard'); speakFemale('Opening Dashboard.'); }
+        else if (cmd.includes('hardware')) { navTo('hardware'); speakFemale('Opening Hardware.'); }
+        else if (cmd.includes('flower')) { navTo('flowers'); speakFemale('Opening Flower list.'); }
+        else if (cmd.includes('frame')) { navTo('frames'); speakFemale('Opening Frames.'); }
+        else if (cmd.includes('flex')) { navTo('flex'); speakFemale('Opening Flex.'); }
+        else if (cmd.includes('mood')) { navTo('moodboard'); speakFemale('Opening Mood board.'); }
+        else if (cmd.includes('loading')) { navTo('loading'); speakFemale('Opening Loading list.'); }
+        else if (cmd.includes('checklist') || cmd.includes('work')) { navTo('worklist'); speakFemale('Opening Work checklist.'); }
+        else { speakFemale(`Processed: ${cmd}`); }
+      };
+      speechRecognition.onend = () => { bubble.classList.add('hidden'); };
+      speechRecognition.start();
     }
 
-    function renderQuotationRows() {
-      const tbody = document.getElementById('ws-quote-items-tbody');
-      if (!tbody) return;
-      tbody.innerHTML = (activeEvent.quoteItems || []).map((it, idx) => `
-        <tr>
-          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.quoteItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs font-semibold"></td>
-          <td class="py-1 px-1 w-16"><input type="number" value="${it.qty}" oninput="activeEvent.quoteItems[${idx}].qty=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-16"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.quoteItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-24"><input type="number" value="${it.rate}" oninput="activeEvent.quoteItems[${idx}].rate=parseFloat(this.value)||0; markUnsaved(); recalcQuotation();" class="w-full border rounded p-1 text-right text-xs"></td>
-          <td class="py-1 pl-1 text-right font-bold w-24">₹${Math.round(it.qty * it.rate).toLocaleString()}</td>
-          <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.quoteItems.splice(${idx},1); markUnsaved(); renderQuotationRows(); recalcQuotation();" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
-      `).join('');
+    function speakFemale(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
     }
 
-    function addCustomQuotationRow() {
-      activeEvent.quoteItems.push({ name: '', qty: 1, unit: 'Nos', rate: 0 });
-      markUnsaved(); renderQuotationRows();
-    }
-
-    function recalcQuotation() {
-      const grand = (activeEvent.quoteItems || []).reduce((sum, it) => sum + (it.qty * it.rate), 0);
-      activeEvent.quoteGrand = grand;
-      document.getElementById('ws-quote-grand').innerText = `₹${Math.round(grand).toLocaleString()}`;
-    }
-
-    function renderScopeRows() {
-      const tbody = document.getElementById('ws-scope-tbody');
-      if (!tbody) return;
-      tbody.innerHTML = (activeEvent.scopeItems || []).map((it, idx) => `
-        <tr>
-          <td class="py-1 pr-1"><input type="text" value="${escapeHTML(it.name)}" oninput="activeEvent.scopeItems[${idx}].name=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.req}" oninput="activeEvent.scopeItems[${idx}].req=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.loaded || 0}" oninput="activeEvent.scopeItems[${idx}].loaded=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.ret || 0}" oninput="activeEvent.scopeItems[${idx}].ret=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs"></td>
-          <td class="py-1 px-1 w-14"><input type="number" value="${it.dam || 0}" oninput="activeEvent.scopeItems[${idx}].dam=parseFloat(this.value)||0; markUnsaved();" class="w-full border rounded p-1 text-center text-xs text-rose-600 font-bold"></td>
-          <td class="py-1 px-1 w-12"><input type="text" value="${escapeHTML(it.unit)}" oninput="activeEvent.scopeItems[${idx}].unit=this.value; markUnsaved();" class="w-full border rounded p-1 text-center text-[10px]"></td>
-          <td class="py-1 pl-1 text-center w-6"><button onclick="activeEvent.scopeItems.splice(${idx},1); markUnsaved(); renderScopeRows();" class="text-rose-500 font-bold">✕</button></td>
-        </tr>
-      `).join('');
-    }
-    function addCustomScopeRow() { activeEvent.scopeItems.push({ name: '', req: 1, loaded: 0, ret: 0, dam: 0, unit: 'Nos' }); markUnsaved(); renderScopeRows(); }
-
-    function renderFlowerRows() {
-      const container = document.getElementById('ws-flowers-container');
-      if (!container) return;
-      container.innerHTML = (activeEvent.flowers || []).map((f, i) => `
-        <div class="flex gap-2 items-center">
-          <input type="text" value="${escapeHTML(f.name)}" oninput="activeEvent.flowers[${i}].name=this.value; markUnsaved();" class="flex-grow border rounded p-1 text-xs">
-          <input type="number" placeholder="Qty" value="${f.qty}" oninput="activeEvent.flowers[${i}].qty=parseFloat(this.value)||0; markUnsaved(); recalcFlowers();" class="w-16 border rounded p-1 text-center text-xs">
-          <input type="number" placeholder="Rate" value="${f.rate}" oninput="activeEvent.flowers[${i}].rate=parseFloat(this.value)||0; markUnsaved(); recalcFlowers();" class="w-20 border rounded p-1 text-right text-xs">
-          <span class="w-20 text-right font-medium text-xs">₹${Math.round(f.qty * f.rate).toLocaleString()}</span>
-          <button onclick="activeEvent.flowers.splice(${i},1); markUnsaved(); renderFlowerRows(); recalcFlowers();" class="text-rose-500 font-bold px-1.5">✕</button>
-        </div>
-      `).join('');
-      recalcFlowers();
-    }
-    function addFlowerRow() { activeEvent.flowers.push({ name: '', qty: 1, rate: 0 }); markUnsaved(); renderFlowerRows(); }
-    function recalcFlowers() {
-      const total = (activeEvent.flowers || []).reduce((sum, f) => sum + (f.qty * f.rate), 0);
-      document.getElementById('ws-flowers-total-outflow').innerText = `₹${total.toLocaleString()}`;
-    }
-
-    function renderLabourRows() {
-      if (!activeEvent) return;
-      const tbody = document.getElementById('labour-table-tbody');
-      if (!tbody) return;
-      let total = 0;
-      tbody.innerHTML = (activeEvent.labourGroups || []).map((lg, i) => {
-        const line = (lg.men || 0) * (lg.days || 0) * (lg.rate || 0);
-        total += line;
-        return `
-          <tr>
-            <td class="py-1 pr-1"><input type="text" value="${escapeHTML(lg.role)}" oninput="activeEvent.labourGroups[${i}].role=this.value; markUnsaved();" class="w-full border rounded p-1 text-xs"></td>
-            <td class="py-1 px-1 w-16"><input type="number" value="${lg.men}" oninput="activeEvent.labourGroups[${i}].men=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
-            <td class="py-1 px-1 w-16"><input type="number" value="${lg.days}" oninput="activeEvent.labourGroups[${i}].days=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-center text-xs"></td>
-            <td class="py-1 px-1 w-24"><input type="number" value="${lg.rate}" oninput="activeEvent.labourGroups[${i}].rate=parseFloat(this.value)||0; markUnsaved(); renderLabourRows();" class="w-full border rounded p-1 text-right text-xs"></td>
-            <td class="py-1 pl-1 text-right font-bold w-24">₹${line.toLocaleString()}</td>
-            <td class="py-1 pl-1 text-center w-8"><button onclick="activeEvent.labourGroups.splice(${i},1); markUnsaved(); renderLabourRows();" class="text-rose-500 font-bold">✕</button></td>
-          </tr>
-        `;
-      }).join('');
-      document.getElementById('labour-total-cost-val').innerText = `₹${total.toLocaleString()}`;
-    }
-    function addLabourRow() { activeEvent.labourGroups.push({ role: 'Helper / Loader', men: 4, days: 1, rate: 1000 }); markUnsaved(); renderLabourRows(); }
-
-    async function saveActiveEventToStore(isSilent = false) {
-      if (!activeEvent) return;
-      activeEvent.client = document.getElementById('inp-client-name').value.trim();
-      activeEvent.phone = document.getElementById('inp-client-phone').value.trim();
-      activeEvent.date = document.getElementById('inp-event-date').value;
-      activeEvent.venue = document.getElementById('inp-venue').value.trim();
-      activeEvent.status = document.getElementById('inp-event-status').value;
-      activeEvent.type = document.getElementById('inp-event-type').value;
-      activeEvent.notes = document.getElementById('inp-event-notes').value;
-
-      await dbPut('events', activeEvent);
-      isDirty = false;
-      const ind = document.getElementById('save-status-indicator');
-      if (ind) { ind.innerText = '● Saved'; ind.className = 'text-[9px] text-emerald-400 font-semibold'; }
-      if (!isSilent) alert(`Event ${activeEvent.id} saved.`);
-      updateDashboard();
-    }
-
-    async function updateDashboard() {
-      if (!db) return;
-      const events = await dbGetAll('events');
-      document.getElementById('dash-total-events').innerText = events.length;
-    }
-
-    function openPrintModal(type) {
-      if (!activeEvent) return alert('Open an event first.');
-      const content = document.getElementById('print-sheet-content');
-      content.innerHTML = `<h1 class="text-xl font-black uppercase">VANJI DECORATORS - MASTER OPERATIONS</h1><p class="text-xs">Event: ${activeEvent.id} | Client: ${activeEvent.client} | Venue: ${activeEvent.venue}</p><hr class="my-2"><p class="text-xs">All individual rate costing sheets, flower mandi purchases (Sept 4th), and labor distributions are verified for execution.</p>`;
-      document.getElementById('modal-print-hub').classList.remove('hidden');
-    }
-
-    function toggleVoiceBot() { alert("Voice assistant active. Speak your command."); }
-    function loadAppSettings() {}
     function saveAppSettings() { alert('Settings saved.'); }
     function openBackupModal() { document.getElementById('modal-backup').classList.remove('hidden'); }
-    function exportFullBackup() { alert('Exporting data...'); }
-    function importFullBackup(e) { alert('Data imported.'); }
+    function exportFullBackup() {
+      const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(rahulEvent)); a.download = `Vanji_Rahul_Backup.json`; a.click();
+    }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkExistingAuth);
     else checkExistingAuth();
